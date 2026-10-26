@@ -12,7 +12,8 @@ public class WelcomeController {
     @GetMapping("/welcome")
     public ResponseEntity<String> welcome() {
         return ResponseEntity.ok(
-                "Welcome! Here we will learn CI/CD with Spring Boot."
+                "Welcome! Here we will learn CI/CD with Spring Boot." +
+                        "\"CI/CD Automation Test Successful - Version 2\""
         );
     }
 }
