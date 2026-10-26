@@ -1,0 +1,61 @@
+
+# Workflow name and trigger
+name: Spring Boot Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+# Application configuration
+env:
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-app
+  CONTAINER_NAME: spring-boot-app
+  APP_PORT: 8080
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Get source code
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      # 2. Login to Docker Hub
+      - name: Docker Hub Login
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Build and push Docker image
+      - name: Build and Push Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      # 4. Deploy to AWS EC2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            # Pull the new image
+            docker pull "${{ env.IMAGE_NAME }}:${{ github.sha }}"
+
+            # Remove the old container
+            docker rm -f "${{ env.CONTAINER_NAME }}" 2>/dev/null || true
+
+            # Run the updated container
+            docker run -d \
+              --name "${{ env.CONTAINER_NAME }}" \
+              --restart unless-stopped \
+              -p "${{ env.APP_PORT }}:8080" \
+              "${{ env.IMAGE_NAME }}:${{ github.sha }}"
