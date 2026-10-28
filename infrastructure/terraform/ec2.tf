@@ -14,6 +14,7 @@ resource "aws_instance" "spring_boot" {
   hibernation                          = false
   instance_initiated_shutdown_behavior = "stop"
   instance_type                        = "t3.micro"
+  iam_instance_profile                 = "personal-world-ec2-role"
   key_name                             = "ci-cd-key"
   monitoring                           = false
   placement_partition_number           = 0
