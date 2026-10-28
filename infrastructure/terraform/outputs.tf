@@ -7,3 +7,11 @@ output "ec2_public_ip" {
   description = "Our existing EC2 public IP"
   value       = aws_instance.spring_boot.public_ip
 }
+
+output "platform_nam" {
+  value = var.platform_name
+}
+
+output "resoure_value" {
+  value = local.resource_name
+}

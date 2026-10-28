@@ -4,3 +4,8 @@ variable "aws_region" {
   type        = string
   default     = "ap-southeast-2"
 }
+
+variable "platform_name" {
+  type    = string
+  default = "Default Platform"
+}
