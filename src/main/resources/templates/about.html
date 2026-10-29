@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="About Safayet Ullah: background, technical skills, education and training.">
+  <title>About | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage about-page">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('about')}"></div>
+<main id="main-content">
+  <section class="about-section about-introduction" id="cv" aria-labelledby="about-title">
+    <div class="wrap">
+      <h1 id="about-title">About Me</h1>
+      <div class="about-biography">
+        <p>I'm Safayet Ullah, studying Computer Science and Engineering at Southeast University. I enjoy understanding how technology works through practical projects, experimentation, and problem solving.</p>
+        <p>My interests include building software, exploring security and machine learning concepts, and learning from the challenges I encounter. Here I organize my work and share lessons from the process.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section about-technology-showcase" aria-labelledby="skills-heading">
+    <div class="wrap">
+      <h2 id="skills-heading">Technical Skills &amp; Technologies</h2>
+      <div th:replace="~{fragments/about-technology :: aboutTechnology}"></div>
+    </div>
+  </section>
+
+  <section class="about-section about-learning-approach" aria-labelledby="approach-heading">
+    <div class="wrap">
+      <h2 id="approach-heading">How I Work &amp; Learn</h2>
+      <p>I learn most effectively by building applications and trying ideas in practice. Testing, troubleshooting, deployment work and small experiments help me understand what succeeds, what fails, and why. I document the useful results so I can revisit them and share them with others.</p>
+    </div>
+  </section>
+
+  <section class="about-section about-education" aria-labelledby="about-education-heading">
+    <div class="wrap">
+      <h2 id="about-education-heading">Education</h2>
+      <div class="education-overview">
+        <article class="education-line">
+          <img src="/images/education/southeast-university.webp" th:src="@{/images/education/southeast-university.webp}" alt="Southeast University logo" width="72" height="72" loading="lazy">
+          <div class="education-details">
+            <h3>Southeast University</h3>
+            <p>Bachelor of Science in Computer Science and Engineering</p>
+          </div>
+          <time class="education-date">2023 &ndash; Present</time>
+        </article>
+        <article class="education-line">
+          <img src="/images/education/noakhali-science-commerce-college.webp" th:src="@{/images/education/noakhali-science-commerce-college.webp}" alt="Noakhali Science and Commerce College logo" width="72" height="72" loading="lazy">
+          <div class="education-details">
+            <h3>Noakhali Science and Commerce College</h3>
+            <p>Higher Secondary Certificate (HSC)</p>
+          </div>
+          <time class="education-date">2020</time>
+        </article>
+      </div>
+      <a class="button button-secondary education-action" href="/academic-journey" th:href="@{/academic-journey}">Explore My Education Journey <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </section>
+
+  <section class="about-section about-training-overview" aria-labelledby="about-training-heading">
+    <div class="wrap">
+      <h2 id="about-training-heading">Training &amp; Certifications</h2>
+      <div class="training-overview-list">
+        <div><strong>Applied Penetration Testing Engineer: Hands-on</strong><span>EDGE-CSE CUET DST Project</span></div>
+        <div><strong>CPTE: Certified Penetration Testing Engineer</strong><span>Mile2 Cybersecurity Certifications</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

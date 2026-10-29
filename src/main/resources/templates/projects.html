@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Real projects and hands-on learning by Safayet Ullah.">
+  <title>Projects | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('projects')}"></div>
+<main id="main-content" class="platform">
+
+<section class="lp-container lp-top lp-project-intro"><div class="lp-eyebrow">Projects <span></span> Selected work</div><h1>What I've built<span class="lp-dot">.</span></h1><p>Applications and hands-on engineering work. Browse a project to see its purpose, stack, and actual screenshots where available.</p></section>
+<section class="lp-container pj-gallery" aria-labelledby="pj-gallery-title"><div class="lp-section-row"><div><h2 id="pj-gallery-title">Project collection</h2><p>Case studies and genuine project resources.</p></div><span class="lp-count" th:text="${projects.size()} + ' projects'">6 projects</span></div>
+<div class="lp-filterbar" data-filter-root="pj-grid"><label class="lp-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span class="sr-only">Search projects</span><input type="search" placeholder="Search projects or technologies" aria-label="Search projects" data-course-search></label><div class="lp-chips" role="group" aria-label="Project category filters"><button type="button" class="lp-chip is-active" data-category="all" aria-pressed="true">All</button><button th:each="cat : ${categories}" type="button" class="lp-chip" th:attr="data-category=${cat}" th:text="${cat}" aria-pressed="false">Category</button></div></div>
+<div id="pj-grid" class="pj-grid"><th:block th:each="project : ${projects}"><div th:replace="~{fragments/project-card :: card(${project})}"></div></th:block></div>
+<div class="lp-empty" id="project-empty" hidden>No projects match this filter. <button type="button" data-reset-filters>Clear filters</button></div>
+</section>
+</main>
+</body></html>

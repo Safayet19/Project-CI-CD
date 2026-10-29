@@ -1,0 +1,197 @@
+[
+  {
+    "slug": "eventflow",
+    "title": "EventFlow",
+    "category": "Web Applications",
+    "summary": "Spring Boot event management platform with discovery, bookings, and role-based administration.",
+    "technologies": [
+      "Java",
+      "Spring Boot",
+      "Spring Security",
+      "JWT",
+      "MongoDB",
+      "Thymeleaf"
+    ],
+    "thumbnail": "/images/projects/eventflow/01-homepage.png",
+    "screenshots": [
+      {
+        "image": "/images/projects/eventflow/01-homepage.png",
+        "caption": "EventFlow public homepage and event discovery"
+      },
+      {
+        "image": "/images/projects/eventflow/02-admin-dashboard.png",
+        "caption": "Administration dashboard, metrics, and event analytics"
+      },
+      {
+        "image": "/images/projects/eventflow/03-user-management.png",
+        "caption": "Administrator user management interface"
+      }
+    ],
+    "overview": "EventFlow is a Spring Boot web application for exploring events, managing registrations, and handling event administration. The public and administrative interfaces shown here are original screenshots from the deployed project.",
+    "purpose": "Provide one platform for discovering events, registering for activities, and managing operations through role-aware administration.",
+    "features": [
+      "Public event discovery with category navigation and search",
+      "Event registration and booking workflows",
+      "Participant and organizer accounts with role-based access",
+      "Administrator analytics and event management",
+      "Account management and user roles"
+    ],
+    "architecture": "Spring Boot MVC and Thymeleaf for server-rendered pages; Spring Security for authorization; MongoDB persistence. Deployment runs on Render.",
+    "challenges": [],
+    "repository": "",
+    "demo": "https://eventflow-g1jo.onrender.com/",
+    "relatedLearning": [
+      {
+        "title": "Spring MVC and Thymeleaf",
+        "url": "/learning/backend/mvc-thymeleaf"
+      }
+    ]
+  },
+  {
+    "slug": "student-excuse",
+    "title": "Student Excuse Generator",
+    "category": "Desktop Applications",
+    "summary": "JavaFX desktop application for generating formatted student excuse documents.",
+    "technologies": [
+      "Java",
+      "JavaFX",
+      "GUI",
+      "File Handling"
+    ],
+    "thumbnail": "/images/projects/student-excuse/01-login.webp",
+    "screenshots": [
+      {
+        "image": "/images/projects/student-excuse/01-login.webp",
+        "caption": "Application login screen"
+      },
+      {
+        "image": "/images/projects/student-excuse/02-dashboard.webp",
+        "caption": "Main dashboard"
+      },
+      {
+        "image": "/images/projects/student-excuse/03-generate-excuse.webp",
+        "caption": "Excuse generation form"
+      }
+    ],
+    "overview": "A Java and JavaFX application that uses structured user input to produce formatted student excuse documents.",
+    "purpose": "Provide a reusable interface for entering information and generating documents in a desktop workflow.",
+    "features": [
+      "Desktop interface with login and dashboard screens",
+      "Structured form for generating student excuse documents"
+    ],
+    "architecture": "Java and JavaFX desktop UI; original portfolio includes the screen sequence.",
+    "challenges": [],
+    "repository": "https://github.com/Safayet19/Student-Excuse-Generator",
+    "demo": "",
+    "relatedLearning": []
+  },
+  {
+    "slug": "hospital-management",
+    "title": "Hospital Management System",
+    "category": "Desktop Applications",
+    "summary": "JavaFX software for hospital records, patient and doctor workflows.",
+    "technologies": [
+      "Java",
+      "JavaFX",
+      "OOP",
+      "Database"
+    ],
+    "thumbnail": "/images/projects/hospital-management/01-login.webp",
+    "screenshots": [
+      {
+        "image": "/images/projects/hospital-management/01-login.webp",
+        "caption": "Application login"
+      },
+      {
+        "image": "/images/projects/hospital-management/02-admin-dashboard.webp",
+        "caption": "Administrator dashboard"
+      },
+      {
+        "image": "/images/projects/hospital-management/03-doctor-dashboard.webp",
+        "caption": "Doctor dashboard"
+      },
+      {
+        "image": "/images/projects/hospital-management/04-feedback.webp",
+        "caption": "Feedback screen"
+      }
+    ],
+    "overview": "Java and JavaFX desktop software for managing hospital-related records and common administrative workflows.",
+    "purpose": "Bring patient, doctor and administrative tasks into one desktop application.",
+    "features": [
+      "Login screen",
+      "Administrator dashboard",
+      "Doctor dashboard",
+      "Feedback interface"
+    ],
+    "architecture": "JavaFX graphical user interface and database-backed application structure.",
+    "challenges": [],
+    "repository": "https://github.com/Safayet19/Hospital-Management-System-JavaFX-",
+    "demo": "",
+    "relatedLearning": []
+  },
+  {
+    "slug": "plant-disease",
+    "title": "Plant Disease Recognition",
+    "category": "AI & Machine Learning",
+    "summary": "CNN-based classification of plant leaf conditions using images.",
+    "technologies": [
+      "Python",
+      "CNN",
+      "Deep Learning",
+      "Image Classification"
+    ],
+    "thumbnail": "/images/projects/plant-disease/01-upload.webp",
+    "screenshots": [
+      {
+        "image": "/images/projects/plant-disease/01-upload.webp",
+        "caption": "Image upload interface"
+      },
+      {
+        "image": "/images/projects/plant-disease/02-result.webp",
+        "caption": "Classification result"
+      }
+    ],
+    "overview": "A deep-learning application that classifies image inputs of plant leaves using a convolutional neural network.",
+    "purpose": "Explore image-based disease recognition as a practical CNN classification task.",
+    "features": [
+      "Plant image upload",
+      "Predicted classification result display"
+    ],
+    "architecture": "CNN image-classification workflow, shown by the original portfolio screens.",
+    "challenges": [],
+    "repository": "https://github.com/Safayet19/Plant-Disease-Detection-CNN-model",
+    "demo": "",
+    "relatedLearning": []
+  },
+  {
+    "slug": "ovijog",
+    "title": "Ovijog",
+    "category": "Cloud & DevOps",
+    "summary": "Community problem reporting platform and an end-to-end DevOps learning project.",
+    "technologies": [
+      "Java",
+      "Spring Boot",
+      "Docker",
+      "AWS"
+    ],
+    "thumbnail": "",
+    "screenshots": [],
+    "overview": "A community-focused problem reporting concept, developed with a practical Java/Spring Boot and DevOps workflow.",
+    "purpose": "Let people report a broad range of community issues through a public interface.",
+    "features": [
+      "Public problem reporting concept",
+      "Administrative management model",
+      "Practical CI/CD and infrastructure workflow"
+    ],
+    "architecture": "Spring Boot backend with DevOps workflow using Docker, AWS, and GitHub Actions.",
+    "challenges": [],
+    "repository": "",
+    "demo": "",
+    "relatedLearning": [
+      {
+        "title": "From Git Push to HTTPS",
+        "url": "/learning/devops/deployment-workflow"
+      }
+    ]
+  }
+]

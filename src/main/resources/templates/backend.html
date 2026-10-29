@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Java and Spring Boot development notes from Safayet Ullah.">
+  <title>Java & Spring Boot Notes | Safayet Ullah</title>
+  <link rel="icon" type="image/svg+xml" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content">
+<section class="page-intro wrap"><a class="back-link" href="/learning" th:href="@{/learning}">Learning Hub</a><p class="section-label">Backend engineering</p><h1>Java &amp; Spring Boot notes.</h1><p>Practical concepts behind this website and my Java applications, without unnecessary scaffolding.</p></section><section class="section section-tight"><div class="wrap content-narrow">
+<article class="lesson-block"><h2>Spring MVC routing</h2><p>Each major section of this website uses a dedicated controller and template. A controller handles incoming requests, supplies the page model and selects a Thymeleaf view.</p><pre><code>@Controller
+public class HomeController {
+    @GetMapping("/")
+    public String home() { return "index"; }
+}</code></pre></article>
+<article class="lesson-block"><h2>Thymeleaf rendering</h2><p>Shared navigation and footer fragments keep the public pages consistent. Project detail pages are populated from a small static catalog, ready for an optional database later.</p></article>
+<article class="lesson-block"><h2>REST APIs alongside MVC pages</h2><p>The project's original <code>/api/welcome</code> endpoint remains separate from the HTML routes and is preserved without changes.</p></article>
+<article class="lesson-block"><h2>Configurations and secrets</h2><p>Application settings and CI/CD configuration remain unchanged. Sensitive keys should be supplied through environment variables rather than committed to source control.</p></article></div></section>
+</main>
+</body></html>

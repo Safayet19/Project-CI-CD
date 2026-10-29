@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Real projects and hands-on learning by Safayet Ullah.">
+  <title>Project Case Study | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('projects')}"></div>
+<main id="main-content" class="platform">
+
+<section class="lp-container pj-case-top"><nav class="lp-breadcrumb" aria-label="Breadcrumb"><a th:href="@{/projects}">Projects</a><span>/</span><span th:text="${project.title}">Project</span></nav><div class="lp-eyebrow" th:text="${project.category}">Category</div><h1 th:text="${project.title}">Project name</h1><p th:text="${project.summary}">Summary</p><div class="pj-case-tags"><span th:each="tech : ${project.technologies}" th:text="${tech}">Java</span></div><div class="pj-case-actions"><a th:if="${!#strings.isEmpty(project.repository)}" class="lp-action lp-solid" th:href="${project.repository}" target="_blank" rel="noopener noreferrer">GitHub Repository &rarr;</a><a th:if="${!#strings.isEmpty(project.demo)}" class="lp-action lp-outline" th:href="${project.demo}" target="_blank" rel="noopener noreferrer">Live Demo &rarr;</a></div></section>
+<div class="lp-container pj-case-layout"><article class="pj-case-main">
+  <section class="pj-case-section" th:if="${!#strings.isEmpty(project.overview)}"><h2>Overview</h2><p th:text="${project.overview}"></p></section>
+  <section class="pj-case-section" th:if="${!#strings.isEmpty(project.purpose)}"><h2>Problem &amp; Purpose</h2><p th:text="${project.purpose}"></p></section>
+  <section class="pj-case-section" th:if="${!#lists.isEmpty(project.features)}"><h2>Main Features</h2><ul class="pj-feature-list"><li th:each="feature : ${project.features}" th:text="${feature}">Feature</li></ul></section>
+  <section class="pj-case-section" th:if="${!#strings.isEmpty(project.architecture)}"><h2>Architecture &amp; Workflow</h2><p th:text="${project.architecture}"></p></section>
+  <section class="pj-case-section" th:if="${!#lists.isEmpty(project.screenshots)}"><h2>Actual Screenshots</h2><div class="pj-screens"><figure th:each="shot : ${project.screenshots}"><button type="button" class="lp-evidence-trigger" th:attr="data-full=${shot.image},data-caption=${shot.caption}" th:aria-label="${'Enlarge screenshot: ' + shot.caption}"><img th:src="@{${shot.image}}" th:alt="${shot.caption}" loading="lazy"><span class="lp-zoom" aria-hidden="true">&rarr;</span></button><figcaption th:text="${shot.caption}">Caption</figcaption></figure></div></section>
+  <section class="pj-case-section" th:if="${!#lists.isEmpty(project.challenges)}"><h2>Challenges &amp; Solutions</h2><ul><li th:each="challenge : ${project.challenges}" th:text="${challenge}"></li></ul></section>
+  <section class="pj-case-section" th:if="${!#lists.isEmpty(project.relatedLearning)}"><h2>Related Tutorials</h2><div class="pj-related"><a th:each="link : ${project.relatedLearning}" th:href="@{${link.url}}"><span th:text="${link.title}">Tutorial</span><span aria-hidden="true">→</span></a></div></section>
+</article><aside class="pj-case-aside"><div class="pj-aside-card"><h2>Technology Stack</h2><div class="pj-tech-tags"><span th:each="tech : ${project.technologies}" th:text="${tech}">Technology</span></div><div class="pj-aside-resources" th:if="${!#strings.isEmpty(project.repository) or !#strings.isEmpty(project.demo)}"><h3>Project links</h3><a th:if="${!#strings.isEmpty(project.repository)}" th:href="${project.repository}" target="_blank" rel="noopener noreferrer">Source repository &rarr;</a><a th:if="${!#strings.isEmpty(project.demo)}" th:href="${project.demo}" target="_blank" rel="noopener noreferrer">Live demonstration &rarr;</a></div></div><a class="pj-back" th:href="@{/projects}">← All projects</a></aside></div>
+<dialog class="lp-lightbox" aria-label="Full-size project screenshot"><button type="button" class="lp-lightbox-close" aria-label="Close screenshot">×</button><img alt="Expanded project screenshot"><p></p></dialog>
+</main>
+</body></html>

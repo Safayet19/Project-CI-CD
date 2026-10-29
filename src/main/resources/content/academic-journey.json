@@ -1,0 +1,195 @@
+{
+  "university": {
+    "name": "Southeast University",
+    "degree": "Bachelor of Science in Computer Science & Engineering",
+    "period": "2023 – Present",
+    "logo": "/images/education/southeast-university.webp",
+    "introduction": "Four years of learning, building, memorable experiences, and personal growth at Southeast University."
+  },
+  "highlights": [
+    {
+      "label": "Current CGPA",
+      "value": "3.99 / 4.00",
+      "note": "Cumulative academic performance"
+    },
+    {
+      "label": "Batch Position",
+      "value": "1st in Batch",
+      "note": "Current standing"
+    }
+  ],
+  "years": [
+    {
+      "number": 1,
+      "label": "Year 1",
+      "semesters": [
+        {
+          "number": 1,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 2,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 3,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "label": "Year 2",
+      "semesters": [
+        {
+          "number": 4,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 5,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 6,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "label": "Year 3",
+      "semesters": [
+        {
+          "number": 7,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 8,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 9,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "label": "Year 4",
+      "semesters": [
+        {
+          "number": 10,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 11,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        },
+        {
+          "number": 12,
+          "term": "",
+          "status": "",
+          "courses": [],
+          "learning": "",
+          "projects": [],
+          "memories": [],
+          "achievements": [],
+          "reflection": ""
+        }
+      ]
+    }
+  ],
+  "beforeUniversity": [
+    {
+      "institution": "Noakhali Science and Commerce College",
+      "qualification": "Higher Secondary Certificate (HSC)",
+      "period": "2020",
+      "result": "GPA 5.00",
+      "logo": "/images/education/noakhali-science-commerce-college.webp"
+    },
+    {
+      "institution": "Sonapur Ali Akbar High School",
+      "qualification": "Secondary School Certificate (SSC)",
+      "period": "2018",
+      "result": "GPA 5.00",
+      "logo": "/images/education/sonapur-ali-akbar-high-school.webp"
+    }
+  ]
+}

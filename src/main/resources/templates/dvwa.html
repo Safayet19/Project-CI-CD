@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Real projects and hands-on learning by Safayet Ullah.">
+  <title>Course Overview | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content" class="platform">
+
+<section class="lp-container lp-course-top">
+  <nav class="lp-breadcrumb" aria-label="Breadcrumb"><a th:href="@{/learning}">Learning Hub</a><span>/</span><span th:text="${course.title}">Course</span></nav>
+  <div class="lp-eyebrow" th:text="${course.category}">Cybersecurity</div>
+  <div class="lp-course-heading"><div><h1 th:text="${course.title}">DVWA Practical Security Lab</h1><p th:text="${course.description}">Short course description</p><span class="lp-count" th:text="${course.modules.size()} + ' available modules'">10 available modules</span></div><a class="lp-action lp-solid" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${course.modules[0].slug})}">Start Learning <span aria-hidden="true">→</span></a></div>
+</section>
+<section class="lp-container lp-course-modules" aria-labelledby="lp-modules-title"><div class="lp-section-row"><h2 id="lp-modules-title">Course modules</h2><span class="lp-count" th:text="${course.modules.size()} + ' lessons'">10 lessons</span></div>
+  <div class="lp-module-list">
+    <a class="lp-module-row" th:each="module,status : ${course.modules}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}"><span class="lp-module-number" th:text="${#numbers.formatInteger(status.count,2)}">01</span><strong th:text="${module.title}">Brute Force</strong><span class="lp-row-arrow" aria-hidden="true">→</span></a>
+  </div>
+</section>
+</main>
+</body></html>

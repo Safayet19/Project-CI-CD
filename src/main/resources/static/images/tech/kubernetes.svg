@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 76" role="img" aria-label="Kubernetes">
+ <path d="M37.95 3 68 20.3v35.4L38 73 8 55.7V20.3Z" fill="#326ce5"/>
+ <g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">
+ <circle cx="38" cy="38" r="15" stroke-width="4.5"/>
+ <circle cx="38" cy="38" r="5.5" fill="white" stroke="none"/>
+ <path d="M38 11v21M38 44v21M11 38h21M44 38h21M19 19l14.8 14.8m8.4 8.4L57 57M57 19 42.2 33.8m-8.4 8.4L19 57" stroke-width="4.5"/>
+ <circle cx="38" cy="11" r="3.4" fill="white" stroke="none"/><circle cx="38" cy="65" r="3.4" fill="white" stroke="none"/>
+ <circle cx="11" cy="38" r="3.4" fill="white" stroke="none"/><circle cx="65" cy="38" r="3.4" fill="white" stroke="none"/>
+ </g>
+</svg>

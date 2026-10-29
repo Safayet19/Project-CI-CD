@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Real projects and hands-on learning by Safayet Ullah.">
+  <title>Learning Hub | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content" class="platform">
+
+<section class="lp-top lp-container">
+  <div class="lp-eyebrow">Learning Hub <span></span> Practical knowledge</div>
+  <h1>Learn from actual work<span class="lp-dot">.</span></h1>
+  <p>Practical, structured lessons from my projects and security labs. Select a track to view its modules.</p>
+</section>
+<section class="lp-container lp-catalog" aria-labelledby="lp-available">
+  <div class="lp-section-row"><div><h2 id="lp-available">Available learning tracks</h2><p>Only courses with published content are listed.</p></div><span class="lp-count" th:text="${courses.size()} + ' tracks'">3 tracks</span></div>
+  <div class="lp-filterbar" data-filter-root="course-list">
+    <label class="lp-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span class="sr-only">Search learning tracks</span><input type="search" id="course-search" autocomplete="off" placeholder="Search tracks or topics" data-course-search></label>
+    <div class="lp-chips" role="group" aria-label="Course category filters"><button type="button" class="lp-chip is-active" data-category="all" aria-pressed="true">All</button><button type="button" class="lp-chip" th:each="cat : ${courses.![category]}" th:attr="data-category=${cat}" th:text="${cat}" aria-pressed="false">Category</button></div>
+  </div>
+  <div id="course-list" class="lp-track-grid">
+    <article class="lp-track-card" th:each="course : ${courses}" th:attr="data-category=${course.category},data-search=${course.title + ' ' + course.description + ' ' + course.category}">
+      <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true">
+        <svg th:if="${course.icon == 'shield'}" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg>
+        <svg th:if="${course.icon == 'terminal'}" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="m6 9 3 3-3 3m6 0h5"/></svg>
+        <svg th:if="${course.icon == 'code'}" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4 10 20"/></svg>
+      </span><span class="lp-category" th:text="${course.category}">Cybersecurity</span></div>
+      <h3 th:text="${course.title}">DVWA Practical Security Lab</h3><p th:text="${course.description}">Description</p>
+      <div class="lp-track-bottom"><span class="lp-module-count"><strong th:text="${course.modules.size()}">10</strong> <span th:text="${course.modules.size() == 1 ? 'module' : 'modules'}">modules</span></span><a class="lp-action" th:href="@{/learning/{track}(track=${course.slug})}">View Modules <span aria-hidden="true">→</span></a></div>
+    </article>
+  </div>
+  <div class="lp-empty" id="course-empty" hidden>No learning tracks match your search. <button type="button" data-reset-filters>Clear filters</button></div>
+</section>
+</main>
+</body></html>

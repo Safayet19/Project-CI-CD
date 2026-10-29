@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Real projects and hands-on learning by Safayet Ullah.">
+  <title>Learning Lesson | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content" class="platform">
+
+<section class="lp-container lp-lesson-breadcrumb"><nav class="lp-breadcrumb" aria-label="Breadcrumb"><a th:href="@{/learning}">Learning Hub</a><span>/</span><a th:href="@{/learning/{track}(track=${course.slug})}" th:text="${course.title}">Course</a><span>/</span><span th:text="${lesson.title}">Lesson</span></nav></section>
+<div class="lp-container lp-doc-layout">
+  <aside class="lp-doc-sidebar"><details class="lp-module-nav" data-mobile-collapsible open>
+    <summary><span th:text="${course.title}">DVWA Security Lab</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="lp-sidebar-details"><p class="lp-sidebar-counter" th:text="${course.modules.size()} + ' MODULES'">10 MODULES</p><nav aria-label="Course modules"><ol><li th:each="module,status : ${course.modules}"><a th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}" th:classappend="${module.slug == lesson.slug} ? ' is-current' : ''" th:attr="aria-current=${module.slug == lesson.slug} ? 'page' : null"><span th:text="${#numbers.formatInteger(status.count,2)}">01</span><span th:text="${module.title}">Module</span></a></li></ol></nav><a class="lp-back-course" th:href="@{/learning/{track}(track=${course.slug})}">← All modules</a></div>
+  </details></aside>
+  <article class="lp-reading">
+    <div class="lp-reading-header"><div class="lp-eyebrow" th:text="'MODULE ' + ${#numbers.formatInteger(lessonIndex + 1,2)}">MODULE 01</div><h1 th:text="${lesson.title}">Module title</h1></div>
+    <section class="lp-doc-section" aria-labelledby="concept-heading"><h2 id="concept-heading">Introduction &amp; Concept</h2><p th:text="${lesson.concept}">Source-derived overview</p></section>
+    <section class="lp-doc-section" aria-labelledby="objective-heading"><h2 id="objective-heading">Objective &amp; Prerequisites</h2><p th:text="${lesson.objective}"></p><ul><li th:each="req : ${lesson.prerequisites}" th:text="${req}">Prerequisite</li></ul></section>
+    <section class="lp-doc-section" aria-labelledby="practical-heading"><h2 id="practical-heading">Practical Steps</h2><ol class="lp-steps"><li th:each="step : ${lesson.steps}" th:text="${step}">Practical lab step</li></ol></section>
+    <section class="lp-doc-section" aria-labelledby="code-heading" th:if="${!#lists.isEmpty(lesson.commands)}"><h2 id="code-heading">Commands &amp; Code</h2><p class="lp-source-note">Recorded from the supplied practical lessons. Use only in your own authorized training environment.</p><div class="lp-code-panel" th:each="command : ${lesson.commands}"><div class="lp-code-top"><span th:text="${command.label}">Code</span><button type="button" class="lp-copy" aria-label="Copy code block">Copy</button></div><pre><code th:text="${command.code}">example</code></pre></div></section>
+    <section class="lp-doc-section" aria-labelledby="screens-heading" th:if="${!#lists.isEmpty(lesson.evidence)}"><h2 id="screens-heading">Original Screenshots &amp; Evidence</h2><div class="lp-evidence-grid"><figure class="lp-evidence" th:each="proof : ${lesson.evidence}"><button type="button" class="lp-evidence-trigger" th:attr="data-full=${proof.image},data-caption=${proof.caption}" th:aria-label="${'Enlarge screenshot: ' + proof.title}"><img th:src="@{${proof.image}}" th:alt="${proof.title}" loading="lazy"><span class="lp-zoom" aria-hidden="true">&rarr;</span></button><figcaption><strong th:text="${proof.title}">Screenshot title</strong><span th:text="${proof.caption}">Original evidence caption</span></figcaption></figure></div></section>
+    <section class="lp-doc-section" aria-labelledby="observ-heading"><h2 id="observ-heading">Observations &amp; Results</h2><p th:text="${lesson.observations}">Observed lab behavior</p></section>
+    <section class="lp-doc-section" aria-labelledby="findings-heading"><h2 id="findings-heading">Findings &amp; Prevention</h2><p th:text="${lesson.findings}">Lab findings</p><h3>Prevention</h3><ul><li th:each="tip : ${lesson.prevention}" th:text="${tip}">Prevention guidance</li></ul></section>
+    <nav class="lp-lesson-pager" aria-label="Lesson navigation"><a th:if="${previous != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${previous.slug})}"><small>← Previous Module</small><strong th:text="${previous.title}">Previous</strong></a><a th:if="${previous == null}" class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>← Course Overview</small><strong>All modules</strong></a><a th:if="${next != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${next.slug})}"><small>Next Module →</small><strong th:text="${next.title}">Next</strong></a><a th:if="${next == null}" class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>Course Overview →</small><strong>All modules</strong></a></nav>
+  </article>
+</div>
+<dialog class="lp-lightbox" aria-label="Full-size lab evidence"><button type="button" class="lp-lightbox-close" aria-label="Close screenshot">×</button><img alt="Expanded evidence screenshot"><p></p></dialog>
+</main>
+</body></html>

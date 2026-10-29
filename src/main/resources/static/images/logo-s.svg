@@ -1,0 +1,30 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="18" y1="20" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b8f5d2"/>
+      <stop offset="0.48" stop-color="#35c887"/>
+      <stop offset="1" stop-color="#72d46f"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="30" y1="34" x2="102" y2="94" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.34" stop-color="#c8f7da"/>
+      <stop offset="0.68" stop-color="#6de0a8"/>
+      <stop offset="1" stop-color="#35c887"/>
+    </linearGradient>
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0.18 0 0 0 0 0.72 0 0 0 0 0.48 0 0 0 0.85 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#04110a" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <circle cx="64" cy="64" r="54" fill="#07150f"/>
+  <circle cx="64" cy="64" r="54" stroke="url(#g1)" stroke-width="4"/>
+  <ellipse cx="64" cy="67" rx="58" ry="19" transform="rotate(-18 64 67)" stroke="url(#g1)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M89 34H51C38 34 30 42 30 53C30 65 39 70 53 72L72 75C78 76 81 79 81 84C81 90 76 94 68 94H32" stroke="url(#g2)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)"/>
+  <path d="M39 94H77C90 94 98 86 98 75C98 63 89 58 75 56L56 53C50 52 47 49 47 44C47 38 52 34 60 34H96" stroke="url(#g1)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+  <circle cx="94" cy="30" r="4" fill="#fff" opacity="0.95"/>
+  <circle cx="99" cy="28" r="8" fill="#72e3aa" opacity="0.25"/>
+</svg>

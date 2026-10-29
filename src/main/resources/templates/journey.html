@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Safayet Ullah's four-year academic journey at Southeast University.">
+  <title>My Academic Journey | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/journey.css" th:href="@{/css/journey.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+  <script defer src="/js/journey.js" th:src="@{/js/journey.js}"></script>
+</head>
+<body id="top" class="subpage journey-page">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('journey')}"></div>
+
+<main id="main-content" data-academic-journey>
+  <header class="academic-hero">
+    <div class="wrap academic-hero-inner">
+      <div class="academic-identity">
+        <img class="university-logo"
+             src="/images/education/southeast-university.webp"
+             th:src="@{${journey.university.logo}}"
+             alt="Southeast University logo"
+             width="116"
+             height="116">
+        <div>
+          <p class="section-label">University Life Journal</p>
+          <h1>My Academic Journey</h1>
+          <p class="university-name" th:text="${journey.university.name}">Southeast University</p>
+          <p class="degree-name" th:text="${journey.university.degree}">Bachelor of Science in Computer Science &amp; Engineering</p>
+          <p class="university-period" th:text="${journey.university.period}">2023 &ndash; Present</p>
+        </div>
+      </div>
+
+      <p class="academic-introduction" th:text="${journey.university.introduction}">
+        Four years of learning, building, memorable experiences, and personal growth at Southeast University.
+      </p>
+
+      <dl class="academic-highlights" aria-label="Academic highlights">
+        <div th:each="highlight, highlightStat : ${journey.highlights}"
+             th:classappend="${highlightStat.odd} ? ' highlight-copper' : ' highlight-green'">
+          <dt th:text="${highlight.label}">Current CGPA</dt>
+          <dd th:text="${highlight.value}">3.99 / 4.00</dd>
+          <p th:text="${highlight.note}">Cumulative academic performance</p>
+        </div>
+      </dl>
+    </div>
+  </header>
+
+  <section class="journey-timeline-section" aria-labelledby="university-years-heading">
+    <div class="wrap journey-journal">
+      <div class="journal-heading">
+        <p class="section-label">Four Academic Years</p>
+        <h2 id="university-years-heading">Semester by semester</h2>
+        <p>Select a year, then open a semester to explore the genuine records available for it.</p>
+      </div>
+
+      <div class="year-navigation" role="tablist" aria-label="Select an academic year">
+        <button th:each="year, yearStat : ${journey.years}"
+                class="year-tab"
+                th:classappend="${yearStat.first} ? ' is-active'"
+                type="button"
+                role="tab"
+                th:id="${'year-tab-' + year.number}"
+                th:attr="aria-controls=${'year-panel-' + year.number},
+                         aria-selected=${yearStat.first},
+                         data-year-target=${'year-panel-' + year.number}"
+                th:tabindex="${yearStat.first} ? '0' : '-1'"
+                th:text="${year.label}">Year 1</button>
+      </div>
+
+      <div class="academic-year-panels">
+        <section th:each="year, yearStat : ${journey.years}"
+                 class="academic-year-panel"
+                 role="tabpanel"
+                 th:id="${'year-panel-' + year.number}"
+                 th:attr="aria-labelledby=${'year-tab-' + year.number}"
+                 th:hidden="${!yearStat.first}">
+          <div class="academic-year-intro">
+            <span th:text="${'0' + year.number}">01</span>
+            <div>
+              <p th:text="${year.label}">Year 1</p>
+              <small th:text="${'Semesters ' + year.semesters[0].number + '–' + year.semesters[2].number}">Semesters 1&ndash;3</small>
+            </div>
+          </div>
+
+          <div class="semester-timeline">
+            <article class="semester-entry" th:each="semester : ${year.semesters}">
+              <button class="semester-toggle"
+                      type="button"
+                      aria-expanded="false"
+                      th:attr="aria-controls=${'semester-panel-' + semester.number}">
+                <span class="semester-index" th:text="${semester.number < 10 ? '0' + semester.number : semester.number}">01</span>
+                <span class="semester-number" th:text="${'Semester ' + semester.number}">Semester 1</span>
+                <span class="semester-meta">
+                  <span th:if="${!#strings.isEmpty(semester.term)}" th:text="${semester.term}">Academic term</span>
+                  <span class="semester-status"
+                        th:if="${!#strings.isEmpty(semester.status)}"
+                        th:text="${semester.status}">Completed</span>
+                </span>
+                <span class="semester-indicator" aria-hidden="true"></span>
+              </button>
+
+              <div class="semester-panel"
+                   th:id="${'semester-panel-' + semester.number}"
+                   hidden>
+                <div class="semester-content" th:if="${semester.hasContent()}">
+                  <section class="semester-block courses-block" th:if="${!#lists.isEmpty(semester.courses)}">
+                    <h3>Courses Studied</h3>
+                    <ul class="course-list">
+                      <li th:each="course : ${semester.courses}">
+                        <span th:if="${!#strings.isEmpty(course.code)}" th:text="${course.code}">CSE 000</span>
+                        <strong th:text="${course.name}">Course name</strong>
+                      </li>
+                    </ul>
+                  </section>
+
+                  <section class="semester-block prose-block" th:if="${!#strings.isEmpty(semester.learning)}">
+                    <h3>What I Learned</h3>
+                    <p th:text="${semester.learning}">Learning experience</p>
+                  </section>
+
+                  <section class="semester-block" th:if="${!#lists.isEmpty(semester.projects)}">
+                    <h3>Projects &amp; Lab Work</h3>
+                    <div class="semester-projects">
+                      <article class="semester-project" th:each="project : ${semester.projects}">
+                        <img th:if="${!#strings.isEmpty(project.image)}"
+                             th:src="@{${project.image}}"
+                             th:alt="${project.name}"
+                             loading="lazy">
+                        <div>
+                          <p class="project-subject"
+                             th:if="${!#strings.isEmpty(project.subject)}"
+                             th:text="${project.subject}">Subject</p>
+                          <h4 th:text="${project.name}">Project name</h4>
+                          <p th:text="${project.description}">Project description</p>
+                          <a th:if="${!#strings.isEmpty(project.detailUrl)}"
+                             th:href="@{${project.detailUrl}}">View project details <span aria-hidden="true">&rarr;</span></a>
+                        </div>
+                      </article>
+                    </div>
+                  </section>
+
+                  <section class="semester-block" th:if="${!#lists.isEmpty(semester.memories)}">
+                    <h3>Campus Life &amp; Memories</h3>
+                    <div class="memory-gallery">
+                      <figure th:each="memory : ${semester.memories}">
+                        <button class="memory-button"
+                                type="button"
+                                th:attr="data-memory-image=${memory.image},
+                                         data-memory-alt=${memory.alt},
+                                         data-memory-caption=${memory.caption}"
+                                th:aria-label="${'View photograph: ' + memory.alt}">
+                          <img th:src="@{${memory.image}}" th:alt="${memory.alt}" loading="lazy">
+                        </button>
+                        <figcaption th:if="${!#strings.isEmpty(memory.caption)}" th:text="${memory.caption}">Photograph caption</figcaption>
+                      </figure>
+                    </div>
+                  </section>
+
+                  <section class="semester-block" th:if="${!#lists.isEmpty(semester.achievements)}">
+                    <h3>Achievements &amp; Milestones</h3>
+                    <ul class="achievement-list">
+                      <li th:each="achievement : ${semester.achievements}" th:text="${achievement}">Achievement</li>
+                    </ul>
+                  </section>
+
+                  <section class="semester-block reflection-block" th:if="${!#strings.isEmpty(semester.reflection)}">
+                    <h3>Semester Reflection</h3>
+                    <blockquote th:text="${semester.reflection}">Semester reflection</blockquote>
+                  </section>
+                </div>
+
+                <p class="semester-empty" th:unless="${semester.hasContent()}">
+                  This semester journal entry is ready for real course, project, and memory details.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <section class="before-university" aria-labelledby="before-university-heading">
+    <div class="wrap before-university-inner">
+      <div class="before-university-heading">
+        <p class="section-label">Earlier Education</p>
+        <h2 id="before-university-heading">Before University</h2>
+      </div>
+
+      <div class="previous-education-list">
+        <article class="previous-education" th:each="education : ${journey.beforeUniversity}">
+          <img th:src="@{${education.logo}}"
+               th:alt="${education.institution + ' logo'}"
+               width="72"
+               height="72"
+               loading="lazy">
+          <div>
+            <h3 th:text="${education.institution}">Institution</h3>
+            <p th:text="${education.qualification}">Qualification</p>
+            <small th:if="${!#strings.isEmpty(education.result)}" th:text="${education.result}">Result</small>
+          </div>
+          <time th:text="${education.period}">2020</time>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <dialog class="memory-dialog" aria-label="Campus photograph">
+    <button class="memory-dialog-close" type="button" aria-label="Close photograph">&times;</button>
+    <img alt="">
+    <p></p>
+  </dialog>
+</main>
+</body>
+</html>

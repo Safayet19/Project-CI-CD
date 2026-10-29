@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="site-header" th:fragment="navbar(activePage)">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/" th:href="@{/}" aria-label="Safayet Ullah, homepage">
+      <img class="brand-logo" src="/images/logo-s.svg" th:src="@{/images/logo-s.svg}"
+           alt="Original Safayet logo" width="43" height="43">
+      <span class="brand-text">Safayet</span>
+    </a>
+
+    <nav class="nav-links" id="primary-navigation" aria-label="Main navigation">
+      <a href="/" th:href="@{/}" th:attr="aria-current=${activePage == 'home'} ? 'page' : null">Home</a>
+      <a href="/about" th:href="@{/about}" th:attr="aria-current=${activePage == 'about'} ? 'page' : null">About</a>
+      <a href="/projects" th:href="@{/projects}" th:attr="aria-current=${activePage == 'projects'} ? 'page' : null">Projects</a>
+      <a href="/learning" th:href="@{/learning}" th:attr="aria-current=${activePage == 'learning'} ? 'page' : null">Learning Hub</a>
+      <a href="/research" th:href="@{/research}" th:attr="aria-current=${activePage == 'research'} ? 'page' : null">Research</a>
+      <a href="/academic-journey" th:href="@{/academic-journey}" th:attr="aria-current=${activePage == 'journey'} ? 'page' : null">Academic Journey</a>
+      <a href="/training-certifications" th:href="@{/training-certifications}" th:attr="aria-current=${activePage == 'training'} ? 'page' : null">Training &amp; Certifications</a>
+      <a class="mobile-contact" href="/#contact" th:href="@{/#contact}">Get in Touch</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-contact" href="/#contact" th:href="@{/#contact}">Get in Touch</a>
+      <button class="menu-toggle" type="button" aria-controls="primary-navigation"
+              aria-expanded="false" aria-label="Open navigation menu">
+        <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="menu-word">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+</body>
+</html>

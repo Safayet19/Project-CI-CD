@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <meta name="description" content="Spring Boot Docker GitHub Actions AWS EC2 Nginx and Terraform practical notes.">
+  <title>DevOps Learning Notes | Safayet Ullah</title>
+  <link rel="icon" type="image/svg+xml" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content">
+<section class="page-intro wrap"><a class="back-link" href="/learning" th:href="@{/learning}">Learning Hub</a><p class="section-label">Cloud &amp; DevOps</p><h1>Deploying a Spring Boot application.</h1><p>Practical notes from working with Java, GitHub Actions, Docker, AWS EC2, Nginx, HTTPS and Terraform in the same learning project.</p></section>
+<section class="section section-tight"><div class="wrap content-narrow"><div class="workflow" aria-label="Deployment workflow"><span>Git push</span><span>GitHub Actions</span><span>Docker Hub</span><span>AWS EC2</span><span>Nginx + HTTPS</span></div>
+<article class="lesson-block"><h2>1. Development and source control</h2><p>Write and test the Spring Boot application in IntelliJ IDEA, then push a meaningful change through Git. The existing project uses a GitHub Actions workflow to automate delivery.</p></article>
+<article class="lesson-block"><h2>2. Container build and delivery</h2><p>The pipeline builds a Docker image and publishes a commit-tagged image to Docker Hub. This ties deployed images to a specific source revision.</p></article>
+<article class="lesson-block"><h2>3. EC2, Nginx and HTTPS</h2><p>The Spring Boot application runs in Docker on Ubuntu EC2. Nginx handles incoming web traffic and HTTPS, while the application container is bound to the host's loopback interface.</p></article>
+<article class="lesson-block"><h2>4. Infrastructure as code</h2><p>Terraform records and manages AWS infrastructure using the existing configuration and S3-backed state. Application content changes do not require running Terraform for every update.</p></article>
+<div class="lab-note"><strong>Learning environment</strong><span>These notes describe the existing project workflow. They are not a deployment trigger and do not change live infrastructure.</span></div></div></section>
+</main>
+</body></html>

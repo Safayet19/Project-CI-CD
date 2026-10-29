@@ -1,0 +1,14 @@
+<!doctype html><html xmlns:th="http://www.thymeleaf.org"><body>
+<article class="pj-card" th:fragment="card(project)" th:attr="data-category=${project.category},data-search=${project.title + ' ' + project.summary + ' ' + #strings.listJoin(project.technologies, ' ')}">
+  <a class="pj-cover" th:classappend="${#strings.isEmpty(project.thumbnail)} ? ' pj-cover-typographic' : ''" th:href="@{/projects/{slug}(slug=${project.slug})}" th:aria-label="${'View details for ' + project.title}">
+    <img th:if="${!#strings.isEmpty(project.thumbnail)}" th:src="@{${project.thumbnail}}" th:alt="${project.title + ' original screenshot'}" loading="lazy">
+    <span class="pj-cover-name" th:if="${#strings.isEmpty(project.thumbnail)}" th:text="${project.title}">Project</span>
+  </a>
+  <div class="pj-card-body"><span class="pj-category" th:text="${project.category}">Category</span>
+    <h3><a th:href="@{/projects/{slug}(slug=${project.slug})}" th:text="${project.title}">Project title</a></h3>
+    <p class="pj-summary" th:text="${project.summary}">Project summary</p>
+    <div class="pj-tags"><span th:each="tech : ${project.technologies}" th:text="${tech}">Tech</span></div>
+    <div class="pj-card-actions"><a class="lp-action" th:href="@{/projects/{slug}(slug=${project.slug})}">View Details <span aria-hidden="true">→</span></a><a class="pj-source" th:if="${!#strings.isEmpty(project.repository)}" th:href="${project.repository}" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a><a class="pj-source" th:if="${!#strings.isEmpty(project.demo)}" th:href="${project.demo}" target="_blank" rel="noopener noreferrer">Live Demo &rarr;</a></div>
+  </div>
+</article>
+</body></html>
