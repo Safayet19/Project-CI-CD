@@ -1944,3 +1944,643 @@ body.subpage .timeline .education-item {
   flex: none;
   color: #26363D;
 }
+
+/* Shared frontend-only Safayet Bot. */
+.safayet-bot {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  color: #26363D;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.safayet-bot-toggle {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 auto;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid #F7F7F4;
+  border-radius: 50%;
+  background: #31534C;
+  box-shadow: 0 10px 28px rgba(38, 54, 61, .24), 0 0 0 1px rgba(49, 83, 76, .2);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.safayet-bot-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 32px rgba(38, 54, 61, .28), 0 0 0 2px rgba(206, 125, 80, .22);
+}
+
+.safayet-bot-toggle img,
+.safayet-bot-avatar img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center top;
+  transform: scale(1.45);
+  transform-origin: 50% 32%;
+}
+
+.safayet-bot-panel {
+  width: min(370px, calc(100vw - 32px));
+  max-height: min(540px, calc(100dvh - 120px));
+  overflow: hidden;
+  border: 1px solid #C5D0C8;
+  border-radius: 18px;
+  background: #F7F7F4;
+  box-shadow: 0 18px 48px rgba(38, 54, 61, .2);
+}
+
+.safayet-bot-header {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: center;
+  padding: 13px 14px;
+  border-bottom: 1px solid #C5D0C8;
+  background: #E3EAE5;
+}
+
+.safayet-bot-avatar {
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+  border: 2px solid #F7F7F4;
+  border-radius: 50%;
+  background: #31534C;
+  box-shadow: 0 2px 8px rgba(38, 54, 61, .12);
+}
+
+.safayet-bot-heading {
+  min-width: 0;
+}
+
+.safayet-bot-heading h2 {
+  margin: 0 0 2px;
+  color: #26363D;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.safayet-bot-heading p {
+  margin: 0;
+  color: #586660;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.safayet-bot-close {
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid #B8C8BF;
+  border-radius: 9px;
+  background: #F7F7F4;
+  color: #43555C;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.safayet-bot-close:hover {
+  border-color: #CE7D50;
+  color: #9D5838;
+}
+
+.safayet-bot-conversation {
+  max-height: 365px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #F3F1EC;
+  scrollbar-width: thin;
+  scrollbar-color: #B8C8BF transparent;
+}
+
+.safayet-bot-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.safayet-bot-message {
+  width: fit-content;
+  max-width: 86%;
+  padding: 10px 12px;
+  border: 1px solid #D5DDD5;
+  border-radius: 13px;
+  box-shadow: 0 2px 7px rgba(38, 54, 61, .04);
+}
+
+.safayet-bot-message p {
+  margin: 0;
+  color: #43555C;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.safayet-bot-message.is-bot {
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  background: #FFFFFF;
+}
+
+.safayet-bot-message.is-bot {
+  overflow-wrap: anywhere;
+}
+
+.safayet-bot-message.is-bot > p {
+  margin: 0 0 .55em;
+}
+
+.safayet-bot-message.is-bot > p:last-child {
+  margin-bottom: 0;
+}
+
+.safayet-bot-message.is-bot h3,
+.safayet-bot-message.is-bot h4,
+.safayet-bot-message.is-bot h5,
+.safayet-bot-message.is-bot h6 {
+  margin: .65em 0 .35em;
+  color: #26363D;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+.safayet-bot-message.is-bot ul,
+.safayet-bot-message.is-bot ol {
+  margin: .35em 0 .65em;
+  padding-inline-start: 1.35em;
+}
+
+.safayet-bot-message.is-bot li {
+  margin-block: .2em;
+}
+
+.safayet-bot-message.is-bot code {
+  padding: .08em .3em;
+  border-radius: 4px;
+  background: #E8EEE9;
+  color: #31534C;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: .92em;
+  overflow-wrap: anywhere;
+}
+
+.safayet-bot-message.is-bot pre {
+  max-width: 100%;
+  margin: .55em 0;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid #D5DDD5;
+  border-radius: 8px;
+  background: #F3F1EC;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.safayet-bot-message.is-bot pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.safayet-bot-message.is-bot a {
+  display: inline;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.safayet-bot-message.is-user {
+  align-self: flex-end;
+  border-color: #31534C;
+  border-bottom-right-radius: 4px;
+  background: #31534C;
+}
+
+.safayet-bot-message.is-user p {
+  color: #FFFFFF;
+}
+
+.safayet-bot-message a {
+  display: inline-flex;
+  margin-top: 7px;
+  color: #A85F3C;
+  font-size: 12.5px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.safayet-bot-suggestions {
+  margin-top: 15px;
+}
+
+.safayet-bot-suggestions > p {
+  margin: 0 0 8px;
+  color: #586660;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.safayet-bot-suggestions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.safayet-bot-suggestions button {
+  min-height: 34px;
+  padding: 7px 11px;
+  border: 1px solid #C5D0C8;
+  border-radius: 999px;
+  background: #E8EEE9;
+  color: #31534C;
+  font-size: 12px;
+  font-weight: 750;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.safayet-bot-suggestions button:hover {
+  border-color: #CE7D50;
+  background: #F5E9E2;
+  color: #9D5838;
+}
+
+.safayet-bot-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #C5D0C8;
+  background: #F7F7F4;
+}
+
+.safayet-bot-form input {
+  min-width: 0;
+  height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #B8C8BF;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #26363D;
+  font-size: 13px;
+}
+
+.safayet-bot-form input::placeholder {
+  color: #75817C;
+}
+
+.safayet-bot-form button {
+  min-height: 42px;
+  padding: 9px 15px;
+  border: 1px solid #31534C;
+  border-radius: 10px;
+  background: #31534C;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.safayet-bot-form button:hover {
+  border-color: #26363D;
+  background: #26363D;
+}
+
+.safayet-bot-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 560px) {
+  .safayet-bot {
+    left: 14px;
+    right: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    align-items: stretch;
+  }
+
+  .safayet-bot-toggle {
+    width: 60px;
+    height: 60px;
+    align-self: flex-end;
+  }
+
+  .safayet-bot-panel {
+    width: 100%;
+    max-height: calc(100dvh - 94px - env(safe-area-inset-bottom));
+    border-radius: 15px;
+  }
+
+  .safayet-bot-conversation {
+    max-height: calc(100dvh - 270px - env(safe-area-inset-bottom));
+    padding: 14px;
+  }
+
+  .safayet-bot-form {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .safayet-bot-toggle,
+  .safayet-bot-suggestions button {
+    transition: none;
+  }
+}
+
+/* Safayet Bot full-screen conversation mode. */
+body.safayet-bot-open {
+  position: fixed;
+  top: var(--safayet-bot-scroll-top, 0);
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.safayet-bot-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.safayet-bot-label {
+  min-height: 42px;
+  padding: 9px 15px;
+  border: 1px solid #C5D0C8;
+  border-radius: 999px;
+  background: #F7F7F4;
+  color: #31534C;
+  box-shadow: 0 7px 20px rgba(38, 54, 61, .14);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: border-color 160ms ease, color 160ms ease, transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.safayet-bot-label:hover {
+  border-color: #CE7D50;
+  color: #9D5838;
+  box-shadow: 0 9px 24px rgba(38, 54, 61, .18);
+  transform: translateY(-1px);
+}
+
+.safayet-bot.is-open {
+  inset: 0;
+  z-index: 1000;
+  display: block;
+}
+
+.safayet-bot.is-open .safayet-bot-launcher {
+  display: none;
+}
+
+.safayet-bot-panel {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  background: #E8EEE9;
+  box-shadow: none;
+}
+
+.safayet-bot-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(820px, 100%);
+  height: 100dvh;
+  margin-inline: auto;
+  border-inline: 1px solid #C5D0C8;
+  background: #F7F7F4;
+  box-shadow: 0 0 38px rgba(38, 54, 61, .12);
+}
+
+.safayet-bot-shell .safayet-bot-header {
+  grid-template-columns: 52px minmax(0, 1fr) 42px;
+  gap: 13px;
+  min-height: 78px;
+  padding: 13px clamp(16px, 4vw, 28px);
+  background: #E3EAE5;
+}
+
+.safayet-bot-shell .safayet-bot-avatar {
+  width: 52px;
+  height: 52px;
+}
+
+.safayet-bot-shell .safayet-bot-heading h2 {
+  font-size: 19px;
+}
+
+.safayet-bot-shell .safayet-bot-heading p {
+  font-size: 13px;
+}
+
+.safayet-bot-shell .safayet-bot-close {
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.safayet-bot-shell .safayet-bot-conversation {
+  max-height: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(22px, 5vw, 42px) clamp(16px, 5vw, 40px);
+}
+
+.safayet-bot-conversation-inner {
+  width: min(680px, 100%);
+  margin-inline: auto;
+}
+
+.safayet-bot-shell .safayet-bot-conversation-inner {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+.safayet-bot-welcome[hidden],
+.safayet-bot-messages[hidden] {
+  display: none;
+}
+
+.safayet-bot-welcome {
+  width: min(560px, 100%);
+  margin: auto;
+  padding-block: 24px;
+  text-align: center;
+  transform: translateY(-4vh);
+}
+
+.safayet-bot-welcome-avatar {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 20px;
+}
+
+.safayet-bot-welcome-greeting {
+  margin: 0 0 5px;
+  color: #A85F3C;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.safayet-bot-welcome h2 {
+  margin: 0;
+  color: #26363D;
+  font-size: clamp(25px, 4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.2;
+}
+
+.safayet-bot-welcome-description {
+  max-width: 470px;
+  margin: 12px auto 0;
+  color: #586660;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestions {
+  margin-top: 28px;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestions > p {
+  margin-bottom: 12px;
+  color: #43555C;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestions > div {
+  justify-content: center;
+  gap: 9px;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestions button {
+  min-height: 40px;
+  padding-inline: 15px;
+  font-size: 13px;
+}
+
+.safayet-bot-shell .safayet-bot-message {
+  max-width: min(82%, 540px);
+  padding: 12px 14px;
+  border-radius: 15px;
+}
+
+.safayet-bot-shell .safayet-bot-message p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.safayet-bot-shell .safayet-bot-suggestions {
+  margin-top: 22px;
+}
+
+.safayet-bot-shell .safayet-bot-form {
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-block: 16px;
+  padding-inline: max(16px, calc((100% - 680px) / 2));
+  background: #F7F7F4;
+}
+
+.safayet-bot-shell .safayet-bot-form input,
+.safayet-bot-shell .safayet-bot-form button {
+  min-height: 46px;
+}
+
+@media (max-width: 560px) {
+  .safayet-bot-launcher {
+    align-self: flex-end;
+  }
+
+  .safayet-bot-label {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .safayet-bot.is-open {
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .safayet-bot-panel {
+    top: var(--safayet-bot-viewport-top, 0);
+    right: 0;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: var(--safayet-bot-viewport-height, 100dvh);
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .safayet-bot-shell {
+    height: var(--safayet-bot-viewport-height, 100dvh);
+    min-height: 0;
+    border-inline: 0;
+  }
+
+  .safayet-bot-shell .safayet-bot-header {
+    min-height: 70px;
+    padding: 10px 14px;
+  }
+
+  .safayet-bot-shell .safayet-bot-avatar {
+    width: 46px;
+    height: 46px;
+  }
+
+  .safayet-bot-shell .safayet-bot-conversation {
+    min-height: 0;
+    max-height: none;
+    padding: 20px 14px;
+  }
+
+  .safayet-bot-welcome {
+    transform: translateY(-2vh);
+  }
+
+  .safayet-bot-welcome .safayet-bot-suggestions > div {
+    gap: 8px;
+  }
+
+  .safayet-bot-shell .safayet-bot-message {
+    max-width: 88%;
+  }
+
+  .safayet-bot-shell .safayet-bot-form {
+    padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .safayet-bot-label {
+    transition: none;
+  }
+}
