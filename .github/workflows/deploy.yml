@@ -40,27 +40,34 @@ jobs:
       # 4. Deploy to AWS EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GROQ_API_KEY
           script: |
             set -e
+
+            # Check secret before replacing the container
+            test -n "$GROQ_API_KEY"
 
             # Pull the new image
             docker pull "${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
-            # Trust forwarded client addresses only from the host-side Docker bridge.
+            # Existing trusted proxy configuration
             TRUSTED_PROXY="$(docker network inspect bridge --format '{{(index .IPAM.Config 0).Gateway}}')"
             test -n "$TRUSTED_PROXY"
 
-            # Remove the old container
+            # Remove old container
             docker rm -f "${{ env.CONTAINER_NAME }}" 2>/dev/null || true
 
-            # Run the updated container
+            # Run updated container
             docker run -d \
               --name "${{ env.CONTAINER_NAME }}" \
               --restart unless-stopped \
+              -e GROQ_API_KEY \
               -e "SAFAYET_BOT_TRUSTEDPROXIES=127.0.0.1,::1,$TRUSTED_PROXY" \
               -p "127.0.0.1:${{ env.APP_PORT }}:8080" \
               "${{ env.IMAGE_NAME }}:${{ github.sha }}"
