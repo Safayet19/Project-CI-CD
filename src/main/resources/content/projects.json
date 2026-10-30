@@ -48,6 +48,95 @@
     ]
   },
   {
+    "slug": "food-mobo-chain",
+    "title": "Food Mobo Chain",
+    "category": "Web Applications",
+    "summary": "Food Mobo Chain is a full-stack food ordering and management platform designed to connect customers with local food carts. It provides food discovery, menu browsing, ordering workflows, seller management, and an administrative dashboard for managing platform operations.",
+    "technologies": [
+      "Java",
+      "Spring Boot",
+      "Spring Security",
+      "Spring Data JPA",
+      "MySQL",
+      "Thymeleaf",
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "thumbnail": "/images/projects/food-mobo-chain/00-admin-dashboard-card.png",
+    "screenshots": [
+      {
+        "image": "/images/projects/food-mobo-chain/01-homepage.png",
+        "caption": "Food Mobo Chain landing page and food-discovery interface"
+      },
+      {
+        "image": "/images/projects/food-mobo-chain/02-admin-dashboard.png",
+        "caption": "Admin dashboard with platform statistics, orders, payments, and management options"
+      },
+      {
+        "image": "/images/projects/food-mobo-chain/03-food-cart-management.png",
+        "caption": "Admin food-cart management with owners, locations, approvals, and actions"
+      }
+    ],
+    "overview": "Food Mobo Chain is a full-stack food ordering and management platform designed to connect customers with local food carts. It provides food discovery, menu browsing, ordering workflows, seller management, and an administrative dashboard for managing platform operations.",
+    "purpose": "Connect customers with local food carts and provide tools for managing food discovery, ordering, seller activity, and platform operations.",
+    "features": [
+      "Food discovery and food-cart browsing",
+      "Food menus, categories, and ordering workflows",
+      "Customer and seller account management",
+      "Seller food-item management",
+      "Admin dashboard with platform statistics",
+      "Food-cart approval and suspension management",
+      "Order management, payment tracking, and promotional offers"
+    ],
+    "architecture": "Java and Spring Boot web application with Thymeleaf views, Spring Security, Spring Data JPA, and MySQL persistence.",
+    "challenges": [],
+    "repository": "https://github.com/Safayet19/Food-Mobo-Chain",
+    "demo": "",
+    "relatedLearning": []
+  },
+  {
+    "slug": "afsos-nama",
+    "title": "Afsos Nama",
+    "category": "Web Applications",
+    "summary": "Afsos Nama is a student-focused reflection and personal improvement platform designed to help students record their semester experiences, recognize recurring mistakes, and turn lessons learned into meaningful actions. It provides a private workspace for tracking reflections, identifying patterns, and setting personal improvement goals.",
+    "technologies": [
+      "Java",
+      "Spring Boot",
+      "Spring Security",
+      "Spring Data JPA",
+      "MySQL",
+      "Thymeleaf",
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "thumbnail": "/images/projects/afsos-nama/01-login-dashboard.png",
+    "screenshots": [
+      {
+        "image": "/images/projects/afsos-nama/01-login-dashboard.png",
+        "caption": "Afsos Nama login page, branding, and reflection dashboard preview"
+      }
+    ],
+    "overview": "Afsos Nama is a student-focused reflection and personal improvement platform designed to help students record their semester experiences, recognize recurring mistakes, and turn lessons learned into meaningful actions. It provides a private workspace for tracking reflections, identifying patterns, and setting personal improvement goals.",
+    "purpose": "Give students a private space to reflect on semester experiences, learn from recurring mistakes, and track practical improvement goals.",
+    "features": [
+      "Secure student registration and login",
+      "Private personal reflection and confession tracking",
+      "Semester-based activity management",
+      "Reviewing recurring patterns and mistakes",
+      "Creating and tracking personal improvement promises",
+      "Personal dashboard and progress insights",
+      "Optional anonymous sharing with moderation",
+      "Administrative review and management functionality"
+    ],
+    "architecture": "Java and Spring Boot web application using Spring Security, Spring Data JPA, and MySQL, with Thymeleaf-rendered pages and HTML, CSS, and JavaScript for the interface.",
+    "challenges": [],
+    "repository": "https://github.com/Safayet19/afsos_nama",
+    "demo": "https://afsos-nama.onrender.com/",
+    "relatedLearning": []
+  },
+  {
     "slug": "student-excuse",
     "title": "Student Excuse Generator",
     "category": "Desktop Applications",

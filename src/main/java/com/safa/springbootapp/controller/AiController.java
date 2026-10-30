@@ -45,10 +45,13 @@ public class AiController {
     private static final String MODEL = "openai/gpt-oss-20b";
     private static final int MAX_MESSAGE_LENGTH = 500;
     private static final int MAX_HISTORY_TURNS = 6;
-    private static final int MAX_HISTORY_CONTENT_LENGTH = 1200;
+    private static final int MAX_HISTORY_CONTENT_LENGTH = 40000;
+    private static final int MAX_HISTORY_CONTEXT_CHARS = 7200;
+    private static final int MAX_SITE_CONTEXT_CHARS = 24000;
+    private static final int MAX_LINK_CONTEXT_CHARS = 1200;
     private static final int MAX_BURST_REQUESTS = 20;
     private static final long RATE_LIMIT_WINDOW_MILLIS = Duration.ofSeconds(10).toMillis();
-    private static final int MAX_SITE_PAGES = 6;
+    private static final int MAX_SITE_PAGES = 7;
     private static final int MAX_SITE_CONTENT_LENGTH = 14000;
     private static final int MAX_VERIFIED_LINKS = 60;
     private static final Pattern UPSTREAM_ERROR_CODE_PATTERN =
@@ -59,6 +62,27 @@ public class AiController {
         Pattern.compile("\\[([^\\]]+)]\\(([^)\\s]+)\\)");
     private static final Pattern SAFAYET_NAME_VARIANT_PATTERN =
         Pattern.compile("\\b(?:safate|safayte)\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PROFILE_QUESTION_PATTERN = Pattern.compile(
+        "(?is).*(?:\\bwho\\s+is\\s+(?:safayet(?:\\s+ullah)?|him|he)\\b"
+            + "|\\btell\\s+me\\s+(?:more\\s+)?about\\s+(?:safayet(?:\\s+ullah)?|him|he)\\b"
+            + "|\\bpersonal\\s+(?:background|profile)\\b).*");
+    private static final Pattern FULL_RESEARCH_RECORDS_PATTERN = Pattern.compile(
+        "(?is).*(?:\\b(?:papers?|publications?)\\b.*\\b(?:all|every|list|show|status|published|accepted|pending|review|author|count|many)\\b"
+            + "|\\b(?:all|every|list|show|status|published|accepted|pending|review|author|count|many)\\b.*\\b(?:papers?|publications?)\\b"
+            + "|\\bhow\\s+many\\s+(?:research\\s+)?papers?\\b).*");
+    private static final Pattern RESEARCH_FOLLOW_UP_PATTERN =
+        Pattern.compile("(?is).*\\b(?:them|those|these|which|accepted|published|pending|under\\s+review|how\\s+many)\\b.*");
+    private static final Pattern ACADEMIC_QUESTION_PATTERN = Pattern.compile(
+        "(?is).*(?:\\b(?:education|academic|university|degree|bsc|cgpa|gpa|batch|semester|courses?|credits?|grades?|term|spring|summer|fall|hsc|ssc|school|college|student|study|studied|studying|qualification|result)\\b"
+            + "|\\bcse\\d{3}\\b).*");
+    private static final Set<String> CONTEXT_STOP_WORDS = Set.of(
+        "about", "after", "again", "and", "are", "can", "does", "for", "from", "have", "him",
+        "his", "how", "into", "its", "more", "please", "safayet", "tell", "that", "the", "their",
+        "them", "there", "these", "this", "those", "ullah", "was", "what", "when", "where", "which",
+        "who", "with", "would", "you"
+    );
+    private static final Set<String> CONTACT_TERMS =
+        Set.of("contact", "email", "linkedin", "facebook", "instagram", "whatsapp", "phone");
     private static final Pattern HTML_BREAK_PATTERN =
         Pattern.compile("<br\\s*/?>", Pattern.CASE_INSENSITIVE);
     private static final Pattern OVER_EMPHASIZED_PATTERN =
@@ -135,15 +159,20 @@ public class AiController {
         Resolve follow-up wording such as "him", "his", "that project", and "those papers" from the recent
         conversation, including their Bangla and Banglish equivalents. A personal question about Safayet Ullah is
         not a question about Safayet Bot.
-        Answer only from the supplied snapshots of actual public website pages. They are the sole source of
-        facts, tutorials, project details, and navigation; never use outside knowledge or infer missing details.
+        Answer only from supplied snapshots of actual public website pages and verified structured records derived
+        directly from the website's existing public content. They are the sole source of facts, tutorials, project
+        details, and navigation; never use outside knowledge or infer missing details.
         If the requested topic or detail is not supported by those pages, say that it is not available on Safayet's
         website yet in the response language. Do not use that fallback for questions about Safayet Bot's identity
         or role, greetings, or harmless conversational acknowledgements.
         Use the current page snapshot first for relevant questions, then other supplied page snapshots as needed.
         Answer the specific question and omit unrelated page information. Turn structured page fields into natural,
-        readable prose instead of repeating labels such as "Category" or "Details". Keep normal answers to a few
-        short paragraphs; use clean bullets only for a useful list of parallel items, and expand only when asked.
+        readable prose instead of repeating labels such as "Category" or "Details". Match the depth to the request:
+        give broad questions a substantive, well-organized answer based on all relevant supplied pages; explain
+        specific topics with the available supporting details; and include every relevant available record when
+        the visitor requests a list, complete set, or comparison. Do not replace concrete facts with generic
+        summaries or omit relevant records merely to shorten a response. Keep simple factual and conversational
+        replies direct, but do not impose a fixed response length.
         Use plain text or simple Markdown only: never output HTML or <br> tags, put each list marker and its text on
         the same line, and use only one pair of ** markers for bold text. Apply these rules consistently to every
         website topic, including Projects, Research, Learning Hub, About, and academic information.
@@ -328,14 +357,33 @@ public class AiController {
         }
     }
 
-    private static List<GroqMessage> buildMessages(ChatRequest request) {
+    static List<GroqMessage> buildMessages(ChatRequest request) {
         List<GroqMessage> messages = new ArrayList<>();
         messages.add(new GroqMessage("system", systemContext(request)));
-        if (request.history() != null) {
-            request.history().forEach(turn -> messages.add(new GroqMessage(turn.role(), turn.content())));
-        }
+        recentHistory(request.history()).forEach(turn ->
+            messages.add(new GroqMessage(turn.role(), turn.content())));
         messages.add(new GroqMessage("user", normalizeKnownNames(request.message()).trim()));
         return messages;
+    }
+
+    static List<ChatTurn> recentHistory(List<ChatTurn> history) {
+        if (history == null || history.isEmpty()) return List.of();
+        ArrayDeque<ChatTurn> retained = new ArrayDeque<>();
+        int contentLength = 0;
+        int turnLimit = Math.min(history.size(), MAX_HISTORY_TURNS);
+        for (int index = history.size() - 1; index >= history.size() - turnLimit; index--) {
+            ChatTurn turn = history.get(index);
+            int remaining = MAX_HISTORY_CONTEXT_CHARS - contentLength;
+            if (remaining <= 0) break;
+            boolean truncated = turn.content().length() > remaining;
+            String content = truncated
+                ? turn.content().substring(0, remaining) : turn.content();
+            turn = new ChatTurn(turn.role(), content);
+            retained.addFirst(turn);
+            contentLength += content.length();
+            if (truncated) break;
+        }
+        return List.copyOf(retained);
     }
 
     static String normalizeKnownNames(String message) {
@@ -390,26 +438,211 @@ public class AiController {
         StringBuilder context = new StringBuilder(SYSTEM_INSTRUCTION);
         context.append("\n\nCURRENT PAGE: ")
             .append(request.pagePath() == null ? "not provided" : request.pagePath()).append("\n")
-            .append("PUBLIC WEBSITE PAGE SNAPSHOTS (page path, title, then visible page text):\n");
-        if (request.pages() != null) {
-            for (SitePage page : request.pages()) {
-                context.append("\n--- PAGE ").append(page.path()).append(" | ")
-                    .append(page.title()).append(" ---\n")
-                    .append(page.content()).append('\n');
-            }
+            .append("RELEVANT PUBLIC WEBSITE EXCERPTS:\n");
+
+        List<SitePage> pages = request.pages() == null ? List.of() : request.pages();
+        boolean fullResearchRecords = needsFullResearchRecords(request);
+        boolean academicQuestion = needsAcademicRecords(request);
+        List<SitePage> selectedPages = selectRelevantPages(request, pages, fullResearchRecords);
+        int remaining = MAX_SITE_CONTEXT_CHARS;
+        if (academicQuestion && remaining > 100) {
+            String header = "\n--- VERIFIED ACADEMIC RECORDS FROM THE PUBLIC ACADEMIC JOURNEY ---\n";
+            String academic = JourneyController.academicKnowledge(questionWithRecentContext(request));
+            context.append(header).append(academic).append('\n');
+            remaining -= header.length() + academic.length() + 1;
         }
-        context.append("\nVERIFIED PUBLIC LINKS (use exact URLs only):\n");
-        if (request.links() != null) {
-            for (VerifiedLink link : request.links()) {
-                context.append("- ").append(link.label()).append(": ").append(link.url()).append('\n');
-            }
+        if (fullResearchRecords && remaining > 100) {
+            String header = "\nCALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE:\n";
+            String records = researchKnowledge();
+            context.append(header).append(records).append('\n');
+            remaining -= header.length() + records.length() + 1;
         }
-        if (request.pages() != null
-            && request.pages().stream().anyMatch(page -> "/research".equals(page.path()))) {
-            context.append("\nCALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE:\n")
-                .append(researchKnowledge());
+        for (int index = 0; index < selectedPages.size(); index++) {
+            SitePage page = selectedPages.get(index);
+            int slotsRemaining = selectedPages.size() - index;
+            String header = "\n--- PAGE " + page.path() + " | " + page.title() + " ---\n";
+            int excerptLimit = Math.max(0, remaining / slotsRemaining - header.length() - 1);
+            String excerpt = pageExcerpt(page, excerptLimit);
+            if (excerpt.isBlank()) continue;
+            context.append(header).append(excerpt).append('\n');
+            remaining -= header.length() + excerpt.length() + 1;
+        }
+        if (request.links() != null && !request.links().isEmpty() && remaining > 100) {
+            List<VerifiedLink> selectedLinks = selectRelevantLinks(request, request.links(),
+                fullResearchRecords, Math.min(MAX_LINK_CONTEXT_CHARS, remaining));
+            if (!selectedLinks.isEmpty()) {
+                String linkHeader = "\nVERIFIED PUBLIC LINKS (use exact URLs only):\n";
+                context.append(linkHeader);
+                int linkChars = 0;
+                for (VerifiedLink link : selectedLinks) {
+                    String line = "- " + link.label() + ": " + link.url() + "\n";
+                    if (linkChars + line.length() > Math.min(MAX_LINK_CONTEXT_CHARS,
+                        remaining - linkHeader.length())) break;
+                    context.append(line);
+                    linkChars += line.length();
+                }
+            }
         }
         return context.toString();
+    }
+
+    private static List<SitePage> selectRelevantPages(ChatRequest request, List<SitePage> pages,
+                                                       boolean fullResearchRecords) {
+        if (pages.isEmpty()) return List.of();
+        boolean broadProfile = PROFILE_QUESTION_PATTERN.matcher(normalizeKnownNames(request.message())).matches();
+        List<SitePage> candidates = pages.stream()
+            .filter(page -> !fullResearchRecords || !"/research".equals(page.path()))
+            .toList();
+        if (broadProfile) {
+            List<String> profileOrder = List.of(
+                "/", "/about", "/academic-journey", "/projects", "/research", "/training-certifications");
+            return candidates.stream()
+                .sorted(java.util.Comparator.comparing((SitePage page) ->
+                        !page.path().equals(request.pagePath()))
+                    .thenComparingInt(page -> profileOrder.indexOf(page.path()) < 0
+                        ? profileOrder.size() : profileOrder.indexOf(page.path())))
+                .limit(MAX_SITE_PAGES)
+                .toList();
+        }
+
+        Set<String> currentTerms = contextTerms(request.message());
+        Set<String> priorTerms = recentUserTerms(request.history());
+        return candidates.stream()
+            .map(page -> new ScoredPage(page, pageRelevance(page, currentTerms, priorTerms,
+                page.path().equals(request.pagePath()))))
+            .filter(scored -> scored.score() > 1)
+            .sorted(java.util.Comparator
+                .comparing((ScoredPage scored) -> !scored.page().path().equals(request.pagePath()))
+                .thenComparing(java.util.Comparator.comparingInt(ScoredPage::score).reversed()))
+            .limit(4)
+            .map(ScoredPage::page)
+            .toList();
+    }
+
+    private static int pageRelevance(SitePage page, Set<String> currentTerms, Set<String> priorTerms,
+                                     boolean currentPage) {
+        String metadata = (page.path() + " " + page.title()).toLowerCase(Locale.ROOT);
+        int score = currentPage ? 1 : 0;
+        for (String term : currentTerms) {
+            if (metadata.contains(term)) score += 5;
+        }
+        for (String term : priorTerms) {
+            if (metadata.contains(term)) score += 1;
+        }
+        List<String> chunks = contentChunks(page.content());
+        for (String chunk : chunks) {
+            score = Math.max(score, chunkRelevance(chunk, currentTerms, priorTerms));
+        }
+        return score;
+    }
+
+    private static String pageExcerpt(SitePage page, int maxLength) {
+        if (maxLength <= 0) return "";
+        return page.content().substring(0, Math.min(page.content().length(), maxLength));
+    }
+
+    private static List<String> contentChunks(String content) {
+        List<String> chunks = new ArrayList<>();
+        for (String sentence : content.split("(?<=[.!?])\\s+|\\s*[|•]\\s*")) {
+            String remaining = sentence.trim();
+            while (remaining.length() > 420) {
+                int boundary = remaining.lastIndexOf(' ', 420);
+                if (boundary < 180) boundary = 420;
+                chunks.add(remaining.substring(0, boundary).trim());
+                remaining = remaining.substring(boundary).trim();
+            }
+            if (!remaining.isEmpty()) chunks.add(remaining);
+        }
+        return chunks;
+    }
+
+    private static int chunkRelevance(String chunk, Set<String> currentTerms, Set<String> priorTerms) {
+        String normalized = chunk.toLowerCase(Locale.ROOT);
+        int score = 0;
+        for (String term : currentTerms) {
+            if (normalized.contains(term)) score += 3;
+        }
+        for (String term : priorTerms) {
+            if (!currentTerms.contains(term) && normalized.contains(term)) score++;
+        }
+        return score;
+    }
+
+    private static Set<String> contextTerms(String text) {
+        return java.util.Arrays.stream(text.toLowerCase(Locale.ROOT)
+                .replaceAll("[^\\p{L}\\p{N}+#./-]+", " ").trim().split("\\s+"))
+            .map(term -> term.replaceAll("^[./-]+|[./-]+$", ""))
+            .filter(term -> term.length() >= 3 && !CONTEXT_STOP_WORDS.contains(term))
+            .collect(java.util.stream.Collectors.toUnmodifiableSet());
+    }
+
+    private static Set<String> recentUserTerms(List<ChatTurn> history) {
+        if (history == null) return Set.of();
+        List<ChatTurn> userTurns = history.stream()
+            .filter(turn -> "user".equals(turn.role()))
+            .toList();
+        return userTurns.stream()
+            .skip(Math.max(0, userTurns.size() - 2))
+            .flatMap(turn -> contextTerms(turn.content()).stream())
+            .collect(java.util.stream.Collectors.toUnmodifiableSet());
+    }
+
+    private static boolean needsFullResearchRecords(ChatRequest request) {
+        String currentQuestion = normalizeKnownNames(request.message());
+        if (FULL_RESEARCH_RECORDS_PATTERN.matcher(currentQuestion).matches()) return true;
+        if (!RESEARCH_FOLLOW_UP_PATTERN.matcher(currentQuestion).matches()) return false;
+        String previousQuestion = lastUserMessage(request.history());
+        if (previousQuestion == null
+            || !previousQuestion.toLowerCase(Locale.ROOT).matches("(?s).*\\b(?:research|papers?|publications?)\\b.*")) {
+            return false;
+        }
+        return FULL_RESEARCH_RECORDS_PATTERN.matcher(previousQuestion + " " + currentQuestion).matches();
+    }
+
+    private static boolean needsAcademicRecords(ChatRequest request) {
+        return ACADEMIC_QUESTION_PATTERN.matcher(questionWithRecentContext(request)).matches();
+    }
+
+    private static String questionWithRecentContext(ChatRequest request) {
+        return normalizeKnownNames(request.message()) + " " + String.join(" ", recentUserTerms(request.history()));
+    }
+
+    private static String lastUserMessage(List<ChatTurn> history) {
+        if (history == null) return null;
+        for (int index = history.size() - 1; index >= 0; index--) {
+            if ("user".equals(history.get(index).role())) return history.get(index).content();
+        }
+        return null;
+    }
+
+    private static List<VerifiedLink> selectRelevantLinks(ChatRequest request, List<VerifiedLink> links,
+                                                           boolean fullResearchRecords, int maxChars) {
+        Set<String> terms = contextTerms(questionWithRecentContext(request));
+        List<VerifiedLink> selected = new ArrayList<>();
+        int used = 0;
+        for (VerifiedLink link : links) {
+            String text = (link.label() + " " + link.url()).toLowerCase(Locale.ROOT);
+            boolean topical = terms.stream().anyMatch(text::contains);
+            boolean researchRecord = fullResearchRecords && link.url().startsWith("https://doi.org/");
+            boolean contactRequest = terms.stream().anyMatch(CONTACT_TERMS::contains)
+                && (text.contains("mail") || text.contains("linkedin") || text.contains("facebook")
+                    || text.contains("instagram") || text.contains("whatsapp"));
+            if (!topical && !researchRecord && !contactRequest) continue;
+            int length = link.label().length() + link.url().length() + 5;
+            if (used + length > maxChars) continue;
+            selected.add(link);
+            used += length;
+            if (selected.size() >= 12) break;
+        }
+        for (VerifiedLink link : links) {
+            if (selected.contains(link)) continue;
+            int length = link.label().length() + link.url().length() + 5;
+            if (used + length > maxChars) continue;
+            selected.add(link);
+            used += length;
+            if (selected.size() >= 12) break;
+        }
+        return List.copyOf(selected);
     }
 
     private static boolean validSiteContext(ChatRequest request) {
@@ -687,8 +920,9 @@ public class AiController {
         }
     }
 
-    private record GroqRequest(String model, List<GroqMessage> messages) {}
-    private record GroqMessage(String role, String content) {}
+    record GroqRequest(String model, List<GroqMessage> messages) {}
+    private record ScoredPage(SitePage page, int score) {}
+    record GroqMessage(String role, String content) {}
     private record GroqChoice(GroqMessage message) {}
     private record GroqResponse(List<GroqChoice> choices) {}
 

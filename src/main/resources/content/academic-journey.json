@@ -1,7 +1,7 @@
 {
   "university": {
     "name": "Southeast University",
-    "degree": "Bachelor of Science in Computer Science & Engineering",
+    "degree": "Program: B.Sc. in Computer Science & Engineering",
     "period": "2023 – Present",
     "logo": "/images/education/southeast-university.webp",
     "introduction": "Four years of learning, building, memorable experiences, and personal growth at Southeast University."
@@ -13,8 +13,8 @@
       "note": "Cumulative academic performance"
     },
     {
-      "label": "Batch Position",
-      "value": "1st in Batch",
+      "label": "Academic Standing",
+      "value": "1st Rank in Batch",
       "note": "Current standing"
     }
   ],
@@ -22,13 +22,21 @@
     {
       "number": 1,
       "label": "Year 1",
+      "focus": "Building My Foundations",
       "semesters": [
         {
           "number": 1,
-          "term": "",
+          "term": "Spring 2023",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 12,
+          "courses": [
+            {"code": "ACT141", "name": "Introduction to Accounting", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE141", "name": "Computer Fundamentals", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ENG101", "name": "Basic English Skills", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "MAT141", "name": "Differential & Integral Calculus", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "My undergraduate journey began with Computer Fundamentals, where I developed an understanding of computing concepts and computer systems. Differential and Integral Calculus strengthened my mathematical foundations, while English and Accounting helped build my communication and analytical skills.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -36,10 +44,18 @@
         },
         {
           "number": 2,
-          "term": "",
+          "term": "Summer 2023",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "3.94",
+          "completedCredits": 13,
+          "courses": [
+            {"code": "CSE161", "name": "Programming Language I", "credits": 3, "gradePoint": "3.75", "grade": "A"},
+            {"code": "CSE162", "name": "Programming Language I Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ENG102", "name": "Intermediate English Skills", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "MAT161", "name": "Coordinate Geometry and Vector Analysis", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "PHY161", "name": "Physics I", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "This semester introduced me to practical programming through Programming Language I and its laboratory. I started developing programming logic and problem-solving skills while strengthening my understanding of physics, coordinate geometry, and vector analysis.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -47,10 +63,19 @@
         },
         {
           "number": 3,
-          "term": "",
+          "term": "Fall 2023",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 14,
+          "courses": [
+            {"code": "CSE181", "name": "Discrete Mathematics", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "EEE181", "name": "Electrical Circuits Design I", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "EEE182", "name": "Electrical Circuits Design I Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ENG103", "name": "Advanced English Skills", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "PHY181", "name": "Physics II", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "PHY182", "name": "Physics II Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "Discrete Mathematics strengthened my logical reasoning and mathematical problem-solving abilities. Electrical Circuits Design and Physics II introduced important engineering concepts, while their laboratory courses provided practical experience with physical and electrical systems.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -61,13 +86,23 @@
     {
       "number": 2,
       "label": "Year 2",
+      "focus": "Strengthening My Core Technical Skills",
       "semesters": [
         {
           "number": 4,
-          "term": "",
+          "term": "Spring 2024",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 14,
+          "courses": [
+            {"code": "CSE241", "name": "Data Structures", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE242", "name": "Data Structures Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "EEE241", "name": "Electronic Devices & Circuits I", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "EEE242", "name": "Electronic Devices & Circuits I Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "MAT241", "name": "Complex Variables and Transforms (Laplace & Fourier)", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "MGT281", "name": "Introduction to Business & Management", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "Data Structures helped me understand how information can be organized, accessed, and managed efficiently. Electronic Devices & Circuits introduced hardware principles, while Complex Variables and Transforms developed my mathematical knowledge. Business and Management provided an additional perspective on organizational processes.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -75,10 +110,19 @@
         },
         {
           "number": 5,
-          "term": "",
+          "term": "Summer 2024",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 14,
+          "courses": [
+            {"code": "CSE263", "name": "Digital Logic Design", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE264", "name": "Digital Logic Design Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE265", "name": "Algorithm", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE266", "name": "Algorithm Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "MAT261", "name": "Linear Algebra and Matrices", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "STA281", "name": "Statistical Methods & Probability", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "This semester strengthened my understanding of algorithms, digital logic, and mathematical foundations for computing. Algorithm and its laboratory developed my knowledge of computational problem-solving, while Digital Logic Design introduced the principles of digital circuits. Linear Algebra, Matrices, and Probability provided essential mathematical tools for more advanced computing topics.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -86,10 +130,17 @@
         },
         {
           "number": 6,
-          "term": "",
+          "term": "Fall 2024",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 12,
+          "courses": [
+            {"code": "CSE261", "name": "Numerical Methods", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE343", "name": "Computer Architecture", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ETE281", "name": "Communication Theory", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "SOC341", "name": "Engineering Ethics", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "Numerical Methods introduced computational approaches to solving mathematical problems, while Computer Architecture helped me understand how processors, memory, and other hardware components work together. Communication Theory developed my understanding of information transmission, and Engineering Ethics emphasized responsibility in professional engineering practice.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -100,13 +151,22 @@
     {
       "number": 3,
       "label": "Year 3",
+      "focus": "Software Development, AI & Database Systems",
       "semesters": [
         {
           "number": 7,
-          "term": "",
+          "term": "Spring 2025",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 13,
+          "courses": [
+            {"code": "CSE281", "name": "Introduction to Programming Language II (Java)", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE282", "name": "Introduction to Programming Language II (Java) Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE359", "name": "Graph Theory", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE475", "name": "Management Information System", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ECO461", "name": "Introduction to Economics", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "This semester introduced me to Java programming through Programming Language II and its laboratory, expanding my understanding of object-oriented programming. Graph Theory strengthened my ability to analyze relationships and connected structures, while Management Information System and Economics provided a broader understanding of technology in organizations and decision-making.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -114,10 +174,19 @@
         },
         {
           "number": 8,
-          "term": "",
+          "term": "Summer 2025",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 14,
+          "courses": [
+            {"code": "CSE341", "name": "Computer Networking", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE345", "name": "Information System Design & Software Engineering", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE365", "name": "Artificial Intelligence", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE383", "name": "Database Design", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE384", "name": "Database Design Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ETE282", "name": "Communication Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "This semester brought together several important areas of modern computing. Computer Networking introduced network communication and protocols, while Software Engineering developed my understanding of designing and maintaining software systems. Artificial Intelligence introduced intelligent computational techniques, and Database Design strengthened my knowledge of data modeling, queries, and database management.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -125,10 +194,19 @@
         },
         {
           "number": 9,
-          "term": "",
+          "term": "Fall 2025",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 14,
+          "courses": [
+            {"code": "CSE342", "name": "Computer Networking Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE353", "name": "Introduction to Data Mining", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE363", "name": "Microprocessor Design & Assembly Language Programming", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE364", "name": "Microprocessor Design & Assembly Language Programming Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE441", "name": "Theory of Computing", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "ENG105", "name": "Public Speaking", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "Introduction to Data Mining introduced methods for discovering useful patterns and knowledge from data. Microprocessor Design and Assembly Language Programming developed my understanding of low-level computing, while Theory of Computing strengthened my knowledge of formal languages and computational models. Networking Lab and Public Speaking further developed my practical and communication skills.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -139,13 +217,22 @@
     {
       "number": 4,
       "label": "Year 4",
+      "focus": "Advanced Systems, Security & Software Engineering",
       "semesters": [
         {
           "number": 10,
-          "term": "",
+          "term": "Spring 2026",
           "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 13,
+          "courses": [
+            {"code": "CSE361", "name": "Operating Systems", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE362", "name": "Operating Systems Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE381", "name": "Introduction to Embedded Systems", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE443", "name": "Computer Graphics & Animation", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE479", "name": "Cryptography & Network Security", "credits": 3, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "Operating Systems developed my understanding of process management, memory, scheduling, and system resources. Introduction to Embedded Systems introduced the interaction between hardware and software, while Computer Graphics & Animation explored techniques for generating and manipulating visual content. Cryptography & Network Security strengthened my understanding of information protection and secure communication.",
           "projects": [],
           "memories": [],
           "achievements": [],
@@ -153,21 +240,20 @@
         },
         {
           "number": 11,
-          "term": "",
+          "term": "Summer 2026",
           "status": "",
-          "courses": [],
-          "learning": "",
-          "projects": [],
-          "memories": [],
-          "achievements": [],
-          "reflection": ""
-        },
-        {
-          "number": 12,
-          "term": "",
-          "status": "",
-          "courses": [],
-          "learning": "",
+          "gpa": "4.00",
+          "completedCredits": 11,
+          "courses": [
+            {"code": "CSE346", "name": "Information System Design & Software Engineering Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE347", "name": "Advanced Networking", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE348", "name": "Advanced Networking Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE351", "name": "Advanced Java", "credits": 3, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE352", "name": "Advanced Java Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE382", "name": "Introduction to Embedded Systems Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"},
+            {"code": "CSE444", "name": "Computer Graphics & Animation Lab", "credits": 1, "gradePoint": "4.00", "grade": "A+"}
+          ],
+          "learning": "This semester focused on advanced programming, networking, embedded systems, and practical software engineering. Advanced Java and its laboratory developed my understanding of enterprise application development concepts, while Advanced Networking explored more complex network technologies and configurations. The software engineering, embedded systems, and computer graphics laboratories strengthened my ability to apply technical knowledge through practical implementation. My broader development work has also involved Spring Boot, databases, DevOps automation, cloud infrastructure, and AI/ML research, connecting my academic knowledge with practical software and research experience.",
           "projects": [],
           "memories": [],
           "achievements": [],

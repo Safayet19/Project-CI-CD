@@ -260,7 +260,7 @@
   const pageSnapshotCache = new Map();
   let verifiedLinkLabels = new Map();
   let verifiedLinkUrls = new Set();
-  const maxSitePages = 6;
+  const maxSitePages = 7;
   const maxSiteContentLength = 14000;
   const knowledgeHubPaths = [
     '/', '/about', '/academic-journey', '/projects', '/research', '/learning',
@@ -375,7 +375,7 @@
       const text = node.textContent.trim();
       if (text) output.push(text);
     }
-    return output.join(' ').replace(/\s+/g, ' ').trim().slice(0, 5000);
+    return output.join(' ').replace(/\s+/g, ' ').trim().slice(0, maxSiteContentLength);
   }
 
   function pageLinks(documentToRead, sourcePath) {
@@ -412,7 +412,8 @@
     const broadProfile = includes(/\b(?:who\s+is|tell\s+me\s+(?:more\s+)?about|about)\s+(?:safayet(?:\s+ullah)?|him|he)\b|\bpersonal\s+(?:background|profile)\b/);
 
     if (broadProfile) {
-      ['/', '/about', '/academic-journey', '/projects', '/research'].forEach(path => paths.add(path));
+      ['/', '/about', '/academic-journey', '/projects', '/research', '/training-certifications']
+        .forEach(path => paths.add(path));
     }
     if (includes(/\b(?:education|academic|qualification|university|degree|bsc|cgpa|gpa|batch|hsc|ssc|college|school)\b/)) {
       paths.add('/about');
@@ -459,6 +460,41 @@
     return terms.reduce((score, term) => score
       + (title.includes(term) ? 4 : 0)
       + (content.includes(term) ? 1 : 0), 0);
+  }
+
+  function relevantPageExcerpt(content, terms, maxLength) {
+    if (content.length <= maxLength) return content;
+    const chunks = [];
+    content.split(/(?<=[.!?])\s+|\s*[|•]\s*/).forEach(sentence => {
+      let remaining = sentence.trim();
+      while (remaining.length > 420) {
+        let boundary = remaining.lastIndexOf(' ', 420);
+        if (boundary < 180) boundary = 420;
+        chunks.push(remaining.slice(0, boundary).trim());
+        remaining = remaining.slice(boundary).trim();
+      }
+      if (remaining) chunks.push(remaining);
+    });
+    if (!chunks.length) return content.slice(0, maxLength);
+
+    const ranked = chunks.map((chunk, index) => ({
+      chunk,
+      index,
+      score: queryTerms(chunk).reduce((score, term) => score
+        + (terms.includes(term) ? 1 : 0), 0)
+    })).sort((left, right) => right.score - left.score || left.index - right.index);
+    const selected = new Set([0]);
+    let used = chunks[0].length;
+    for (const candidate of ranked) {
+      if (candidate.score === 0 || selected.has(candidate.index)) continue;
+      const additionalLength = candidate.chunk.length + (used ? 1 : 0);
+      if (used + additionalLength > maxLength) continue;
+      selected.add(candidate.index);
+      used += additionalLength;
+    }
+    if (used > maxLength) return chunks[0].slice(0, maxLength);
+    return [...selected].sort((left, right) => left - right)
+      .map(index => chunks[index]).join(' ');
   }
 
   async function fetchPageSnapshot(path) {
@@ -519,15 +555,10 @@
     };
     routedPaths.forEach(path => addSnapshot(catalog.find(snapshot => snapshot.page.path === path)));
 
-    const terms = queryTerms(message);
-    catalog.filter(snapshot => !selected.has(snapshot.page.path))
-      .map(snapshot => ({ snapshot, score: pageRelevance(snapshot, terms) }))
-      .filter(match => match.score > 0)
-      .sort((left, right) => right.score - left.score)
-      .slice(0, 2)
-      .forEach(match => addSnapshot(match.snapshot));
-
-    const normalizedQuestion = normalizedSearchText(message);
+    const normalizedQuestion = normalizedSearchText([
+      ...conversationHistory.slice(-2).map(turn => turn.content),
+      message
+    ].join(' '));
     const matchingDetailPaths = catalog.flatMap(snapshot => snapshot.links)
       .filter(link => link.url.startsWith('/') && !selected.has(link.url))
       .filter(link => {
@@ -540,6 +571,14 @@
       .slice(0, 2);
     const detailSnapshots = await Promise.all(matchingDetailPaths.map(fetchPageSnapshot));
     detailSnapshots.forEach(addSnapshot);
+
+    const terms = queryTerms(normalizedQuestion);
+    catalog.filter(snapshot => !selected.has(snapshot.page.path))
+      .map(snapshot => ({ snapshot, score: pageRelevance(snapshot, terms) }))
+      .filter(match => match.score > 0)
+      .sort((left, right) => right.score - left.score)
+      .slice(0, maxSitePages - selected.size)
+      .forEach(match => addSnapshot(match.snapshot));
     const snapshots = [...selected.values()];
 
     const verified = new Map();
@@ -560,7 +599,10 @@
     for (const { page } of snapshots) {
       const room = maxSiteContentLength - totalLength;
       if (room <= page.title.length + 100) break;
-      const content = page.content.slice(0, Math.min(5000, room - page.title.length));
+      const slotsRemaining = snapshots.length - contextPages.length;
+      const excerptLimit = Math.min(maxSiteContentLength,
+        Math.max(0, Math.floor((room - page.title.length) / slotsRemaining)));
+      const content = relevantPageExcerpt(page.content, terms, excerptLimit);
       contextPages.push({ ...page, content });
       totalLength += page.path.length + page.title.length + content.length;
     }
@@ -854,7 +896,7 @@
 
       conversationHistory.push(
         { role: 'user', content: message },
-        { role: 'assistant', content: data.reply.slice(0, 1200) }
+        { role: 'assistant', content: data.reply }
       );
       if (conversationHistory.length > 6) conversationHistory.splice(0, conversationHistory.length - 6);
       addMessage(data.reply, 'bot');

@@ -57,11 +57,26 @@ public class LearningController {
             .findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
     }
 
+    private static List<Course> catalogCourses() {
+        return List.of(
+            course("java-programming"),
+            new Course("advanced-java-spring-boot", "Backend Development", "code",
+                "Advanced Java Programming with Spring Boot",
+                "Advanced Java, Spring Boot, REST APIs, Spring Security, databases, and practical backend development.",
+                List.of()),
+            course("practical-devops"),
+            course("dvwa")
+        );
+    }
+
     @GetMapping("/learning")
     public String catalog(Model model) {
         model.addAttribute("activePage", "learning");
-        model.addAttribute("courses", COURSES);
-        model.addAttribute("categories", COURSES.stream().map(Course::category).distinct().toList());
+        List<Course> catalogCourses = catalogCourses();
+        model.addAttribute("courses", catalogCourses);
+        model.addAttribute("categories", java.util.stream.Stream.concat(
+            catalogCourses.stream().map(Course::category), java.util.stream.Stream.of("Academic"))
+            .distinct().toList());
         return "learning";
     }
 

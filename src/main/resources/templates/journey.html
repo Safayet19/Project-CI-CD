@@ -86,7 +86,7 @@
             <span th:text="${'0' + year.number}">01</span>
             <div>
               <p th:text="${year.label}">Year 1</p>
-              <small th:text="${'Semesters ' + year.semesters[0].number + '–' + year.semesters[2].number}">Semesters 1&ndash;3</small>
+              <small th:text="${year.focus}">Academic year focus</small>
             </div>
           </div>
 
@@ -101,8 +101,7 @@
                 <span class="semester-meta">
                   <span th:if="${!#strings.isEmpty(semester.term)}" th:text="${semester.term}">Academic term</span>
                   <span class="semester-status"
-                        th:if="${!#strings.isEmpty(semester.status)}"
-                        th:text="${semester.status}">Completed</span>
+                        th:text="${'GPA ' + semester.gpa + ' · ' + semester.completedCredits + ' credits'}">GPA 4.00 · 12 credits</span>
                 </span>
                 <span class="semester-indicator" aria-hidden="true"></span>
               </button>
@@ -111,20 +110,42 @@
                    th:id="${'semester-panel-' + semester.number}"
                    hidden>
                 <div class="semester-content" th:if="${semester.hasContent()}">
-                  <section class="semester-block courses-block" th:if="${!#lists.isEmpty(semester.courses)}">
-                    <h3>Courses Studied</h3>
-                    <ul class="course-list">
-                      <li th:each="course : ${semester.courses}">
-                        <span th:if="${!#strings.isEmpty(course.code)}" th:text="${course.code}">CSE 000</span>
-                        <strong th:text="${course.name}">Course name</strong>
-                      </li>
-                    </ul>
-                  </section>
-
                   <section class="semester-block prose-block" th:if="${!#strings.isEmpty(semester.learning)}">
                     <h3>What I Learned</h3>
                     <p th:text="${semester.learning}">Learning experience</p>
                   </section>
+
+                  <section class="semester-block courses-block" th:if="${!#lists.isEmpty(semester.courses)}">
+                    <h3>Course Results</h3>
+                    <div class="course-results-scroll" role="region" aria-label="Course results" tabindex="0">
+                      <table class="course-results">
+                        <thead>
+                          <tr>
+                            <th scope="col">Course Code</th>
+                            <th scope="col">Course Title</th>
+                            <th scope="col">Credits</th>
+                            <th scope="col">Grade Point</th>
+                            <th scope="col">Letter Grade</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="course : ${semester.courses}">
+                            <td th:text="${course.code}">CSE000</td>
+                            <td th:text="${course.name}">Course name</td>
+                            <td th:text="${course.credits}">3</td>
+                            <td th:text="${course.gradePoint}">4.00</td>
+                            <td th:text="${course.grade}">A+</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <p class="semester-results-summary">
+                    <strong>Semester GPA:</strong> <span th:text="${semester.gpa}">4.00</span>
+                    <span aria-hidden="true"> · </span>
+                    <strong>Completed Credits:</strong> <span th:text="${semester.completedCredits}">12</span>
+                  </p>
 
                   <section class="semester-block" th:if="${!#lists.isEmpty(semester.projects)}">
                     <h3>Projects &amp; Lab Work</h3>

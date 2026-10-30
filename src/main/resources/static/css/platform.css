@@ -1437,6 +1437,25 @@ body.subpage .platform .lp-empty {
 /* Practical DevOps course: scoped to shared Learning Hub components. */
 .platform .lp-course-label{display:inline-block;margin:3px 0 9px;color:var(--lp-emerald);font-size:11px;font-weight:800;letter-spacing:.11em}
 .platform .lp-upcoming{color:var(--lp-muted);cursor:default}
+.platform .lp-track-grid.lp-practical-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.platform .lp-subject-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.platform .lp-subject-card{min-height:190px}
+.platform .lp-coming-tag{display:inline-flex;align-items:center;border:1px solid #B7C7BE;border-radius:999px;background:#E5EEE9;color:#263B33;font-size:12px;font-weight:700;padding:6px 10px;white-space:nowrap}
+.platform .lp-academic{padding-top:38px}
+.platform .lp-academic .lp-section-row{margin-bottom:20px}
+.platform .lp-learning-top>p,.platform .lp-learning-catalog .lp-section-row p,
+.platform .lp-learning-catalog .lp-count,.platform .lp-learning-catalog .lp-category,
+.platform .lp-learning-catalog .lp-module-count,.platform .lp-learning-catalog .lp-chip{color:#344A45}
+.platform .lp-learning-top>p{max-width:735px}
+.platform .lp-learning-catalog .lp-section-row h2,.platform .lp-learning-catalog .lp-track-card h3{color:#203632;font-weight:750}
+.platform .lp-learning-catalog .lp-track-card>p{color:#344A45}
+.platform .lp-learning-catalog .lp-module-count strong{color:#203632}
+.platform .lp-learning-catalog .lp-track-card{border-color:#C8D3CB}
+.platform .lp-learning-catalog .lp-track-bottom{border-color:#C8D3CB}
+.platform .lp-learning-catalog .lp-coming-tag{border-color:#AEBFB4;background:#E5EEE9;color:#263B33}
+.platform .lp-learning-contact{margin-top:5px}
+@media (max-width:1020px){.platform .lp-track-grid.lp-practical-grid,.platform .lp-subject-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.platform .lp-track-grid.lp-practical-grid,.platform .lp-subject-grid{grid-template-columns:1fr}}
 .platform .lp-module-row.lp-module-row-status{grid-template-columns:53px minmax(0,1fr) auto auto}
 .platform .lp-module-row.lp-coming-row{grid-template-columns:53px minmax(0,1fr) auto;background:#F8FAF9;cursor:default}
 .platform .lp-coming-row strong{color:var(--lp-muted)}

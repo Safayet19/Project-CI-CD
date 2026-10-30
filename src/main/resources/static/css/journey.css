@@ -1,13 +1,13 @@
 /* Academic Journey: a restrained, update-ready four-year university journal. */
 .journey-page {
-  --journey-bg: #F3F1EC;
-  --journey-surface: #F7F7F4;
+  --journey-bg: #F4F4F0;
+  --journey-surface: #FFFFFF;
   --journey-heading: #26363D;
-  --journey-text: #43555C;
+  --journey-text: #34454B;
   --journey-copper: #CE7D50;
   --journey-green: #31534C;
-  --journey-line: #C5D0C8;
-  --journey-separator: #D5DDD5;
+  --journey-line: #AEBBB5;
+  --journey-separator: #CDD5D1;
   background: var(--journey-bg);
 }
 
@@ -202,16 +202,15 @@
 
 .year-tab.is-active,
 .year-tab[aria-selected="true"] {
-  border-color: #BF724B;
-  background: #BF724B;
+  border-color: #99512F;
+  background: #99512F;
   color: #FFFFFF;
-  box-shadow: 0 6px 15px rgba(191, 114, 75, .2);
 }
 
 .year-tab.is-active:hover,
 .year-tab[aria-selected="true"]:hover {
-  border-color: #B36742;
-  background: #B36742;
+  border-color: #8B4527;
+  background: #8B4527;
 }
 
 .academic-year-panel {
@@ -224,13 +223,13 @@
 
 .academic-year-intro {
   display: flex;
-  gap: 13px;
+  gap: 16px;
   align-items: center;
   padding-left: 34px;
 }
 
 .academic-year-intro > span {
-  color: var(--journey-copper);
+  color: #99512F;
   font-size: 35px;
   font-weight: 800;
   letter-spacing: -.06em;
@@ -238,17 +237,21 @@
 }
 
 .academic-year-intro p {
-  margin: 0 0 2px;
+  margin: 0 0 4px;
   color: var(--journey-heading);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.2;
 }
 
 .academic-year-intro small {
   display: block;
-  color: #6B7771;
-  font-size: 12px;
-  line-height: 1.4;
+  color: #40554F;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .005em;
+  line-height: 1.5;
 }
 
 .semester-timeline {
@@ -294,31 +297,27 @@
   width: 100%;
   min-height: 70px;
   padding: 13px 16px;
-  border: 1px solid #D5DDD5;
+  border: 1px solid #C5CFCA;
   border-radius: 12px;
-  background: #F4F6F2;
+  background: #FFFFFF;
   color: var(--journey-heading);
-  box-shadow: 0 3px 10px rgba(38, 54, 61, .045);
   text-align: left;
   transition: background-color 160ms ease, border-color 160ms ease,
     box-shadow 160ms ease, transform 160ms ease;
 }
 
 .semester-toggle:hover {
-  border-color: #BFCFC4;
-  background: #EEF2ED;
-  box-shadow: 0 5px 14px rgba(38, 54, 61, .075);
-  transform: translateX(2px);
+  border-color: #82968D;
+  background: #F7F8F5;
 }
 
 .semester-toggle[aria-expanded="true"] {
-  border-color: #D7A58A;
-  background: #FAF0EA;
-  box-shadow: 0 6px 16px rgba(191, 114, 75, .1);
+  border-color: #A85F3C;
+  background: #F8F2ED;
 }
 
 .semester-index {
-  color: #BF724B;
+  color: #8B4527;
   font-size: 14px;
   font-weight: 800;
   letter-spacing: .035em;
@@ -327,7 +326,7 @@
 
 .semester-toggle:hover .semester-number,
 .semester-toggle[aria-expanded="true"] .semester-number {
-  color: #A85F3C;
+  color: #8B4527;
 }
 
 .semester-number {
@@ -343,8 +342,9 @@
   gap: 12px;
   align-items: center;
   justify-content: flex-end;
-  color: #65736D;
+  color: #4D5C61;
   font-size: 13px;
+  font-weight: 600;
 }
 
 .semester-status {
@@ -352,11 +352,12 @@
   align-items: center;
   min-height: 26px;
   padding: 3px 9px;
-  border: 1px solid #B8C8BF;
-  border-radius: 999px;
-  color: var(--journey-green);
+  border: 1px solid #AEBDB5;
+  border-radius: 6px;
+  background: #F3F6F3;
+  color: #31534C;
   font-size: 11.5px;
-  font-weight: 750;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -405,23 +406,25 @@
 .semester-panel {
   margin: 8px 8px 18px;
   padding: 24px 22px;
-  border: 1px solid var(--journey-separator);
-  border-radius: 12px;
-  background: #FBFBF8;
-  box-shadow: 0 4px 13px rgba(38, 54, 61, .045);
+  border: 1px solid #C7D0CC;
+  border-radius: 8px;
+  background: #FFFFFF;
 }
 
 .semester-content {
   display: grid;
-  gap: 30px;
+  gap: 24px;
 }
 
 .semester-block h3 {
-  margin: 0 0 13px;
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #D8DFDC;
   color: var(--journey-heading);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
   letter-spacing: -.01em;
+  line-height: 1.35;
 }
 
 .semester-block p {
@@ -432,9 +435,116 @@
 .reflection-block blockquote {
   max-width: 790px;
   color: var(--journey-text);
-  font-size: 15.5px;
-  line-height: 1.75;
-  text-align: justify;
+  font-size: 16px;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.course-results-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #AEBBB5;
+  border-radius: 4px;
+  background: #FFFFFF;
+  scrollbar-color: #82968D #EEF1EF;
+  scrollbar-width: thin;
+}
+
+.course-results {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #34454B;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.course-results th,
+.course-results td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #D6DEDA;
+}
+
+.course-results th {
+  background: #304A50;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .015em;
+  white-space: nowrap;
+}
+
+.course-results th + th,
+.course-results td + td {
+  border-left: 1px solid #D6DEDA;
+}
+
+.course-results th + th {
+  border-left-color: #60777B;
+}
+
+.course-results tbody tr:nth-child(even) {
+  background: #F5F7F5;
+}
+
+.course-results tbody tr:hover {
+  background: #EEF3F0;
+}
+
+.course-results td:first-child {
+  color: #8B4527;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.course-results td:nth-child(2) {
+  min-width: 280px;
+  font-weight: 550;
+}
+
+.course-results td:nth-child(n + 3),
+.course-results th:nth-child(n + 3) {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.course-results tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.semester-results-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  align-items: center;
+  margin: -8px 0 0;
+  padding: 12px 14px;
+  border: 1px solid #C7D0CC;
+  border-left: 3px solid #99512F;
+  border-radius: 4px;
+  background: #F5F7F5;
+  color: #34454B;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.semester-results-summary strong {
+  color: #26363D;
+  font-weight: 750;
+}
+
+.semester-results-summary span:not([aria-hidden="true"]) {
+  color: #26363D;
+  font-weight: 700;
+}
+
+.semester-results-summary span[aria-hidden="true"] {
+  margin-inline: 5px;
+  color: #8B4527;
+  font-weight: 800;
 }
 
 .course-list {
@@ -766,6 +876,11 @@
     grid-column: 2;
     grid-row: 2;
     justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .semester-status {
+    white-space: normal;
   }
 
   .semester-indicator {

@@ -7,6 +7,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AiControllerResearchTest {
@@ -91,6 +92,24 @@ class AiControllerResearchTest {
         assertTrue(context.contains("Published lesson"));
         assertTrue(context.contains("Actual lesson text."));
         assertTrue(context.contains("Learning Hub: /learning"));
+    }
+
+    @Test
+    void includesCompleteResearchRecordsOnlyForRelevantListRequests() {
+        var page = new AiController.SitePage("/research", "Research", "Raw research page text.");
+        var allPapers = new AiController.ChatRequest("Show all research papers.", null, "/research",
+            List.of(page), List.of());
+        var unrelatedFollowUp = new AiController.ChatRequest("What is his CGPA?",
+            List.of(new AiController.ChatTurn("user", "Show all research papers.")),
+            "/research", List.of(page), List.of());
+
+        String researchContext = AiController.systemContext(allPapers);
+        String cgpaContext = AiController.systemContext(unrelatedFollowUp);
+
+        assertTrue(researchContext.contains("CALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE"));
+        assertFalse(researchContext.contains("Raw research page text."));
+        assertFalse(cgpaContext.contains("CALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE"));
+        assertTrue(cgpaContext.contains("CGPA: 3.99 / 4.00"));
     }
 
     @Test
