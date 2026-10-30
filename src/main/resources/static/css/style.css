@@ -2298,6 +2298,10 @@ body.subpage .timeline .education-item {
   .safayet-bot-suggestions button {
     transition: none;
   }
+
+  .safayet-bot-welcome .safayet-bot-suggestion-card:hover {
+    transform: none;
+  }
 }
 
 /* Safayet Bot full-screen conversation mode. */
@@ -2475,14 +2479,76 @@ body.safayet-bot-open {
 }
 
 .safayet-bot-welcome .safayet-bot-suggestions > div {
-  justify-content: center;
-  gap: 9px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
 }
 
-.safayet-bot-welcome .safayet-bot-suggestions button {
-  min-height: 40px;
-  padding-inline: 15px;
+.safayet-bot-welcome .safayet-bot-suggestion-card {
+  display: grid;
+  min-width: 0;
+  min-height: 112px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  align-items: center;
+  justify-items: start;
+  column-gap: 10px;
+  row-gap: 4px;
+  padding: 14px;
+  border: 1px solid #D5DDD5;
+  border-radius: 16px;
+  background: #FFFFFF;
+  color: #31534C;
+  text-align: left;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestion-card:hover {
+  transform: translateY(-2px);
+  border-color: #CE7D50;
+  background: #FCF9F5;
+  box-shadow: 0 7px 18px rgba(49, 83, 76, .09);
+}
+
+.safayet-bot-welcome .safayet-bot-suggestion-card:focus-visible {
+  outline: 3px solid rgba(168, 95, 60, .35);
+  outline-offset: 3px;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestion-card svg {
+  width: 34px;
+  height: 34px;
+  grid-row: 1 / span 2;
+  padding: 7px;
+  border-radius: 11px;
+  background: #E8EEE9;
+  color: #31534C;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.safayet-bot-welcome .safayet-bot-suggestion-card:nth-child(even) svg {
+  background: #F5E9E2;
+  color: #A85F3C;
+}
+
+.safayet-bot-suggestion-title {
+  color: #26363D;
   font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.safayet-bot-suggestion-subtitle {
+  color: #586660;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .safayet-bot-shell .safayet-bot-message {
@@ -2566,8 +2632,24 @@ body.safayet-bot-open {
     transform: translateY(-2vh);
   }
 
-  .safayet-bot-welcome .safayet-bot-suggestions > div {
-    gap: 8px;
+  .safayet-bot-welcome .safayet-bot-suggestion-card {
+    min-height: 100px;
+    column-gap: 8px;
+    padding: 11px;
+  }
+
+  .safayet-bot-welcome .safayet-bot-suggestion-card svg {
+    width: 30px;
+    height: 30px;
+    padding: 6px;
+  }
+
+  .safayet-bot-suggestion-title {
+    font-size: 12px;
+  }
+
+  .safayet-bot-suggestion-subtitle {
+    font-size: 10px;
   }
 
   .safayet-bot-shell .safayet-bot-message {

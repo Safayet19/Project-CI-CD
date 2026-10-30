@@ -189,10 +189,27 @@
               </p>
               <div class="safayet-bot-suggestions" aria-label="Suggested questions">
                 <p>What would you like to explore?</p>
-                <div>
-                  <button type="button" data-bot-topic="projects">Explore Projects</button>
-                  <button type="button" data-bot-topic="learning">Learning Hub</button>
-                  <button type="button" data-bot-topic="research">Research Papers</button>
+                <div class="safayet-bot-suggestion-grid">
+                  <button type="button" class="safayet-bot-suggestion-card" data-bot-topic="projects">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M8 9h8M8 13h5"></path></svg>
+                    <span class="safayet-bot-suggestion-title">Projects</span>
+                    <span class="safayet-bot-suggestion-subtitle">What has Safayet built?</span>
+                  </button>
+                  <button type="button" class="safayet-bot-suggestion-card" data-bot-topic="learning">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"></path><path d="M4 5.5v13A2.5 2.5 0 0 1 6.5 16H20M8 7h8"></path></svg>
+                    <span class="safayet-bot-suggestion-title">Learning Hub</span>
+                    <span class="safayet-bot-suggestion-subtitle">Explore practical tutorials</span>
+                  </button>
+                  <button type="button" class="safayet-bot-suggestion-card" data-bot-topic="research">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"></path><path d="M14 3.5V8h4M8 12h8M8 16h8"></path></svg>
+                    <span class="safayet-bot-suggestion-title">Research</span>
+                    <span class="safayet-bot-suggestion-subtitle">Discover research papers</span>
+                  </button>
+                  <button type="button" class="safayet-bot-suggestion-card" data-bot-topic="about">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0M19 5v4M17 7h4"></path></svg>
+                    <span class="safayet-bot-suggestion-title">About Safayet</span>
+                    <span class="safayet-bot-suggestion-subtitle">Skills and experience</span>
+                  </button>
                 </div>
               </div>
             </section>
@@ -240,18 +257,26 @@
   typingText.textContent = 'Safayet Bot is typing...';
   typingIndicator.append(typingText);
   const conversationHistory = [];
+  let siteContextPromise;
+  let verifiedLinkLabels = new Map();
+  let verifiedLinkUrls = new Set();
+  const maxSitePages = 12;
+  const maxSiteContentLength = 22000;
   let isWaiting = false;
   let previousScrollPosition = 0;
 
   const topicReplies = {
     projects: {
-      question: 'What projects has Safayet worked on?'
+      question: 'What has Safayet built?'
     },
     learning: {
-      question: 'What is in the Learning Hub?'
+      question: 'What practical tutorials are available in the Learning Hub?'
     },
     research: {
-      question: 'What research papers has Safayet published?'
+      question: 'Discover research papers by Safayet Ullah.'
+    },
+    about: {
+      question: 'What skills and experience does Safayet share on his About page?'
     }
   };
 
@@ -329,33 +354,129 @@
     conversation.scrollTop = conversation.scrollHeight;
   }
 
+  function pageText(documentToRead) {
+    const main = documentToRead.querySelector('main') || documentToRead.body;
+    if (!main) return '';
+    const content = main.cloneNode(true);
+    content.querySelectorAll('script, style, nav, footer, header, form, button, [hidden], [aria-hidden="true"]')
+      .forEach(element => element.remove());
+    const output = [];
+    const walker = documentToRead.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent.trim();
+      if (text) output.push(text);
+    }
+    return output.join(' ').replace(/\s+/g, ' ').trim().slice(0, 8000);
+  }
+
+  function pageLinks(documentToRead, sourcePath) {
+    const discovered = [];
+    documentToRead.querySelectorAll('a[href]').forEach(anchor => {
+      try {
+        const url = new URL(anchor.getAttribute('href'), new URL(sourcePath, window.location.origin));
+        const label = (anchor.textContent || anchor.getAttribute('title')
+          || anchor.getAttribute('aria-label') || url.pathname).trim().slice(0, 200);
+        if (url.origin === window.location.origin && /^\/(?:[A-Za-z0-9._~-]+\/)*[A-Za-z0-9._~-]*$/.test(url.pathname)) {
+          discovered.push({ label: label || url.pathname, url: url.pathname });
+        } else if (url.origin === 'https://doi.org'
+            && /^\/10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i.test(url.pathname)) {
+          discovered.push({ label: label || 'DOI', url: url.href });
+        } else if (anchor.closest('.socials, .footer-contacts')) {
+          discovered.push({ label: label || 'Contact', url: url.href });
+        }
+      } catch (error) {
+        console.warn('Skipping an invalid link on a public page', sourcePath, error);
+      }
+    });
+    return discovered;
+  }
+
+  async function loadSiteContext() {
+    const currentPath = window.location.pathname;
+    const currentTitle = document.title || currentPath;
+    const currentContent = pageText(document);
+    if (!currentContent) {
+      return { pagePath: null, pages: null, links: [] };
+    }
+
+    const pages = [{ path: currentPath, title: currentTitle, content: currentContent }];
+    const queued = new Map();
+    const verified = new Map([[currentPath, currentTitle]]);
+    const externalLinks = new Map();
+    const visited = new Set([currentPath]);
+    const addDiscovered = links => {
+      links.forEach(link => {
+        if (link.url.startsWith('/')) {
+          if (!visited.has(link.url) && !queued.has(link.url)) queued.set(link.url, link.label);
+        } else {
+          externalLinks.set(link.url, link.label);
+        }
+      });
+    };
+    addDiscovered(pageLinks(document, currentPath));
+
+    while (queued.size && pages.length < maxSitePages) {
+      const batch = [...queued.entries()].slice(0, Math.min(4, maxSitePages - pages.length));
+      batch.forEach(([path]) => {
+        queued.delete(path);
+        visited.add(path);
+      });
+      await Promise.all(batch.map(async ([path, linkLabel]) => {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 2500);
+        try {
+          const response = await fetch(path, {
+            cache: 'no-store',
+            credentials: 'same-origin',
+            headers: { Accept: 'text/html' },
+            signal: controller.signal
+          });
+          if (!response.ok) {
+            console.warn('A linked public page was unavailable to Safayet Bot', path, response.status);
+            return;
+          }
+          if (!response.headers.get('content-type')?.includes('text/html')) return;
+          const responseUrl = new URL(response.url, window.location.origin);
+          if (responseUrl.origin !== window.location.origin) return;
+          const source = await response.text();
+          const pageDocument = new DOMParser().parseFromString(source, 'text/html');
+          const content = pageText(pageDocument);
+          if (!content) return;
+          const pageTitle = (pageDocument.title || linkLabel || path).slice(0, 300);
+          const pagePathname = responseUrl.pathname;
+          if (pages.length >= maxSitePages) return;
+          pages.push({ path: pagePathname, title: pageTitle, content });
+          verified.set(pagePathname, pageTitle);
+          addDiscovered(pageLinks(pageDocument, pagePathname));
+        } catch (error) {
+          console.warn('Unable to load a linked public page for Safayet Bot', path, error);
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      }));
+    }
+
+    const contextPages = [];
+    let totalLength = 0;
+    for (const page of pages) {
+      const room = maxSiteContentLength - totalLength;
+      if (room <= page.title.length + 100) break;
+      const content = page.content.slice(0, Math.min(6000, room - page.title.length));
+      contextPages.push({ ...page, content });
+      totalLength += page.path.length + page.title.length + content.length;
+    }
+    const links = [
+      ...[...verified.entries()].map(([url, label]) => ({ label, url })),
+      ...[...externalLinks.entries()].map(([url, label]) => ({ label, url }))
+    ].slice(0, 100);
+    verifiedLinkLabels = new Map(links.map(link => [link.url, link.label]));
+    verifiedLinkUrls = new Set(links.map(link => link.url));
+    return { pagePath: currentPath, pages: contextPages, links };
+  }
+
   function renderBotMarkdown(container, text) {
-    const lines = text.replace(/\r\n?/g, '\n').split('\n');
-    const pathLabels = new Map([
-      ['/', 'Home'],
-      ['/about', 'About'],
-      ['/projects', 'Projects'],
-      ['/projects/eventflow', 'EventFlow'],
-      ['/projects/student-excuse', 'Student Excuse Generator'],
-      ['/projects/hospital-management', 'Hospital Management System'],
-      ['/projects/plant-disease', 'Plant Disease Recognition'],
-      ['/projects/ovijog', 'Ovijog'],
-      ['/learning', 'Learning Hub'],
-      ['/learning/dvwa', 'DVWA Practical Security Lab'],
-      ['/learning/devops', 'Spring Boot Deployment Workflow'],
-      ['/learning/devops/deployment-workflow', 'From Git Push to HTTPS'],
-      ['/learning/backend', 'Spring Boot MVC Notes'],
-      ['/learning/backend/mvc-thymeleaf', 'Spring MVC and Thymeleaf'],
-      ['/research', 'Research'],
-      ['/academic-journey', 'Academic Journey'],
-      ['/journey', 'Academic Journey'],
-      ['/training-certifications', 'Training & Certifications']
-    ]);
-    const doiLinks = new Set([
-      'https://doi.org/10.1109/TENSYMP68909.2026.11704048',
-      'https://doi.org/10.18034/apjee.v9i2.765'
-    ]);
-    const routePattern = /\/(?:about|projects(?:\/(?:eventflow|student-excuse|hospital-management|plant-disease|ovijog))?|learning(?:\/(?:dvwa|devops(?:\/deployment-workflow)?|backend(?:\/mvc-thymeleaf)?))?|research|academic-journey|journey|training-certifications)(?=$|[\s.,!?;:)])/g;
+    const lines = text.replace(/<br\s*\/?>/gi, '\n').replace(/\r\n?/g, '\n').split('\n');
 
     function appendInline(parent, value) {
       const pattern = /\*\*(.+?)\*\*|__(.+?)__|`([^`\n]+)`|\[([^\]]+)\]\(([^)\s]+)\)|\*([^*\n]+)\*/g;
@@ -375,18 +496,11 @@
           parent.append(code);
         } else if (match[4] !== undefined) {
           const label = match[4];
-          const path = match[5];
-          const linkLabel = pathLabels.get(path);
-          if (linkLabel || doiLinks.has(path)) {
+          const url = match[5];
+          if (verifiedLinkUrls.has(url)) {
             const anchor = document.createElement('a');
-            anchor.href = path;
-            if (linkLabel && (label === path || label === '/')) {
-              anchor.textContent = linkLabel;
-            } else if (!linkLabel && label === path) {
-              anchor.textContent = 'DOI';
-            } else {
-              appendInline(anchor, label);
-            }
+            anchor.href = url;
+            anchor.textContent = label === url ? (verifiedLinkLabels.get(url) || label) : label;
             parent.append(anchor);
           } else {
             appendInline(parent, label);
@@ -403,29 +517,22 @@
     }
 
     function appendPlainText(parent, value) {
-      let position = 0;
-      let match;
-      routePattern.lastIndex = 0;
-
-      while ((match = routePattern.exec(value)) !== null) {
-        parent.append(document.createTextNode(value.slice(position, match.index)));
-        const label = pathLabels.get(match[0]);
-        if (label) {
-          const anchor = document.createElement('a');
-          anchor.href = match[0];
-          anchor.textContent = label;
-          parent.append(anchor);
-        } else {
-          parent.append(document.createTextNode(match[0]));
-        }
-        position = routePattern.lastIndex;
-      }
-
-      parent.append(document.createTextNode(value.slice(position)));
+      parent.append(document.createTextNode(value));
     }
 
     function isListLine(line) {
-      return /^\s*(?:[-*+]|\d+\.)\s+/.test(line);
+      return /^\s*(?:[-*+]|\d+\.)\s+\S/.test(line);
+    }
+
+    function expandIsolatedListMarker(index) {
+      const marker = lines[index]?.match(/^\s*(\d+)\.\s*$/);
+      if (!marker) return;
+      let contentIndex = index + 1;
+      while (contentIndex < lines.length && !lines[contentIndex].trim()) contentIndex++;
+      if (contentIndex >= lines.length
+          || /^\s*(?:```|#{1,6}\s|[-*+]\s+)/.test(lines[contentIndex])) return;
+      lines[index] = `${marker[1]}. ${lines[contentIndex].trim()}`;
+      lines.splice(index + 1, contentIndex - index);
     }
 
     function tableCells(line) {
@@ -494,6 +601,7 @@
     }
 
     for (let index = 0; index < lines.length;) {
+      expandIsolatedListMarker(index);
       const line = lines[index];
       if (!line.trim()) {
         index++;
@@ -538,12 +646,19 @@
       if (isListLine(line)) {
         const ordered = /^\s*\d+\.\s+/.test(line);
         const list = document.createElement(ordered ? 'ol' : 'ul');
+        if (ordered) list.start = Number(line.match(/^\s*(\d+)\./)[1]);
         while (index < lines.length && isListLine(lines[index])
             && /^\s*\d+\.\s+/.test(lines[index]) === ordered) {
           const item = document.createElement('li');
           appendInline(item, lines[index].replace(/^\s*(?:[-*+]|\d+\.)\s+/, ''));
-          list.append(item);
           index++;
+          while (index < lines.length && lines[index].trim()) {
+            expandIsolatedListMarker(index);
+            if (isListLine(lines[index]) || /^\s*(?:```|#{1,6}\s)/.test(lines[index])) break;
+            item.append(document.createElement('br'));
+            appendInline(item, lines[index++].trim());
+          }
+          list.append(item);
         }
         container.append(list);
         continue;
@@ -592,10 +707,18 @@
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), 40000);
     try {
+      siteContextPromise ||= loadSiteContext();
+      const siteContext = await siteContextPromise;
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, history: conversationHistory.slice(-16) }),
+        body: JSON.stringify({
+          message,
+          history: conversationHistory.slice(-8),
+          pagePath: siteContext.pagePath,
+          pages: siteContext.pages,
+          links: siteContext.links
+        }),
         signal: controller.signal
       });
 
@@ -612,7 +735,16 @@
       }
 
       if (response.status === 400) {
-        addMessage('Please keep your message to 500 characters or fewer and try again.', 'bot');
+        const data = await response.json().catch(() => null);
+        addMessage(data?.error === 'Invalid website context'
+          ? 'Safayet Bot could not verify the website content. Please reload and try again.'
+          : (data?.error || 'Please keep your message to 500 characters or fewer and try again.'), 'bot');
+        return;
+      }
+
+      if (response.status === 503) {
+        const data = await response.json().catch(() => null);
+        addMessage(data?.error || 'Safayet Bot is temporarily unavailable. Please try again shortly.', 'bot');
         return;
       }
 
@@ -625,9 +757,9 @@
 
       conversationHistory.push(
         { role: 'user', content: message },
-        { role: 'assistant', content: data.reply.slice(0, 4000) }
+        { role: 'assistant', content: data.reply.slice(0, 2000) }
       );
-      if (conversationHistory.length > 16) conversationHistory.splice(0, conversationHistory.length - 16);
+      if (conversationHistory.length > 8) conversationHistory.splice(0, conversationHistory.length - 8);
       addMessage(data.reply, 'bot');
     } catch (error) {
       const reply = error.name === 'AbortError'
