@@ -1,5 +1,12 @@
 package com.safa.springbootapp.controller;
 
+import com.safa.springbootapp.dto.ChatRequest;
+import com.safa.springbootapp.dto.ChatResponse;
+import com.safa.springbootapp.dto.ChatTurn;
+import com.safa.springbootapp.dto.SitePage;
+import com.safa.springbootapp.dto.VerifiedLink;
+import com.safa.springbootapp.service.AiRateLimitService;
+import com.safa.springbootapp.service.AiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -13,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AiControllerResearchTest {
     @Test
     void derivesPaperCountsAuthorPositionsAndLinksFromResearchPage() {
-        String knowledge = AiController.researchKnowledge();
+        String knowledge = AiService.researchKnowledge();
 
         assertTrue(knowledge.contains("Total papers: 6; Published: 2; Accepted: 4; Pending/Under Review: 0 (none recorded)"));
         assertTrue(knowledge.contains("Safayet Ullah is first author on 3 paper(s)"));
@@ -27,7 +34,7 @@ class AiControllerResearchTest {
 
     @Test
     void listsAllResearchPapersGroupedWithAccurateDetails() {
-        String reply = AiController.researchReply("Show all research papers.");
+        String reply = AiService.researchReply("Show all research papers.");
 
         assertTrue(reply.contains("## Published (2)"));
         assertTrue(reply.contains("## Accepted (4)"));
@@ -41,9 +48,9 @@ class AiControllerResearchTest {
 
     @Test
     void statusSpecificRequestsOnlyIncludeThatCategory() {
-        String acceptedReply = AiController.researchReply("Show accepted papers.");
-        String publishedReply = AiController.researchReply("List published papers.");
-        String pendingReply = AiController.researchReply("Show under-review papers.");
+        String acceptedReply = AiService.researchReply("Show accepted papers.");
+        String publishedReply = AiService.researchReply("List published papers.");
+        String pendingReply = AiService.researchReply("Show under-review papers.");
 
         assertTrue(acceptedReply.startsWith("## Accepted (4)"));
         assertTrue(!acceptedReply.contains("## Published"));
@@ -57,9 +64,9 @@ class AiControllerResearchTest {
 
     @Test
     void researchSuggestionGetsPaperRecordsWithoutGroqConfiguration() {
-        AiController controller = new AiController("", List.of("127.0.0.1"));
+        AiController controller = controller();
 
-        var response = controller.chat(new AiController.ChatRequest("Show all research papers by Safayet Ullah.", null),
+        var response = controller.chat(new ChatRequest("Show all research papers by Safayet Ullah.", null),
             requestFrom("192.0.2.10"));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -67,26 +74,26 @@ class AiControllerResearchTest {
 
     @Test
     void answersFromAvailablePagesWithoutGroqAndRejectsUnverifiedLinks() {
-        AiController controller = new AiController("", List.of("127.0.0.1"));
-        var fallback = controller.chat(new AiController.ChatRequest("Explain a tutorial not on the site.", null),
+        AiController controller = controller();
+        var fallback = controller.chat(new ChatRequest("Explain a tutorial not on the site.", null),
             requestFrom("192.0.2.10"));
-        var invalidContext = controller.chat(new AiController.ChatRequest("Explain this page.", null, "/",
-                List.of(new AiController.SitePage("/", "Home", "Visible page text.")),
-                List.of(new AiController.VerifiedLink("External", "https://example.com"))),
+        var invalidContext = controller.chat(new ChatRequest("Explain this page.", null, "/",
+                List.of(new SitePage("/", "Home", "Visible page text.")),
+                List.of(new VerifiedLink("External", "https://example.com"))),
             requestFrom("192.0.2.11"));
 
         assertEquals(HttpStatus.OK, fallback.getStatusCode());
         assertEquals("This topic isn't available on Safayet's website yet.",
-            ((AiController.ChatResponse) fallback.getBody()).reply());
+            ((ChatResponse) fallback.getBody()).reply());
         assertEquals(HttpStatus.BAD_REQUEST, invalidContext.getStatusCode());
     }
 
     @Test
     void includesDynamicPageContentAndCurrentPageInModelContext() {
-        String context = AiController.systemContext(new AiController.ChatRequest("Explain this lesson.", null,
-            "/learning/example", List.of(new AiController.SitePage(
+        String context = AiService.systemContext(new ChatRequest("Explain this lesson.", null,
+            "/learning/example", List.of(new SitePage(
                 "/learning/example", "Published lesson", "Actual lesson text.")),
-            List.of(new AiController.VerifiedLink("Learning Hub", "/learning"))));
+            List.of(new VerifiedLink("Learning Hub", "/learning"))));
 
         assertTrue(context.contains("CURRENT PAGE: /learning/example"));
         assertTrue(context.contains("Published lesson"));
@@ -96,15 +103,15 @@ class AiControllerResearchTest {
 
     @Test
     void includesCompleteResearchRecordsOnlyForRelevantListRequests() {
-        var page = new AiController.SitePage("/research", "Research", "Raw research page text.");
-        var allPapers = new AiController.ChatRequest("Show all research papers.", null, "/research",
+        var page = new SitePage("/research", "Research", "Raw research page text.");
+        var allPapers = new ChatRequest("Show all research papers.", null, "/research",
             List.of(page), List.of());
-        var unrelatedFollowUp = new AiController.ChatRequest("What is his CGPA?",
-            List.of(new AiController.ChatTurn("user", "Show all research papers.")),
+        var unrelatedFollowUp = new ChatRequest("What is his CGPA?",
+            List.of(new ChatTurn("user", "Show all research papers.")),
             "/research", List.of(page), List.of());
 
-        String researchContext = AiController.systemContext(allPapers);
-        String cgpaContext = AiController.systemContext(unrelatedFollowUp);
+        String researchContext = AiService.systemContext(allPapers);
+        String cgpaContext = AiService.systemContext(unrelatedFollowUp);
 
         assertTrue(researchContext.contains("CALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE"));
         assertFalse(researchContext.contains("Raw research page text."));
@@ -114,7 +121,7 @@ class AiControllerResearchTest {
 
     @Test
     void distinguishesWebsiteOwnerFromBotIdentity() {
-        String context = AiController.systemContext(new AiController.ChatRequest("Who is safate?", null));
+        String context = AiService.systemContext(new ChatRequest("Who is safate?", null));
 
         assertTrue(context.contains("introduce Safayet Ullah"));
         assertTrue(context.contains("Briefly introduce Safayet Bot only"));
@@ -126,9 +133,9 @@ class AiControllerResearchTest {
 
     @Test
     void instructsModelToUnderstandAndLocalizeBanglaBanglishAndFollowUps() {
-        String context = AiController.systemContext(new AiController.ChatRequest("tui k", List.of(
-            new AiController.ChatTurn("user", "Safayet er project gula bolo"),
-            new AiController.ChatTurn("assistant", "O kichu verified project build koreche."))));
+        String context = AiService.systemContext(new ChatRequest("tui k", List.of(
+            new ChatTurn("user", "Safayet er project gula bolo"),
+            new ChatTurn("assistant", "O kichu verified project build koreche."))));
 
         assertTrue(context.contains("Bangla (Bengali script)"));
         assertTrue(context.contains("Banglish (Bangla written in the Latin alphabet)"));
@@ -138,15 +145,16 @@ class AiControllerResearchTest {
         assertTrue(context.contains("Safayet ke?"));
         assertTrue(context.contains("সাফায়েত কে?"));
         assertTrue(context.contains("Do not ask for clarification or refuse merely"));
+        assertTrue(context.contains("Treat informal teasing or profanity as tone"));
         assertTrue(context.contains("Carry the established language naturally through short or ambiguous follow-ups"));
     }
 
     @Test
     void distinguishesVisitorRecognitionFromBotIdentityAndPrioritizesCorrections() {
-        String context = AiController.systemContext(new AiController.ChatRequest(
+        String context = AiService.systemContext(new ChatRequest(
             "ami bolsi amake chinos??", List.of(
-                new AiController.ChatTurn("user", "amake chinos?"),
-                new AiController.ChatTurn("assistant", "I'm Safayet Bot, the website assistant."))));
+                new ChatTurn("user", "amake chinos?"),
+                new ChatTurn("assistant", "I'm Safayet Bot, the website assistant."))));
 
         assertTrue(context.contains("First-person forms such as I, me, my"));
         assertTrue(context.contains("ami, amake, amar"));
@@ -161,9 +169,9 @@ class AiControllerResearchTest {
 
     @Test
     void acceptsValidWebsitePagesWhenLinksAreMissing() {
-        AiController controller = new AiController("", List.of("127.0.0.1"));
-        var response = controller.chat(new AiController.ChatRequest("Explain this page.", null,
-                "/about", List.of(new AiController.SitePage(
+        AiController controller = controller();
+        var response = controller.chat(new ChatRequest("Explain this page.", null,
+                "/about", List.of(new SitePage(
                     "/about", "About", "Safayet's public profile.")), null),
             requestFrom("192.0.2.12"));
 
@@ -171,20 +179,37 @@ class AiControllerResearchTest {
     }
 
     @Test
+    void excludesUnrelatedVerifiedLinksFromCasualConversationContext() {
+        var request = new ChatRequest("hi", null, "/",
+            List.of(new SitePage("/", "Home", "Portfolio introduction.")),
+            List.of(new VerifiedLink("Research paper DOI", "https://doi.org/10.1234/example"),
+                new VerifiedLink("Projects", "/projects")));
+
+        String context = AiService.systemContext(request);
+
+        assertFalse(context.contains("https://doi.org/10.1234/example"));
+        assertFalse(context.contains("VERIFIED PUBLIC LINKS"));
+    }
+
+    @Test
     void acceptsOnlyContactLinksPublishedByTheWebsite() {
-        AiController controller = new AiController("", List.of("127.0.0.1"));
-        var page = List.of(new AiController.SitePage("/", "Home", "Public Contact section."));
-        var publicContact = controller.chat(new AiController.ChatRequest("How can I contact Safayet?", null, "/",
+        AiController controller = controller();
+        var page = List.of(new SitePage("/", "Home", "Public Contact section."));
+        var publicContact = controller.chat(new ChatRequest("How can I contact Safayet?", null, "/",
                 page, List.of(
-                    new AiController.VerifiedLink("Email", "mailto:safayetullah019@gmail.com"),
-                    new AiController.VerifiedLink("WhatsApp", "https://wa.me/8801837945824"))),
+                    new VerifiedLink("Email", "mailto:safayetullah019@gmail.com"),
+                    new VerifiedLink("WhatsApp", "https://wa.me/8801837945824"))),
             requestFrom("192.0.2.13"));
-        var unverifiedContact = controller.chat(new AiController.ChatRequest("How can I contact Safayet?", null, "/",
-                page, List.of(new AiController.VerifiedLink("Phone", "https://wa.me/8801000000000"))),
+        var unverifiedContact = controller.chat(new ChatRequest("How can I contact Safayet?", null, "/",
+                page, List.of(new VerifiedLink("Phone", "https://wa.me/8801000000000"))),
             requestFrom("192.0.2.14"));
 
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, publicContact.getStatusCode());
         assertEquals(HttpStatus.BAD_REQUEST, unverifiedContact.getStatusCode());
+    }
+
+    private static AiController controller() {
+        return new AiController(new AiService(""), new AiRateLimitService(List.of("127.0.0.1")));
     }
 
     private static MockHttpServletRequest requestFrom(String address) {

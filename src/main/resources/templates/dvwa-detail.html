@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
   <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
-  <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
   <script defer src="/js/learning-highlight.js" th:src="@{/js/learning-highlight.js}"></script>
 </head>
-<body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
+<body id="top" class="subpage" th:classappend="${course.slug == 'advanced-java-spring-boot'} ? 'lp-advanced-course' : ''"><a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
 <main id="main-content" class="platform">
 
@@ -36,22 +36,22 @@
     <section class="lp-doc-section" aria-labelledby="findings-heading"><h2 id="findings-heading">Findings &amp; Prevention</h2><p th:text="${lesson.findings}">Lab findings</p><h3>Prevention</h3><ul><li th:each="tip : ${lesson.prevention}" th:text="${tip}">Prevention guidance</li></ul></section>
     </div>
     <div th:if="${lesson.practicalSteps != null and !#lists.isEmpty(lesson.practicalSteps)}">
-      <!-- Java-only educational context; other Learning Hub courses remain unchanged. -->
-      <th:block th:if="${course.slug == 'java-programming' and lesson.conceptOverview != null}">
+      <!-- Course-specific learning explanations; existing DVWA and DevOps tracks remain unchanged. -->
+      <th:block th:if="${(course.slug == 'java-programming' or course.slug == 'advanced-java-spring-boot') and lesson.conceptOverview != null}">
         <section class="lp-doc-section lp-java-concept" aria-labelledby="java-concept-heading">
-          <h2 id="java-concept-heading">Understand the Concept</h2>
+          <h2 id="java-concept-heading" th:text="${course.slug == 'advanced-java-spring-boot'} ? 'The Situation and Technical Context' : 'Understand the Concept'">Understand the Concept</h2>
           <p th:each="paragraph : ${lesson.conceptOverview}" th:text="${paragraph}">Clear explanation of the topic.</p>
         </section>
         <section class="lp-doc-section lp-java-relevance" aria-labelledby="java-why-heading">
-          <h2 id="java-why-heading">Why Do We Need It?</h2>
+          <h2 id="java-why-heading" th:text="${course.slug == 'advanced-java-spring-boot'} ? 'The Design Decision' : 'Why Do We Need It?'">Why Do We Need It?</h2>
           <p th:text="${lesson.whyItMatters}">Explain the practical benefit.</p>
         </section>
         <section class="lp-doc-section lp-java-example" aria-labelledby="java-example-heading">
-          <h2 id="java-example-heading">Real-Life Example</h2>
+          <h2 id="java-example-heading" th:text="${course.slug == 'advanced-java-spring-boot'} ? 'An Example from an Application' : 'Real-Life Example'">Real-Life Example</h2>
           <p th:text="${lesson.realLifeExample}">A familiar real-life scenario.</p>
         </section>
         <section class="lp-doc-section lp-java-mechanics" aria-labelledby="java-how-heading">
-          <h2 id="java-how-heading">How It Works</h2>
+          <h2 id="java-how-heading" th:text="${course.slug == 'advanced-java-spring-boot'} ? 'Mechanisms You Must Understand' : 'How It Works'">How It Works</h2>
           <dl class="lp-java-terms">
             <div th:each="item : ${lesson.coreIdeas}">
               <dt th:text="${item.term}">Term or syntax</dt>
@@ -101,11 +101,11 @@
           </div>
         </div>
       </section>
-      <section class="lp-doc-section lp-java-recap" th:if="${course.slug == 'java-programming' and lesson.learningTakeaways != null}" aria-labelledby="java-takeaways-heading">
+      <section class="lp-doc-section lp-java-recap" th:if="${(course.slug == 'java-programming' or course.slug == 'advanced-java-spring-boot') and lesson.learningTakeaways != null}" aria-labelledby="java-takeaways-heading">
         <h2 id="java-takeaways-heading">Key Takeaways</h2>
         <ul><li th:each="takeaway : ${lesson.learningTakeaways}" th:text="${takeaway}">Essential lesson.</li></ul>
       </section>
-      <section class="lp-doc-section" th:if="${lesson.problems != null and !#lists.isEmpty(lesson.problems)}" aria-labelledby="devops-problems"><h2 id="devops-problems"><span th:if="${course.slug == 'java-programming'}">Common Mistakes &amp; How to Fix Them</span><span th:unless="${course.slug == 'java-programming'}">Problems &amp; Solutions</span></h2><ul><li th:each="problem : ${lesson.problems}" th:text="${problem}">Recorded problem and solution.</li></ul></section>
+      <section class="lp-doc-section" th:if="${lesson.problems != null and !#lists.isEmpty(lesson.problems)}" aria-labelledby="devops-problems"><h2 id="devops-problems"><span th:if="${course.slug == 'java-programming' or course.slug == 'advanced-java-spring-boot'}">Common Mistakes &amp; How to Fix Them</span><span th:unless="${course.slug == 'java-programming' or course.slug == 'advanced-java-spring-boot'}">Problems &amp; Solutions</span></h2><ul><li th:each="problem : ${lesson.problems}" th:text="${problem}">Recorded problem and solution.</li></ul></section>
       <section class="lp-doc-section" aria-labelledby="devops-result"><h2 id="devops-result">Final Outcome</h2><p th:text="${lesson.finalOutcome}">Verified result.</p></section>
     </div>
     <nav class="lp-lesson-pager" aria-label="Lesson navigation"><a th:if="${previous != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${previous.slug})}"><small>← Previous Module</small><strong th:text="${previous.title}">Previous</strong></a><a th:if="${previous == null}" class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>← Course Overview</small><strong>All modules</strong></a><a th:if="${next != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${next.slug})}"><small>Next Module →</small><strong th:text="${next.title}">Next</strong></a><a th:if="${next == null}" class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>Course Overview →</small><strong>All modules</strong></a></nav>

@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
   <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
-  <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
 <body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
@@ -25,10 +25,10 @@
 <section class="lp-container lp-course-modules" aria-labelledby="lp-modules-title"><div class="lp-section-row"><h2 id="lp-modules-title">Course modules</h2><span class="lp-count" th:text="${course.modules.size()} + ' lessons'">10 lessons</span></div>
   <div class="lp-module-list">
     <th:block th:each="module,status : ${course.modules}">
-      <a class="lp-module-row" th:if="${module.available}" th:classappend="${course.slug == 'practical-devops' or course.slug == 'java-programming'} ? 'lp-module-row-status' : ''" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}">
+      <a class="lp-module-row" th:if="${module.available}" th:classappend="${course.slug == 'practical-devops' or course.slug == 'java-programming' or course.slug == 'advanced-java-spring-boot'} ? 'lp-module-row-status' : ''" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}">
         <span class="lp-module-number" th:text="${#numbers.formatInteger(status.count,2)}">01</span>
         <strong th:text="${module.title}">Module title</strong>
-        <span class="lp-available-tag" th:if="${course.slug == 'practical-devops' or course.slug == 'java-programming'}">Available</span>
+        <span class="lp-available-tag" th:if="${course.slug == 'practical-devops' or course.slug == 'java-programming' or course.slug == 'advanced-java-spring-boot'}">Available</span>
         <span class="lp-row-arrow" aria-hidden="true">→</span>
       </a>
       <div class="lp-module-row lp-coming-row" th:unless="${module.available}" aria-disabled="true">

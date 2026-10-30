@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
-  <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
 <body id="top" class="subpage about-page">
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -21,15 +21,21 @@
     <div class="wrap">
       <h1 id="about-title">About Me</h1>
       <div class="about-biography">
-        <p>I'm Safayet Ullah, studying Computer Science and Engineering at Southeast University. I enjoy understanding how technology works through practical projects, experimentation, and problem solving.</p>
-        <p>My interests include building software, exploring security and machine learning concepts, and learning from the challenges I encounter. Here I organize my work and share lessons from the process.</p>
+        <p>I'm Safayet Ullah, a Computer Science and Engineering undergraduate at Southeast University, with hands-on experience in DevOps and Java backend development. I've built automated CI/CD pipelines using GitHub Actions and Docker, deployed Spring Boot applications on AWS EC2, configured Nginx as a reverse proxy, and secured deployments with HTTPS. My practical work also covers Linux, Git, Docker Compose, Docker Hub, Terraform, and cloud infrastructure.</p>
+        <p>Alongside DevOps, I've developed applications using Java, Spring Boot, Spring Security, JWT, REST APIs, MongoDB, and other backend technologies. I'm also expanding my DevOps knowledge with Jenkins and Kubernetes while continuing my work in AI and machine learning research. Through this website, I share the projects I've developed, deployment workflows I've implemented, research I've contributed to, and practical lessons from my experience.</p>
       </div>
     </div>
   </section>
 
   <section class="about-section about-technology-showcase" aria-labelledby="skills-heading">
     <div class="wrap">
-      <h2 id="skills-heading">Technical Skills &amp; Technologies</h2>
+      <header class="skills-intro">
+        <div class="skills-title-row">
+          <span class="skills-title-accent" aria-hidden="true"></span>
+          <h2 id="skills-heading">TECHNICAL SKILLS</h2>
+        </div>
+        <p>Key technologies and tools I work with for software development, cloud deployment, and automation.</p>
+      </header>
       <div th:replace="~{fragments/about-technology :: aboutTechnology}"></div>
     </div>
   </section>

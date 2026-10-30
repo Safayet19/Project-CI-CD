@@ -2,21 +2,111 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="technology-showcase" th:fragment="aboutTechnology">
-  <section class="technology-domain technology-domain--software">
-    <h3>Software Development</h3>
-    <div class="technology-subgroup"><h4>Programming Languages</h4><div class="technology-items"><figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/c/c-original.svg" alt="C logo" width="42" height="42" loading="lazy"><figcaption>C</figcaption></figure><figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/cplusplus/cplusplus-original.svg" alt="C++ logo" width="42" height="42" loading="lazy"><figcaption>C++</figcaption></figure><figure class="technology-item"><img src="/images/tech/java.svg" th:src="@{/images/tech/java.svg}" alt="Java logo" width="42" height="42" loading="lazy"><figcaption>Java</figcaption></figure><figure class="technology-item"><img src="/images/tech/python.svg" th:src="@{/images/tech/python.svg}" alt="Python logo" width="42" height="42" loading="lazy"><figcaption>Python</figcaption></figure><figure class="technology-item"><img src="/images/tech/javascript-fa.svg" th:src="@{/images/tech/javascript-fa.svg}" alt="JavaScript logo" width="42" height="42" loading="lazy"><figcaption>JavaScript</figcaption></figure></div></div><div class="technology-subgroup"><h4>Frameworks</h4><div class="technology-items"><figure class="technology-item"><img src="/images/tech/spring.svg" th:src="@{/images/tech/spring.svg}" alt="Spring Boot logo" width="42" height="42" loading="lazy"><figcaption>Spring Boot</figcaption></figure><figure class="technology-item"><img src="/images/tech/javafx-wordmark.svg" th:src="@{/images/tech/javafx-wordmark.svg}" alt="JavaFX logo" width="42" height="42" loading="lazy"><figcaption>JavaFX</figcaption></figure></div></div>
+  <section class="technology-domain technology-domain--software" aria-labelledby="software-heading">
+    <header class="technology-domain-header">
+      <span class="technology-domain-icon technology-domain-icon--software" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
+      </span>
+      <span class="technology-domain-copy">
+        <h3 id="software-heading">Software Development</h3>
+        <p>Programming languages and frameworks for building applications.</p>
+      </span>
+    </header>
+    <div class="technology-panel">
+      <section class="technology-subgroup" aria-labelledby="programming-heading">
+        <h4 id="programming-heading">Programming Languages</h4>
+        <div class="technology-items technology-items--languages">
+          <figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/c/c-original.svg" alt="C logo" width="64" height="64" loading="lazy"><figcaption>C</figcaption></figure>
+          <figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/cplusplus/cplusplus-original.svg" alt="C++ logo" width="64" height="64" loading="lazy"><figcaption>C++</figcaption></figure>
+          <figure class="technology-item"><img src="/images/tech/java.svg" th:src="@{/images/tech/java.svg}" alt="Java logo" width="64" height="64" loading="lazy"><figcaption>Java</figcaption></figure>
+          <figure class="technology-item"><img src="/images/tech/python.svg" th:src="@{/images/tech/python.svg}" alt="Python logo" width="64" height="64" loading="lazy"><figcaption>Python</figcaption></figure>
+          <figure class="technology-item"><img src="/images/tech/javascript-fa.svg" th:src="@{/images/tech/javascript-fa.svg}" alt="JavaScript logo" width="64" height="64" loading="lazy"><figcaption>JavaScript</figcaption></figure>
+        </div>
+      </section>
+      <section class="technology-subgroup" aria-labelledby="frameworks-heading">
+        <h4 id="frameworks-heading">Frameworks</h4>
+        <div class="technology-items technology-items--frameworks">
+          <figure class="technology-item"><img src="/images/tech/spring.svg" th:src="@{/images/tech/spring.svg}" alt="Spring Boot logo" width="64" height="64" loading="lazy"><figcaption>Spring Boot</figcaption></figure>
+          <figure class="technology-item"><img src="/images/tech/javafx-wordmark.svg" th:src="@{/images/tech/javafx-wordmark.svg}" alt="JavaFX logo" width="64" height="64" loading="lazy"><figcaption>JavaFX</figcaption></figure>
+        </div>
+      </section>
+    </div>
   </section>
-  <section class="technology-domain technology-domain--databases">
-    <h3>Databases</h3>
-    <div class="technology-items"><figure class="technology-item"><img src="/images/tech/mongodb.svg" th:src="@{/images/tech/mongodb.svg}" alt="MongoDB logo" width="42" height="42" loading="lazy"><figcaption>MongoDB</figcaption><span class="technology-meta">NoSQL</span></figure><figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/mysql/mysql-original.svg" alt="MySQL logo" width="42" height="42" loading="lazy"><figcaption>MySQL</figcaption><span class="technology-meta">Relational</span></figure><figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/postgresql/postgresql-original.svg" alt="PostgreSQL logo" width="42" height="42" loading="lazy"><figcaption>PostgreSQL</figcaption><span class="technology-meta">Relational</span></figure></div>
+
+  <section class="technology-domain technology-domain--infrastructure" aria-labelledby="infrastructure-heading">
+    <header class="technology-domain-header">
+      <span class="technology-domain-icon technology-domain-icon--infrastructure" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12a4 4 0 0 0 .4-8A6.5 6.5 0 0 0 6 8.5a4.75 4.75 0 0 0 0 9.5Z"/></svg>
+      </span>
+      <span class="technology-domain-copy">
+        <h3 id="infrastructure-heading">Infrastructure &amp; Cloud</h3>
+        <p>Tools for deployment, containerization, infrastructure and cloud platforms.</p>
+      </span>
+    </header>
+    <div class="technology-panel">
+      <div class="technology-items technology-items--infrastructure">
+        <figure class="technology-item"><img src="/images/tech/linux-fa.svg" th:src="@{/images/tech/linux-fa.svg}" alt="Linux logo" width="64" height="64" loading="lazy"><figcaption>Linux</figcaption></figure>
+        <figure class="technology-item"><img src="/images/tech/docker-approved.svg" th:src="@{/images/tech/docker-approved.svg}" alt="Docker logo" width="64" height="64" loading="lazy"><figcaption>Docker</figcaption></figure>
+        <figure class="technology-item"><img src="/images/tech/docker-compose-wordmark.svg" th:src="@{/images/tech/docker-compose-wordmark.svg}" alt="Docker Compose logo" width="64" height="64" loading="lazy"><figcaption>Docker Compose</figcaption></figure>
+        <figure class="technology-item"><img src="/images/tech/kubernetes-approved.svg" th:src="@{/images/tech/kubernetes-approved.svg}" alt="Kubernetes logo" width="64" height="64" loading="lazy"><figcaption>Kubernetes</figcaption></figure>
+        <figure class="technology-item"><img src="/images/tech/amazon-web-services-approved.svg" th:src="@{/images/tech/amazon-web-services-approved.svg}" alt="AWS logo" width="64" height="64" loading="lazy"><figcaption>AWS</figcaption></figure>
+      </div>
+      <div class="technology-infrastructure-details">
+        <section class="technology-subgroup technology-deployment" aria-labelledby="deployment-heading">
+          <h4 id="deployment-heading">Infrastructure &amp; Deployment</h4>
+          <div class="technology-items technology-items--deployment">
+            <figure class="technology-item"><img src="/images/tech/terraform-approved.svg" th:src="@{/images/tech/terraform-approved.svg}" alt="Terraform logo" width="64" height="64" loading="lazy"><figcaption>Terraform</figcaption></figure>
+            <figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/nginx/nginx-original.svg" alt="Nginx logo" width="64" height="64" loading="lazy"><figcaption>Nginx</figcaption><span class="technology-meta">Reverse Proxy</span></figure>
+          </div>
+        </section>
+        <section class="technology-subgroup technology-monitoring" aria-labelledby="monitoring-heading">
+          <h4 id="monitoring-heading">Monitoring &amp; Observability</h4>
+          <div class="technology-items technology-items--monitoring">
+            <figure class="technology-item"><img src="/images/tech/grafana.png" th:src="@{/images/tech/grafana.png}" alt="Grafana logo" width="64" height="64" loading="lazy"><figcaption>Grafana</figcaption></figure>
+            <figure class="technology-item"><img src="/images/tech/prometheus.png" th:src="@{/images/tech/prometheus.png}" alt="Prometheus logo" width="64" height="64" loading="lazy"><figcaption>Prometheus</figcaption></figure>
+          </div>
+        </section>
+      </div>
+    </div>
   </section>
-  <section class="technology-domain technology-domain--automation">
-    <h3>Version Control &amp; Automation</h3>
-    <div class="technology-items"><figure class="technology-item"><img src="/images/tech/git-fa.svg" th:src="@{/images/tech/git-fa.svg}" alt="Git logo" width="42" height="42" loading="lazy"><figcaption>Git</figcaption><span class="technology-meta">Version Control</span></figure><figure class="technology-item"><img src="/images/tech/github-fa.svg" th:src="@{/images/tech/github-fa.svg}" alt="GitHub logo" width="42" height="42" loading="lazy"><figcaption>GitHub</figcaption><span class="technology-meta">Code Hosting</span></figure><figure class="technology-item"><img src="/images/tech/github-actions.svg" th:src="@{/images/tech/github-actions.svg}" alt="GitHub Actions logo" width="42" height="42" loading="lazy"><figcaption>GitHub Actions</figcaption><span class="technology-meta">CI/CD</span></figure><figure class="technology-item"><img src="/images/tech/jenkins.svg" th:src="@{/images/tech/jenkins.svg}" alt="Jenkins logo" width="42" height="42" loading="lazy"><figcaption>Jenkins</figcaption><span class="technology-meta">CI/CD</span></figure></div>
+
+  <section class="technology-domain technology-domain--databases" aria-labelledby="databases-heading">
+    <header class="technology-domain-header">
+      <span class="technology-domain-icon technology-domain-icon--databases" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+      </span>
+      <span class="technology-domain-copy">
+        <h3 id="databases-heading">Databases</h3>
+        <p>Data storage and database technologies.</p>
+      </span>
+    </header>
+    <div class="technology-panel">
+      <div class="technology-items technology-items--databases">
+        <figure class="technology-item"><img src="/images/tech/mongodb.svg" th:src="@{/images/tech/mongodb.svg}" alt="MongoDB logo" width="64" height="64" loading="lazy"><figcaption>MongoDB</figcaption><span class="technology-meta technology-badge technology-badge--nosql">NoSQL</span></figure>
+        <figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/mysql/mysql-original.svg" alt="MySQL logo" width="64" height="64" loading="lazy"><figcaption>MySQL</figcaption><span class="technology-meta technology-badge">Relational</span></figure>
+        <figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/postgresql/postgresql-original.svg" alt="PostgreSQL logo" width="64" height="64" loading="lazy"><figcaption>PostgreSQL</figcaption><span class="technology-meta technology-badge">Relational</span></figure>
+      </div>
+    </div>
   </section>
-  <section class="technology-domain technology-domain--infrastructure">
-    <h3>Infrastructure &amp; Cloud</h3>
-    <div class="technology-items"><figure class="technology-item"><img src="/images/tech/linux-fa.svg" th:src="@{/images/tech/linux-fa.svg}" alt="Linux logo" width="42" height="42" loading="lazy"><figcaption>Linux</figcaption></figure><figure class="technology-item"><img src="/images/tech/docker-approved.svg" th:src="@{/images/tech/docker-approved.svg}" alt="Docker logo" width="42" height="42" loading="lazy"><figcaption>Docker</figcaption></figure><figure class="technology-item"><img src="/images/tech/docker-compose-wordmark.svg" th:src="@{/images/tech/docker-compose-wordmark.svg}" alt="Docker Compose logo" width="42" height="42" loading="lazy"><figcaption>Docker Compose</figcaption></figure><figure class="technology-item"><img src="/images/tech/kubernetes-approved.svg" th:src="@{/images/tech/kubernetes-approved.svg}" alt="Kubernetes logo" width="42" height="42" loading="lazy"><figcaption>Kubernetes</figcaption></figure><figure class="technology-item"><img src="/images/tech/amazon-web-services-approved.svg" th:src="@{/images/tech/amazon-web-services-approved.svg}" alt="AWS logo" width="42" height="42" loading="lazy"><figcaption>AWS</figcaption></figure><figure class="technology-item"><img src="/images/tech/terraform-approved.svg" th:src="@{/images/tech/terraform-approved.svg}" alt="Terraform logo" width="42" height="42" loading="lazy"><figcaption>Terraform</figcaption></figure><figure class="technology-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/icons/nginx/nginx-original.svg" alt="Nginx logo" width="42" height="42" loading="lazy"><figcaption>Nginx</figcaption></figure></div>
+
+  <section class="technology-domain technology-domain--automation" aria-labelledby="automation-heading">
+    <header class="technology-domain-header">
+      <span class="technology-domain-icon technology-domain-icon--automation" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8.3 8.3 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a8.3 8.3 0 0 1-1.7-1l-1.7.7-1.4-2.4 1.4-1.1a7.7 7.7 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.7a8.3 8.3 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a8.3 8.3 0 0 1 1.7 1l1.7-.7 1.4 2.4-1.4 1.1a7.7 7.7 0 0 1 0 2Z" transform="translate(-1 -1) scale(.92)"/></svg>
+      </span>
+      <span class="technology-domain-copy">
+        <h3 id="automation-heading">Version Control &amp; Automation</h3>
+        <p>Tools for source code management and CI/CD automation.</p>
+      </span>
+    </header>
+    <div class="technology-panel">
+      <div class="technology-items technology-items--automation">
+        <figure class="technology-item"><img src="/images/tech/git-fa.svg" th:src="@{/images/tech/git-fa.svg}" alt="Git logo" width="64" height="64" loading="lazy"><figcaption>Git</figcaption><span class="technology-meta technology-badge">Version Control</span></figure>
+        <figure class="technology-item"><img src="/images/tech/github-fa.svg" th:src="@{/images/tech/github-fa.svg}" alt="GitHub logo" width="64" height="64" loading="lazy"><figcaption>GitHub</figcaption><span class="technology-meta technology-badge">Code Hosting</span></figure>
+        <figure class="technology-item"><img src="/images/tech/github-actions.svg" th:src="@{/images/tech/github-actions.svg}" alt="GitHub Actions logo" width="64" height="64" loading="lazy"><figcaption>GitHub Actions</figcaption><span class="technology-meta technology-badge">CI/CD</span></figure>
+        <figure class="technology-item"><img src="/images/tech/jenkins.svg" th:src="@{/images/tech/jenkins.svg}" alt="Jenkins logo" width="64" height="64" loading="lazy"><figcaption>Jenkins</figcaption><span class="technology-meta technology-badge">CI/CD</span></figure>
+      </div>
+    </div>
   </section>
 </div>
 </body>

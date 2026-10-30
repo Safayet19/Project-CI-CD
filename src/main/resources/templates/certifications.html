@@ -10,15 +10,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
-  <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
 <body id="top" class="subpage">
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('training')}"></div>
 <main id="main-content">
-  <header class="page-intro wrap"><p class="section-label">Training &amp; Certifications</p><h1>Practical training &amp; credentials</h1><p>Original training and certification records, with details from the certificates.</p></header>
-  <section class="section section-tight">
+  <section class="training-intro wrap" aria-labelledby="training-title">
+    <header class="training-intro-header"><p class="section-label">Training &amp; Certifications</p><h1 id="training-title">Practical training &amp; credentials</h1></header>
+    <div class="training-intro-body"><p>Original training and certification records, with details from the certificates.</p></div>
+  </section>
+  <section class="section section-tight training-records">
     <div class="wrap certificate-list">
       <article class="certificate-entry">
         <div class="certificate-details">

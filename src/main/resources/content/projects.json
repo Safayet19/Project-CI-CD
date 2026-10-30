@@ -4,6 +4,7 @@
     "title": "EventFlow",
     "category": "Web Applications",
     "summary": "Spring Boot event management platform with discovery, bookings, and role-based administration.",
+    "cardSummary": "Spring Boot event management platform for event discovery, bookings, and role-based administration.",
     "technologies": [
       "Java",
       "Spring Boot",
@@ -52,6 +53,7 @@
     "title": "Food Mobo Chain",
     "category": "Web Applications",
     "summary": "Food Mobo Chain is a full-stack food ordering and management platform designed to connect customers with local food carts. It provides food discovery, menu browsing, ordering workflows, seller management, and an administrative dashboard for managing platform operations.",
+    "cardSummary": "Food ordering platform connecting customers with local food carts, featuring seller management and administrative tools.",
     "technologies": [
       "Java",
       "Spring Boot",
@@ -100,6 +102,7 @@
     "title": "Afsos Nama",
     "category": "Web Applications",
     "summary": "Afsos Nama is a student-focused reflection and personal improvement platform designed to help students record their semester experiences, recognize recurring mistakes, and turn lessons learned into meaningful actions. It provides a private workspace for tracking reflections, identifying patterns, and setting personal improvement goals.",
+    "cardSummary": "Student reflection platform for recording semester experiences, identifying patterns, and setting personal improvement goals.",
     "technologies": [
       "Java",
       "Spring Boot",
@@ -141,6 +144,7 @@
     "title": "Student Excuse Generator",
     "category": "Desktop Applications",
     "summary": "JavaFX desktop application for generating formatted student excuse documents.",
+    "cardSummary": "JavaFX desktop app for creating formatted student excuse documents from structured input.",
     "technologies": [
       "Java",
       "JavaFX",
@@ -179,6 +183,7 @@
     "title": "Hospital Management System",
     "category": "Desktop Applications",
     "summary": "JavaFX software for hospital records, patient and doctor workflows.",
+    "cardSummary": "JavaFX desktop software for hospital records and patient, doctor, and administrative workflows.",
     "technologies": [
       "Java",
       "JavaFX",
@@ -223,6 +228,7 @@
     "title": "Plant Disease Recognition",
     "category": "AI & Machine Learning",
     "summary": "CNN-based classification of plant leaf conditions using images.",
+    "cardSummary": "CNN-based image classification for recognizing conditions in plant leaves.",
     "technologies": [
       "Python",
       "CNN",
@@ -257,6 +263,7 @@
     "title": "Ovijog",
     "category": "Cloud & DevOps",
     "summary": "Community problem reporting platform and an end-to-end DevOps learning project.",
+    "cardSummary": "Community issue reporting platform built alongside a practical end-to-end DevOps workflow.",
     "technologies": [
       "Java",
       "Spring Boot",

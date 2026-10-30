@@ -11,8 +11,8 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="/css/style.css?v=20261030" rel="stylesheet" th:href="@{/css/style.css(v=20261030)}"/>
-<script defer="" src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+<link href="/css/style.css" rel="stylesheet" th:href="@{/css/style.css}"/>
+<script defer="" src="/js/main.js" th:src="@{/js/main.js}"></script>
 <link href="/css/home-approved.css" rel="stylesheet" th:href="@{/css/home-approved.css}"/></head>
 <body id="top">
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -26,7 +26,7 @@
 <p class="hero-desc">A personal space for my projects, research, technical knowledge, experiences, and everything I'm learning along the way.</p>
 <div class="actions">
   <a class="cta primary" href="/projects" th:href="@{/projects}">Explore Projects <span aria-hidden="true">&rarr;</span></a>
-  <a class="cta cv" href="/about#cv" th:href="@{/about#cv}">View CV <span aria-hidden="true">&rarr;</span></a>
+  <a class="cta cv" href="/cv/Safayet%20Ullah%20CV.pdf" target="_blank" rel="noopener">View CV <span aria-hidden="true">&rarr;</span></a>
   <a class="cta" href="#contact">Contact Me <span aria-hidden="true">&rarr;</span></a>
 </div>
 <div class="connections">
@@ -44,47 +44,49 @@
 </section>
 <section class="website-introduction wfh-section" aria-labelledby="wfh-title">
   <div class="wrap">
-    <div class="wfh-intro">
-      <div class="wfh-heading">
-        <div class="wfh-eyebrow">
-          <span class="wfh-eyebrow-line" aria-hidden="true"></span>
-          <span>Explore &amp; Learn</span>
+    <div class="wfh-panel">
+      <div class="wfh-intro">
+        <div class="wfh-heading">
+          <div class="wfh-eyebrow">
+            <span class="wfh-eyebrow-line" aria-hidden="true"></span>
+            <span>Explore &amp; Learn</span>
+          </div>
+          <h2 id="wfh-title">What You’ll<br>Find <span>Here</span></h2>
+          <p class="wfh-lead">A personal website, a learning platform, and a collection of real experiences.</p>
         </div>
-        <h2 id="wfh-title">What You'll<br>Find <span>Here</span></h2>
-        <p class="wfh-lead">A personal website, a learning platform, and a collection of real experiences.</p>
+        <nav class="wfh-links" aria-label="Explore website sections">
+          <a class="wfh-link" href="/projects" th:href="@{/projects}">
+            <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4.2l2.2 2.3H19a2 2 0 0 1 2 2v9.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"></path></svg>
+            <span class="wfh-link-copy"><span class="wfh-link-title">Projects</span><span class="wfh-link-subtitle">Explore my work</span></span>
+            <span class="wfh-link-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+          </a>
+          <a class="wfh-link" href="/learning" th:href="@{/learning}">
+            <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6C9.8 4.5 7 4 4 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1c3 0 5.8.6 8 2 2.2-1.4 5-2 8-2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1c-3 0-5.8.5-8 2Z"></path><path d="M12 6v16"></path></svg>
+            <span class="wfh-link-copy"><span class="wfh-link-title">Learning Hub</span><span class="wfh-link-subtitle">Hands-on tutorials</span></span>
+            <span class="wfh-link-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+          </a>
+          <a class="wfh-link" href="/research" th:href="@{/research}">
+            <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6M8 13h8M8 17h6"></path></svg>
+            <span class="wfh-link-copy"><span class="wfh-link-title">Research</span><span class="wfh-link-subtitle">Publications &amp; work</span></span>
+            <span class="wfh-link-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+          </a>
+          <a class="wfh-link" href="/academic-journey" th:href="@{/academic-journey}">
+            <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5L2 9Z"></path><path d="M6 11v5.5C8 19 16 19 18 16.5V11M22 9v7"></path></svg>
+            <span class="wfh-link-copy"><span class="wfh-link-title">Academic Journey</span><span class="wfh-link-subtitle">My education path</span></span>
+            <span class="wfh-link-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+          </a>
+          <a class="wfh-link" href="/training-certifications" th:href="@{/training-certifications}">
+            <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="15" rx="2"></rect><path d="M7 8h10M7 12h7M8 18v4l4-2 4 2v-4"></path></svg>
+            <span class="wfh-link-copy"><span class="wfh-link-title">Training &amp; Certifications</span><span class="wfh-link-subtitle">Courses &amp; achievements</span></span>
+            <span class="wfh-link-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span>
+          </a>
+        </nav>
       </div>
       <div class="wfh-copy">
         <p>I use this website to document the software I build, the problems I solve, and what I learn along the way. Alongside my projects, you'll find hands-on tutorials, Spring Boot and DevOps workflows, cybersecurity lab experiences, AI research, and my academic achievements and certifications.</p>
         <p>The goal is to share practical knowledge, real experiences, and useful resources, not just finished projects.</p>
       </div>
     </div>
-    <nav class="wfh-links" aria-label="Explore website sections">
-      <a class="wfh-link wfh-link--sage" href="/projects" th:href="@{/projects}">
-        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4.2l2.2 2.3H19a2 2 0 0 1 2 2v9.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"></path></svg>
-        <span class="wfh-link-copy"><span class="wfh-link-title">Projects</span><span class="wfh-link-subtitle">Explore my work</span></span>
-        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
-      </a>
-      <a class="wfh-link wfh-link--warm" href="/learning" th:href="@{/learning}">
-        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6C9.8 4.5 7 4 4 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1c3 0 5.8.6 8 2 2.2-1.4 5-2 8-2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1c-3 0-5.8.5-8 2Z"></path><path d="M12 6v16"></path></svg>
-        <span class="wfh-link-copy"><span class="wfh-link-title">Learning Hub</span><span class="wfh-link-subtitle">Hands-on tutorials</span></span>
-        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
-      </a>
-      <a class="wfh-link wfh-link--sage" href="/research" th:href="@{/research}">
-        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6M8 13h8M8 17h6"></path></svg>
-        <span class="wfh-link-copy"><span class="wfh-link-title">Research</span><span class="wfh-link-subtitle">Publications &amp; work</span></span>
-        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
-      </a>
-      <a class="wfh-link wfh-link--warm" href="/academic-journey" th:href="@{/academic-journey}">
-        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5L2 9Z"></path><path d="M6 11v5.5C8 19 16 19 18 16.5V11M22 9v7"></path></svg>
-        <span class="wfh-link-copy"><span class="wfh-link-title">Academic Journey</span><span class="wfh-link-subtitle">My education path</span></span>
-        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
-      </a>
-      <a class="wfh-link wfh-link--sage" href="/training-certifications" th:href="@{/training-certifications}">
-        <svg class="wfh-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="15" rx="2"></rect><path d="M7 8h10M7 12h7M8 18v4l4-2 4 2v-4"></path></svg>
-        <span class="wfh-link-copy"><span class="wfh-link-title">Training &amp; Certifications</span><span class="wfh-link-subtitle">Courses &amp; achievements</span></span>
-        <span class="wfh-link-arrow" aria-hidden="true">&rarr;</span>
-      </a>
-    </nav>
   </div>
 </section>
 </main>

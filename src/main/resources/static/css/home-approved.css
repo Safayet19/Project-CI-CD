@@ -19,7 +19,7 @@
   isolation: isolate;
   overflow: hidden;
   min-height: auto;
-  background: radial-gradient(ellipse at 83% 60%,rgba(208,213,222,.36) 0%,transparent 45%),linear-gradient(109deg,var(--bg2) 12%,var(--bg) 62%,var(--pale) 130%);
+  background: radial-gradient(ellipse at 83% 60%,rgba(208,213,222,.24) 0%,transparent 45%),linear-gradient(109deg,var(--bg2) 12%,var(--bg) 62%,var(--pale) 130%);
 }
 
 .hero:before {
@@ -29,7 +29,7 @@
   height: 30%;
   border-radius: 50% 50% 0 0/64% 64% 0 0;
   background: linear-gradient(90deg,transparent,var(--wave) 48%,transparent 100%);
-  opacity: .65;
+  opacity: .45;
   pointer-events: none;
 }
 
@@ -266,7 +266,7 @@
   left: 0%;
   bottom: 0%;
   border-radius: 52% 48% 38% 57%/50% 56% 44% 50%;
-  background: radial-gradient(ellipse at 66% 28%,rgba(233,218,203,.53),transparent 38%),linear-gradient(136deg,rgba(233,235,237,.03),rgba(207,211,215,.48));
+  background: radial-gradient(ellipse at 66% 28%,rgba(233,218,203,.42),transparent 38%),linear-gradient(136deg,rgba(233,235,237,.03),rgba(207,211,215,.36));
   transform: rotate(-8deg);
 }
 
@@ -549,7 +549,7 @@
   font-size: 20px;
   line-height: 1;
 }
-/* Ten genuine technology labels remain visible, in two balanced rows. */
+/* Twelve genuine technology labels remain visible in three balanced rows. */
 .hero .techs {
   display: grid;
   grid-template-columns: repeat(5, minmax(0,1fr));
@@ -648,4 +648,35 @@
   .hero .tech-tech figcaption {
     font-size: 10px;
   }
+}
+
+/* Homepage-only contrast refinements; preserve the approved layout and components. */
+.hero {
+  --ink: #1D2D34;
+  --text: #253842;
+  --muted: #253842;
+}
+.hero .eyebrow,
+.hero .group-label,
+.hero .tech-tech figcaption {
+  color: #253842;
+}
+.hero .hero-title .warm {
+  background: none;
+  color: #A65331;
+}
+.wfh-eyebrow,
+.wfh-heading h2 span {
+  color: #A65331;
+}
+.wfh-heading h2 {
+  color: #1D2D34;
+}
+.wfh-lead,
+.wfh-copy p {
+  color: #253842;
+}
+.wfh-link-subtitle {
+  color: #FFFFFF;
+  font-weight: 600;
 }

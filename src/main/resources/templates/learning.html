@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
   <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
-  <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
 <body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
@@ -24,61 +24,68 @@
   <p>If you'd like the complete notes for any subject, feel free to contact me. I'll be happy to share them.</p>
   <a class="lp-action lp-solid lp-learning-contact" href="/#contact">Contact me <span aria-hidden="true">→</span></a>
 </section>
-<section class="lp-container lp-catalog lp-learning-catalog" aria-labelledby="lp-available">
-  <div class="lp-section-row"><div><h2 id="lp-available">Practical Learning Tracks</h2><p>Published lessons and planned learning tracks, in one place.</p></div><span class="lp-count" th:text="${courses.size()} + ' tracks'">4 tracks</span></div>
-  <div class="lp-filterbar" data-filter-root="course-list">
-    <label class="lp-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span class="sr-only">Search learning tracks</span><input type="search" id="course-search" autocomplete="off" placeholder="Search tracks or topics" data-course-search></label>
-    <div class="lp-chips" role="group" aria-label="Course category filters"><button type="button" class="lp-chip is-active" data-category="all" aria-pressed="true">All</button><button type="button" class="lp-chip" th:each="cat : ${categories}" th:attr="data-category=${cat}" th:text="${cat}" aria-pressed="false">Category</button></div>
-  </div>
+<div class="lp-container lp-catalog lp-learning-catalog">
   <div id="course-list">
-    <div class="lp-track-grid lp-practical-grid">
-      <article class="lp-track-card" th:each="course, courseNo : ${courses}" th:attr="data-category=${course.category},data-search=${course.title + ' ' + course.description + ' ' + course.category}">
-        <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true">
-          <svg th:if="${course.icon == 'shield'}" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg>
-          <svg th:if="${course.icon == 'terminal'}" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="m6 9 3 3-3 3m6 0h5"/></svg>
-          <svg th:if="${course.icon == 'code'}" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4 10 20"/></svg>
-        </span><span class="lp-category" th:text="${course.category}">Java</span></div>
-        <span class="lp-course-label" th:text="'COURSE ' + ${#numbers.formatInteger(courseNo.count, 2)}">COURSE 01</span>
-        <h3 th:text="${course.title}">Java Programming</h3><p th:text="${course.description}">Description</p>
-        <div class="lp-track-bottom">
-          <span class="lp-module-count" th:if="${course.availableCount > 0}"><strong th:text="${course.availableCount}">14</strong> <span th:text="${course.availableCount == 1 ? 'available module' : 'available modules'}">available modules</span></span>
-          <span class="lp-module-count" th:if="${course.availableCount == 0}"><strong>0</strong> Modules</span>
-          <a class="lp-action" th:if="${course.availableCount > 0}" th:href="@{/learning/{track}(track=${course.slug})}">View Modules <span aria-hidden="true">→</span></a>
-          <span class="lp-coming-tag" th:if="${course.availableCount == 0}">Coming Soon</span>
+    <section class="lp-learning-panel lp-practical-panel" aria-labelledby="lp-available">
+      <div class="lp-section-row"><div><h2 id="lp-available">Practical Learning Tracks</h2><p>Published lessons and planned learning tracks, in one place.</p></div><span class="lp-count" th:text="${courses.size()} + ' tracks'">4 tracks</span></div>
+      <div class="lp-filterbar" data-filter-root="course-list">
+        <label class="lp-search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span class="sr-only">Search learning tracks</span><input type="search" id="course-search" autocomplete="off" placeholder="Search tracks or topics" data-course-search></label>
+        <div class="lp-chips" role="group" aria-label="Course category filters"><button type="button" class="lp-chip is-active" data-category="all" aria-pressed="true">All</button><button type="button" class="lp-chip" th:each="cat : ${categories}" th:attr="data-category=${cat}" th:text="${cat}" aria-pressed="false">Category</button></div>
+      </div>
+      <div class="lp-track-grid lp-practical-grid">
+      <article class="lp-track-card lp-course-card" th:each="course, courseNo : ${courses}" th:classappend="|lp-course-${course.slug}|" th:attr="data-category=${course.category},data-search=${course.title + ' ' + course.description + ' ' + course.category}">
+        <header class="lp-card-header">
+          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true">
+            <svg th:if="${course.icon == 'shield'}" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg>
+            <svg th:if="${course.icon == 'terminal'}" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="m6 9 3 3-3 3m6 0h5"/></svg>
+            <svg th:if="${course.icon == 'code'}" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4 10 20"/></svg>
+          </span><span class="lp-category" th:text="${course.category}">Java</span></div>
+          <span class="lp-course-label" th:text="'COURSE ' + ${#numbers.formatInteger(courseNo.count, 2)}">COURSE 01</span>
+          <h3 th:text="${course.title}">Java Programming</h3>
+        </header>
+        <div class="lp-card-body">
+          <p th:text="${course.description}">Description</p>
+          <div class="lp-track-bottom">
+            <span class="lp-module-count" th:if="${course.availableCount > 0}"><strong th:text="${course.availableCount}">14</strong> <span th:text="${course.availableCount == 1 ? 'available module' : 'available modules'}">available modules</span></span>
+            <span class="lp-module-count" th:if="${course.availableCount == 0}"><strong>0</strong> Modules</span>
+            <a class="lp-action" th:if="${course.availableCount > 0}" th:href="@{/learning/{track}(track=${course.slug})}">View Modules <span aria-hidden="true">→</span></a>
+            <span class="lp-coming-tag" th:if="${course.availableCount == 0}">Coming Soon</span>
+          </div>
         </div>
       </article>
-    </div>
-    <section class="lp-academic" aria-labelledby="lp-academic-title">
+      </div>
+    </section>
+    <section class="lp-academic lp-learning-panel" aria-labelledby="lp-academic-title">
       <div class="lp-section-row"><div><h2 id="lp-academic-title">Academic Subjects</h2><p>Core Computer Science subjects from my university learning journey. Notes and lessons will be added gradually.</p></div></div>
       <div class="lp-track-grid lp-subject-grid">
         <article class="lp-track-card lp-subject-card" data-category="Academic" data-search="Data Structures Algorithms Academic Coming Soon">
-          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M9 6h4a3 3 0 0 1 3 3v6"/></svg></span><span class="lp-category">Academic</span></div>
-          <h3>Data Structures &amp; Algorithms</h3><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div>
+          <header class="lp-card-header"><div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M9 6h4a3 3 0 0 1 3 3v6"/></svg></span><span class="lp-category">Academic</span></div><h3>Data Structures &amp; Algorithms</h3></header>
+          <div class="lp-card-body"><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div></div>
         </article>
         <article class="lp-track-card lp-subject-card" data-category="Academic" data-search="Database Management Systems DBMS Academic Coming Soon">
-          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><span class="lp-category">Academic</span></div>
-          <h3>Database Management Systems</h3><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div>
+          <header class="lp-card-header"><div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><span class="lp-category">Academic</span></div><h3>Database Management Systems</h3></header>
+          <div class="lp-card-body"><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div></div>
         </article>
         <article class="lp-track-card lp-subject-card" data-category="Academic" data-search="Operating Systems OS Academic Coming Soon">
-          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span><span class="lp-category">Academic</span></div>
-          <h3>Operating Systems</h3><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div>
+          <header class="lp-card-header"><div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span><span class="lp-category">Academic</span></div><h3>Operating Systems</h3></header>
+          <div class="lp-card-body"><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div></div>
         </article>
         <article class="lp-track-card lp-subject-card" data-category="Academic" data-search="Computer Networks Networking Academic Coming Soon">
-          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="m11 7-5 10m7-10 5 10M7 19h10"/></svg></span><span class="lp-category">Academic</span></div>
-          <h3>Computer Networks</h3><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div>
+          <header class="lp-card-header"><div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="m11 7-5 10m7-10 5 10M7 19h10"/></svg></span><span class="lp-category">Academic</span></div><h3>Computer Networks</h3></header>
+          <div class="lp-card-body"><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div></div>
         </article>
         <article class="lp-track-card lp-subject-card" data-category="Academic" data-search="Cryptography Network Security Academic Coming Soon">
-          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/><rect x="9" y="10" width="6" height="5" rx="1"/><path d="M10 10V8a2 2 0 0 1 4 0v2"/></svg></span><span class="lp-category">Academic</span></div>
-          <h3>Cryptography &amp; Network Security</h3><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div>
+          <header class="lp-card-header"><div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/><rect x="9" y="10" width="6" height="5" rx="1"/><path d="M10 10V8a2 2 0 0 1 4 0v2"/></svg></span><span class="lp-category">Academic</span></div><h3>Cryptography &amp; Network Security</h3></header>
+          <div class="lp-card-body"><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div></div>
         </article>
         <article class="lp-track-card lp-subject-card" data-category="Academic" data-search="Software Engineering Academic Coming Soon">
-          <div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4 10 20"/></svg></span><span class="lp-category">Academic</span></div>
-          <h3>Software Engineering</h3><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div>
+          <header class="lp-card-header"><div class="lp-track-top"><span class="lp-track-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4 10 20"/></svg></span><span class="lp-category">Academic</span></div><h3>Software Engineering</h3></header>
+          <div class="lp-card-body"><div class="lp-track-bottom"><span class="lp-module-count"><strong>0</strong> Modules</span><span class="lp-coming-tag">Coming Soon</span></div></div>
         </article>
       </div>
     </section>
   </div>
   <div class="lp-empty" id="course-empty" hidden>No learning tracks match your search. <button type="button" data-reset-filters>Clear filters</button></div>
-</section>
+</div>
 </main>
 </body></html>

@@ -839,29 +839,32 @@
 .platform .pj-grid {
   display: grid;
   grid-template-columns: repeat(3,minmax(0,1fr));
-  gap: 17px;
+  gap: 24px;
 }
 
 .platform .pj-card {
   display: flex;
   flex-direction: column;
-  background: var(--lp-panel);
-  border: 1px solid var(--lp-line);
-  border-radius: 12px;
+  min-height: 480px;
+  background: #FFFFFF;
+  border: 1.5px solid #9BAEB5;
+  border-radius: 16px;
   overflow: hidden;
   min-width: 0;
-  transition: transform .18s,border-color .18s,box-shadow .18s;
+  box-shadow: 0 2px 6px rgba(38,54,61,.08);
+  transition: border-color .18s,box-shadow .18s;
 }
 
 .platform .pj-card:hover {
-  border-color: var(--lp-emerald);
-  box-shadow: var(--lp-shadow);
-  transform: translateY(-2px);
+  border-color: #667F88;
+  box-shadow: 0 4px 10px rgba(38,54,61,.13);
 }
 
 .platform .pj-cover {
-  aspect-ratio: 16/9;
+  height: 185px;
+  flex: 0 0 185px;
   overflow: hidden;
+  border-bottom: 1.5px solid #9BAEB5;
   background: linear-gradient(145deg,#E6F1ED,#CCDCD8);
   position: relative;
   display: flex;
@@ -896,7 +899,7 @@
 }
 
 .platform .pj-card-body {
-  padding: 19px 21px 20px;
+  padding: 18px 20px 19px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -913,7 +916,7 @@
 .platform .pj-card h3 {
   font-size: 19px;
   line-height: 1.33;
-  margin: 10px 0 9px;
+  margin: 7px 0 7px;
 }
 
 .platform .pj-card h3 a:hover {
@@ -923,22 +926,25 @@
 .platform .pj-summary {
   color: var(--lp-muted);
   font-size: 14px;
-  line-height: 1.58;
-  margin: 0 0 16px;
-  flex: 1;
+  line-height: 1.5;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .platform .pj-tags,.platform .pj-case-tags,.platform .pj-tech-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .platform .pj-tags span,.platform .pj-case-tags span,.platform .pj-tech-tags span {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 650;
-  line-height: 1.25;
-  padding: 6px 9px;
+  line-height: 1.2;
+  padding: 5px 8px;
   border: 1px solid var(--lp-line);
   border-radius: 6px;
   background: var(--lp-bg);
@@ -952,8 +958,8 @@
   align-items: center;
   flex-wrap: wrap;
   border-top: 1px solid var(--lp-line);
-  padding-top: 16px;
-  margin-top: 16px;
+  padding-top: 12px;
+  margin-top: auto;
 }
 
 .platform .pj-card-actions .lp-action {
@@ -1353,12 +1359,12 @@ body.subpage .platform .lp-track-card>p {
 }
 
 body.subpage .platform .pj-card {
-  background: #FFFEFC;
-  border-color: #D4DDD6;
+  background: #FFFFFF;
+  border-color: #9BAEB5;
 }
 
 body.subpage .platform .pj-card:hover {
-  border-color: #BC896C;
+  border-color: #667F88;
 }
 
 body.subpage .platform .pj-cover {
@@ -1441,7 +1447,7 @@ body.subpage .platform .lp-empty {
 .platform .lp-subject-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 .platform .lp-subject-card{min-height:190px}
 .platform .lp-coming-tag{display:inline-flex;align-items:center;border:1px solid #B7C7BE;border-radius:999px;background:#E5EEE9;color:#263B33;font-size:12px;font-weight:700;padding:6px 10px;white-space:nowrap}
-.platform .lp-academic{padding-top:38px}
+.platform .lp-academic{padding-top:44px}
 .platform .lp-academic .lp-section-row{margin-bottom:20px}
 .platform .lp-learning-top>p,.platform .lp-learning-catalog .lp-section-row p,
 .platform .lp-learning-catalog .lp-count,.platform .lp-learning-catalog .lp-category,
@@ -1453,9 +1459,136 @@ body.subpage .platform .lp-empty {
 .platform .lp-learning-catalog .lp-track-card{border-color:#C8D3CB}
 .platform .lp-learning-catalog .lp-track-bottom{border-color:#C8D3CB}
 .platform .lp-learning-catalog .lp-coming-tag{border-color:#AEBFB4;background:#E5EEE9;color:#263B33}
-.platform .lp-learning-contact{margin-top:5px}
+body.subpage .platform .lp-learning-top{
+  margin-top:38px;
+  margin-bottom:36px;
+  padding:44px 46px 46px;
+  background:#FFFEFC;
+  border:1px solid #C8D3CB;
+  border-radius:14px;
+}
+body.subpage .platform .lp-learning-panel{
+  padding:44px 46px 46px;
+  background:#FFFEFC;
+  border:1px solid #C8D3CB;
+  border-radius:14px;
+}
+body.subpage .platform .lp-project-intro{
+  background:linear-gradient(145deg,#FFFFFF 0%,#FFFEFC 68%,#F7F9F7 100%);
+}
+body.subpage .platform .lp-practical-panel{margin-bottom:36px}
+body.subpage .platform .lp-learning-panel .lp-track-card{
+  background:#F7F9F7;
+  border-color:#BFCBC2;
+}
+.platform .lp-learning-top h1{
+  color:#1F3038;
+  font-size:clamp(42px,4.5vw,50px);
+  font-weight:800;
+  line-height:1.12;
+  letter-spacing:-.02em;
+  margin-bottom:24px;
+}
+.platform .lp-learning-top>p{
+  max-width:880px;
+  color:#32454D;
+  font-size:17.5px;
+  font-weight:500;
+  line-height:1.8;
+  text-wrap:pretty;
+}
+.platform .lp-learning-top>p+p{margin-top:10px}
+.platform .lp-learning-contact{margin-top:24px}
+
+body.subpage .platform .lp-learning-catalog .lp-track-card{
+  min-height:300px;
+  padding:0;
+  overflow:hidden;
+  background:#FFFFFF;
+  border-color:#B5BDC4;
+}
+body.subpage .platform .lp-learning-catalog .lp-track-card:hover{
+  border-color:#B5BDC4;
+  box-shadow:none;
+  transform:none;
+}
+.platform .lp-learning-catalog .lp-card-header{
+  flex:none;
+  padding:22px 24px 23px;
+  color:#FFFFFF;
+  background:#204B85;
+}
+.platform .lp-learning-catalog .lp-course-advanced-java-spring-boot .lp-card-header{background:#553982}
+.platform .lp-learning-catalog .lp-course-practical-devops .lp-card-header{background:#12675B}
+.platform .lp-learning-catalog .lp-course-dvwa .lp-card-header{background:#A4482D}
+.platform .lp-learning-catalog .lp-subject-card .lp-card-header{background:#173E45}
+.platform .lp-learning-catalog .lp-card-header .lp-track-top{
+  margin:0 0 14px;
+}
+.platform .lp-learning-catalog .lp-card-header .lp-track-icon{
+  width:36px;
+  height:36px;
+  color:#FFFFFF;
+  background:transparent;
+}
+.platform .lp-learning-catalog .lp-card-header .lp-category,
+.platform .lp-learning-catalog .lp-course-label{
+  color:#FFFFFF;
+}
+.platform .lp-learning-catalog .lp-course-label{
+  margin:0 0 8px;
+}
+.platform .lp-learning-catalog .lp-card-header h3{
+  margin:0;
+  color:#FFFFFF;
+  font-size:19px;
+  line-height:1.35;
+}
+.platform .lp-learning-catalog .lp-card-body{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  padding:20px 24px 21px;
+  background:#FFFFFF;
+}
+.platform .lp-learning-catalog .lp-card-body>p{
+  max-width:none;
+  margin:0 0 16px;
+  color:#28323D;
+  font-size:14px;
+  line-height:1.6;
+}
+.platform .lp-learning-catalog .lp-card-body .lp-track-bottom{
+  margin-top:auto;
+  padding-top:14px;
+  border-color:#B5BDC4;
+}
+.platform .lp-learning-catalog .lp-card-body .lp-module-count,
+.platform .lp-learning-catalog .lp-card-body .lp-module-count strong{
+  color:#28323D;
+}
+.platform .lp-learning-catalog .lp-subject-card{
+  min-height:220px;
+}
 @media (max-width:1020px){.platform .lp-track-grid.lp-practical-grid,.platform .lp-subject-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:760px){.platform .lp-track-grid.lp-practical-grid,.platform .lp-subject-grid{grid-template-columns:1fr}}
+@media (max-width:760px){
+  body.subpage .platform .lp-learning-top{
+    margin-top:24px;
+    margin-bottom:30px;
+    padding:30px 24px 32px;
+    border-radius:12px;
+  }
+  body.subpage .platform .lp-learning-panel{
+    padding:30px 24px 32px;
+    border-radius:12px;
+  }
+  body.subpage .platform .lp-practical-panel{margin-bottom:30px}
+  .platform .lp-learning-top h1{font-size:clamp(36px,10vw,43px);margin-bottom:20px}
+  .platform .lp-learning-top>p{font-size:16.5px;line-height:1.72}
+  .platform .lp-learning-top>p+p{margin-top:12px}
+  .platform .lp-learning-contact{margin-top:21px}
+  .platform .lp-track-grid.lp-practical-grid,.platform .lp-subject-grid{grid-template-columns:1fr}
+}
 .platform .lp-module-row.lp-module-row-status{grid-template-columns:53px minmax(0,1fr) auto auto}
 .platform .lp-module-row.lp-coming-row{grid-template-columns:53px minmax(0,1fr) auto;background:#F8FAF9;cursor:default}
 .platform .lp-coming-row strong{color:var(--lp-muted)}
@@ -1710,4 +1843,25 @@ body.subpage .platform .lp-empty {
   .platform .lp-java-example { padding: 13px 15px; }
   .platform .lp-code-walkthrough { padding: 13px 13px 12px; }
   .platform .lp-code-walkthrough dt code { font-size: 12px; }
+}
+
+
+/* Advanced Java & Spring Boot: justified teaching text, scoped to Course 02 only. */
+@media (min-width: 821px) {
+  body.lp-advanced-course .platform .lp-reading .lp-doc-section > p,
+  body.lp-advanced-course .platform .lp-reading .lp-practical-step p,
+  body.lp-advanced-course .platform .lp-reading .lp-code-walkthrough dd,
+  body.lp-advanced-course .platform .lp-reading .lp-java-terms dd,
+  body.lp-advanced-course .platform .lp-reading .lp-output-explain p {
+    text-align: justify;
+    text-align-last: left;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+}
+@media (max-width: 820px) {
+  body.lp-advanced-course .platform .lp-reading p,
+  body.lp-advanced-course .platform .lp-reading dd {
+    text-align: left;
+  }
 }

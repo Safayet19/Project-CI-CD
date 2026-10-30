@@ -10,18 +10,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
-  <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
-<body id="top" class="subpage">
+<body id="top" class="subpage research-page">
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('research')}"></div>
 <main id="main-content">
-<section class="page-intro wrap publication-intro">
+<section class="page-intro wrap publication-intro research-intro-container">
 <p class="section-label">Research</p><h1>Research &amp; publications</h1>
 <p>Explainable machine learning, medical AI and reliable methods—selected papers and ongoing research from my work.</p>
 </section>
-<section class="section section-tight research-library"><div class="wrap">
+<section class="section section-tight research-library"><div class="wrap research-container">
   <div class="section-header"><div><p class="section-label">Selected publications</p><h2>Papers and research work</h2><p>Publication details and review stages are shown only where supported by my portfolio.</p></div></div>
   <div class="publication-timeline" aria-label="Research publication timeline">
     <article class="publication-card"><div class="publication-card-top"><span class="publication-status published"><span class="publication-status-dot"></span>PUBLISHED</span><span class="publication-year">2026</span></div>
