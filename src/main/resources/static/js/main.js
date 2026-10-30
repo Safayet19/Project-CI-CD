@@ -265,6 +265,7 @@
   let verifiedLinkUrls = new Set();
   const maxSitePages = 7;
   const maxSiteContentLength = 14000;
+  const maxHistoryContentLength = 40000;
   const publicContactUrls = new Set([
     'mailto:safayetullah019@gmail.com',
     'https://mail.google.com/mail/?view=cm&fs=1&to=safayetullah019%40gmail.com',
@@ -534,7 +535,7 @@
     if (path === window.location.pathname && !refresh) {
       const content = pageText(document);
       return content ? {
-        page: { path, title: document.title || path, content },
+        page: { path, title: (document.title || path).slice(0, 300), content },
         links: pageLinks(document, path)
       } : null;
     }
@@ -590,7 +591,7 @@
     const currentSnapshot = catalog.find(snapshot => snapshot.page.path === currentPath)
       || await fetchPageSnapshot(currentPath, refresh);
     if (!currentSnapshot) {
-      return { pagePath: null, pages: null, links: [] };
+      return emptySiteContext();
     }
 
     const selected = new Map([[currentSnapshot.page.path, currentSnapshot]]);
@@ -669,10 +670,16 @@
     const links = [
       ...[...verified.entries()].map(([url, label]) => ({ label, url })),
       ...[...externalLinks.entries()].map(([url, label]) => ({ label, url }))
-    ].slice(0, 60);
+    ].filter(link => link.url.length <= 500).slice(0, 60);
     verifiedLinkLabels = new Map(links.map(link => [link.url, link.label]));
     verifiedLinkUrls = new Set(links.map(link => link.url));
-    return { pagePath: currentPath, pages: contextPages, links };
+    return { pagePath: currentSnapshot.page.path, pages: contextPages, links };
+  }
+
+  function emptySiteContext() {
+    verifiedLinkLabels = new Map();
+    verifiedLinkUrls = new Set();
+    return { pagePath: null, pages: null, links: [] };
   }
 
   function renderBotMarkdown(container, text) {
@@ -913,21 +920,42 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message,
-          history: conversationHistory.slice(-6),
+          history: conversationHistory.slice(-6).map(turn => ({
+            role: turn.role,
+            content: turn.content.slice(0, maxHistoryContentLength)
+          })),
           pagePath: siteContext.pagePath,
           pages: siteContext.pages,
           links: siteContext.links
         }),
         signal: controller.signal
       });
-      let siteContext = await loadSiteContext(message);
+      let siteContext;
+      try {
+        siteContext = await loadSiteContext(message);
+      } catch (contextError) {
+        console.warn('Continuing Safayet Bot chat without optional browser context', contextError);
+        pageSnapshotCache.clear();
+        siteContext = emptySiteContext();
+      }
       let response = await requestChat(siteContext);
       if (response.status === 400) {
         const firstError = await response.clone().json().catch(() => null);
         if (firstError?.error === 'Invalid website context') {
           pageSnapshotCache.clear();
-          siteContext = await loadSiteContext(message, true);
+          try {
+            siteContext = await loadSiteContext(message, true);
+          } catch (contextError) {
+            console.warn('Unable to refresh optional Safayet Bot website context', contextError);
+            siteContext = emptySiteContext();
+          }
           response = await requestChat(siteContext);
+          if (response.status === 400) {
+            const refreshedError = await response.clone().json().catch(() => null);
+            if (refreshedError?.error === 'Invalid website context') {
+              response = await requestChat(emptySiteContext());
+            }
+          }
         }
       }
 
@@ -962,7 +990,7 @@
 
       conversationHistory.push(
         { role: 'user', content: message },
-        { role: 'assistant', content: data.reply }
+        { role: 'assistant', content: data.reply.slice(0, maxHistoryContentLength) }
       );
       if (conversationHistory.length > 6) conversationHistory.splice(0, conversationHistory.length - 6);
       addMessage(data.reply, 'bot');

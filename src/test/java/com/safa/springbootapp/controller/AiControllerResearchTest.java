@@ -73,19 +73,21 @@ class AiControllerResearchTest {
     }
 
     @Test
-    void reportsUnavailableGroqAndRejectsUnverifiedLinks() {
+    void reportsUnavailableGroqAndIgnoresUnverifiedLinks() {
         AiController controller = controller();
         var fallback = controller.chat(new ChatRequest("Explain a tutorial not on the site.", null),
             requestFrom("192.0.2.10"));
-        var invalidContext = controller.chat(new ChatRequest("Explain this page.", null, "/",
-                List.of(new SitePage("/", "Home", "Visible page text.")),
-                List.of(new VerifiedLink("External", "https://example.com"))),
+        var unverifiedContextRequest = new ChatRequest("Explain this page.", null, "/",
+            List.of(new SitePage("/", "Home", "Visible page text.")),
+            List.of(new VerifiedLink("External", "https://example.com")));
+        var unverifiedContext = controller.chat(unverifiedContextRequest,
             requestFrom("192.0.2.11"));
 
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, fallback.getStatusCode());
         assertEquals("AI service is not configured",
             ((ErrorResponse) fallback.getBody()).error());
-        assertEquals(HttpStatus.BAD_REQUEST, invalidContext.getStatusCode());
+        assertFalse(AiService.systemContext(unverifiedContextRequest).contains("https://example.com"));
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, unverifiedContext.getStatusCode());
     }
 
     @Test
@@ -207,7 +209,8 @@ class AiControllerResearchTest {
             requestFrom("192.0.2.14"));
 
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, publicContact.getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, unverifiedContact.getStatusCode());
+        assertFalse(AiService.isPublicContactUrl("https://wa.me/8801000000000"));
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, unverifiedContact.getStatusCode());
     }
 
     private static AiController controller() {

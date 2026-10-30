@@ -139,12 +139,38 @@
                         </tbody>
                       </table>
                     </div>
+                    <div class="course-result-cards" role="list" aria-label="Course results">
+                      <article class="course-result-card" role="listitem" th:each="course : ${semester.courses}">
+                        <h4 class="course-result-title" th:text="${course.name}">Course name</h4>
+                        <p class="course-result-code">
+                          <strong>Course Code:</strong> <span th:text="${course.code}">CSE000</span>
+                        </p>
+                        <dl class="course-result-details">
+                          <div>
+                            <dt>Credits</dt>
+                            <dd th:text="${course.credits}">3</dd>
+                          </div>
+                          <div>
+                            <dt>Grade Point</dt>
+                            <dd th:text="${course.gradePoint}">4.00</dd>
+                          </div>
+                          <div>
+                            <dt>Letter Grade</dt>
+                            <dd th:text="${course.grade}">A+</dd>
+                          </div>
+                        </dl>
+                      </article>
+                    </div>
                   </section>
 
                   <p class="semester-results-summary">
-                    <strong>Semester GPA:</strong> <span th:text="${semester.gpa}">4.00</span>
+                    <span class="semester-result-item">
+                      <strong>Semester GPA:</strong> <span th:text="${semester.gpa}">4.00</span>
+                    </span>
                     <span aria-hidden="true"> · </span>
-                    <strong>Completed Credits:</strong> <span th:text="${semester.completedCredits}">12</span>
+                    <span class="semester-result-item">
+                      <strong>Completed Credits:</strong> <span th:text="${semester.completedCredits}">12</span>
+                    </span>
                   </p>
 
                   <section class="semester-block" th:if="${!#lists.isEmpty(semester.projects)}">

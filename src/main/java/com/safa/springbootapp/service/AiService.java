@@ -262,15 +262,10 @@ public class AiService {
                 .body(new ErrorResponse("Messages must be 500 characters or fewer."));
         }
 
-        if (request.history() != null && (request.history().size() > MAX_HISTORY_TURNS
-            || request.history().stream().anyMatch(turn -> turn == null
-                || !("user".equals(turn.role()) || "assistant".equals(turn.role()))
-                || turn.content() == null || turn.content().length() > MAX_HISTORY_CONTENT_LENGTH))) {
+        if (hasInvalidRecentHistory(request.history())) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Invalid conversation history"));
         }
-        if (!validSiteContext(request)) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Invalid website context"));
-        }
+        request = sanitizeOptionalSiteContext(request);
 
         // Keep the deterministic website-data fallback for local/unconfigured operation. In configured chats,
         // Groq must see research questions so it can understand Bangla/Banglish and localize the verified answer.
@@ -337,6 +332,14 @@ public class AiService {
             if (truncated) break;
         }
         return List.copyOf(retained);
+    }
+
+    private static boolean hasInvalidRecentHistory(List<ChatTurn> history) {
+        if (history == null || history.isEmpty()) return false;
+        int firstRetainedTurn = Math.max(0, history.size() - MAX_HISTORY_TURNS);
+        return history.subList(firstRetainedTurn, history.size()).stream().anyMatch(turn -> turn == null
+            || !("user".equals(turn.role()) || "assistant".equals(turn.role()))
+            || turn.content() == null || turn.content().length() > MAX_HISTORY_CONTENT_LENGTH);
     }
 
     public static String normalizeKnownNames(String message) {
@@ -784,7 +787,7 @@ public class AiService {
 
     private static boolean isKnownPublicPath(String path) {
         if (!isSafePagePath(path)) return false;
-        if (List.of("/", "/about", "/projects", "/learning", "/research",
+        if (List.of("/", "/about", "/projects", "/learning", "/research", "/journey",
             "/academic-journey", "/training-certifications").contains(path)) return true;
         if (PublicCatalog.RECORDS.stream().anyMatch(record -> path.equals(record.path()))) return true;
         String[] parts = path.split("/");
@@ -997,40 +1000,39 @@ public class AiService {
         return List.copyOf(selected);
     }
 
-    private static boolean validSiteContext(ChatRequest request) {
-        if (request.pages() == null) {
-            return request.pagePath() == null && (request.links() == null || request.links().isEmpty());
-        }
-        List<VerifiedLink> links = request.links() == null ? List.of() : request.links();
-        if (request.pages().isEmpty() || request.pages().size() > MAX_SITE_PAGES
-            || links.size() > MAX_VERIFIED_LINKS
-            || !isSafePagePath(request.pagePath())) {
-            return false;
-        }
-
+    private static ChatRequest sanitizeOptionalSiteContext(ChatRequest request) {
+        String pagePath = normalizeKnownPublicPath(request.pagePath());
+        List<SitePage> pages = new ArrayList<>();
         int contentLength = 0;
-        boolean currentPageFound = false;
-        for (SitePage page : request.pages()) {
-            if (page == null || !isSafePagePath(page.path()) || page.title() == null
+        int examinedPages = 0;
+        if (request.pages() != null) for (SitePage page : request.pages()) {
+            if (examinedPages++ >= MAX_SITE_PAGES) break;
+            String path = page == null ? null : normalizeKnownPublicPath(page.path());
+            if (path == null || page.title() == null
                 || page.title().length() > 300 || page.content() == null || page.content().isBlank()
                 || page.content().length() > MAX_SITE_CONTENT_LENGTH) {
-                return false;
+                continue;
             }
-            contentLength += page.title().length() + page.content().length();
-            if (contentLength > MAX_SITE_CONTENT_LENGTH) return false;
-            if (request.pagePath().equals(page.path())) currentPageFound = true;
+            int pageLength = page.title().length() + page.content().length();
+            if (contentLength + pageLength > MAX_SITE_CONTENT_LENGTH) continue;
+            pages.add(new SitePage(path, page.title(), page.content()));
+            contentLength += pageLength;
         }
-        if (!currentPageFound) return false;
 
-        for (VerifiedLink link : links) {
+        LinkedHashMap<String, VerifiedLink> links = new LinkedHashMap<>();
+        int examinedLinks = 0;
+        if (request.links() != null) for (VerifiedLink link : request.links()) {
+            if (examinedLinks++ >= MAX_VERIFIED_LINKS) break;
             if (link == null || link.label() == null || link.label().length() > 200
-                || link.url() == null || link.url().length() > 500
-                || !(isKnownPublicPath(link.url()) || isPublishedDoi(link.url())
-                    || isPublicContactUrl(link.url()) || isPublicProjectUrl(link.url()))) {
-                return false;
-            }
+                || link.url() == null || link.url().length() > 500) continue;
+            String publicPath = normalizeKnownPublicPath(link.url());
+            String url = publicPath != null ? publicPath : link.url();
+            if (publicPath == null && !(isPublishedDoi(url)
+                || isPublicContactUrl(url) || isPublicProjectUrl(url))) continue;
+            links.putIfAbsent(url, new VerifiedLink(link.label(), url));
         }
-        return true;
+        return new ChatRequest(request.message(), request.history(), pagePath,
+            List.copyOf(pages), List.copyOf(links.values()));
     }
 
     public static boolean isPublicContactUrl(String url) {
@@ -1046,6 +1048,15 @@ public class AiService {
             if (".".equals(segment) || "..".equals(segment)) return false;
         }
         return true;
+    }
+
+    private static String normalizeKnownPublicPath(String path) {
+        if (!isSafePagePath(path)) return null;
+        String normalized = path;
+        while (normalized.length() > 1 && normalized.endsWith("/")) {
+            normalized = normalized.substring(0, normalized.length() - 1);
+        }
+        return isKnownPublicPath(normalized) ? normalized : null;
     }
 
     private static boolean isGreeting(String message) {

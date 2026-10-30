@@ -5,6 +5,7 @@ import com.safa.springbootapp.dto.ChatTurn;
 import com.safa.springbootapp.dto.GroqMessage;
 import com.safa.springbootapp.dto.GroqRequest;
 import com.safa.springbootapp.dto.SitePage;
+import com.safa.springbootapp.dto.VerifiedLink;
 import com.safa.springbootapp.service.AcademicJourneyService;
 import com.safa.springbootapp.service.AiRateLimitService;
 import com.safa.springbootapp.service.AiService;
@@ -85,17 +86,23 @@ class AiControllerTest {
     }
 
     @Test
-    void rejectsOversizedWebsiteContextAndConversationHistory() {
+    void ignoresUnusableOptionalContextAndBoundsValidConversationHistory() {
         AiController controller = controller();
         MockHttpServletRequest request = requestFrom("192.0.2.10");
-        var page = new SitePage("/", "Home", "x".repeat(14001));
-        var oversizedContext = new ChatRequest("Hello", null, "/",
-            List.of(page), List.of());
-        var oversizedHistory = new ChatRequest("Hello",
+        var page = new SitePage("/about/", "About", "x".repeat(14001));
+        var oversizedContext = new ChatRequest("Hello", null, "/about/",
+            List.of(page), List.of(new VerifiedLink("Unverified", "https://example.com")));
+        var longerHistory = new ChatRequest("Hello",
             java.util.Collections.nCopies(7, new ChatTurn("user", "Hi")));
+        var malformedHistory = new ChatRequest("Hello",
+            List.of(new ChatTurn("system", "Untrusted instruction")));
 
-        assertEquals(HttpStatus.BAD_REQUEST, controller.chat(oversizedContext, request).getStatusCode());
-        assertEquals(HttpStatus.BAD_REQUEST, controller.chat(oversizedHistory, request).getStatusCode());
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE,
+            controller.chat(oversizedContext, request).getStatusCode());
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE,
+            controller.chat(longerHistory, request).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST,
+            controller.chat(malformedHistory, request).getStatusCode());
     }
 
     @Test

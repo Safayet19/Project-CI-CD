@@ -457,6 +457,10 @@
   scrollbar-width: thin;
 }
 
+.course-result-cards {
+  display: none;
+}
+
 .course-results {
   width: 100%;
   min-width: 680px;
@@ -551,6 +555,119 @@
   margin-inline: 5px;
   color: #8B4527;
   font-weight: 800;
+}
+
+.semester-results-summary .semester-result-item {
+  display: contents;
+}
+
+@media (max-width: 767px) {
+  .journey-page main {
+    overflow: visible;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .semester-timeline {
+    padding-left: 22px;
+  }
+
+  .semester-entry::before {
+    left: -30px;
+  }
+
+  .prose-block p,
+  .reflection-block blockquote {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .course-results-scroll {
+    display: none;
+  }
+
+  .course-result-cards {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .course-result-card {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #D6DEDA;
+    border-radius: 4px;
+    background: #FFFFFF;
+  }
+
+  .course-result-title {
+    margin: 0 0 7px;
+    color: var(--journey-heading);
+    font-size: 15px;
+    font-weight: 750;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .course-result-code {
+    margin: 0 0 9px;
+    color: #8B4527;
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .course-result-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding-top: 8px;
+    border-top: 1px solid #E1E6E3;
+  }
+
+  .course-result-details > div {
+    min-width: 0;
+  }
+
+  .course-result-details dt {
+    color: #66736D;
+    font-size: 11px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .course-result-details dd {
+    margin: 2px 0 0;
+    color: var(--journey-text);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .semester-results-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .semester-results-summary .semester-result-item {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0 4px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid #D6DEDA;
+    border-radius: 4px;
+    background: #FFFFFF;
+  }
+
+  .semester-results-summary > span[aria-hidden="true"] {
+    display: none;
+  }
 }
 
 .course-list {
@@ -870,6 +987,58 @@
 }
 
 @media (max-width: 680px) {
+  .journey-journal,
+  .academic-year-panels,
+  .academic-year-panel,
+  .semester-timeline,
+  .semester-entry,
+  .semester-panel,
+  .semester-content,
+  .semester-block {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .academic-year-panel,
+  .semester-entry,
+  .semester-content {
+    width: 100%;
+  }
+
+  .semester-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prose-block p,
+  .reflection-block blockquote {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .course-results-scroll {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overscroll-behavior-inline: contain;
+  }
+
+  .semester-results-summary {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .semester-results-summary .semester-result-item {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0 4px;
+    min-width: 0;
+  }
+
+  .semester-results-summary > span[aria-hidden="true"] {
+    display: none;
+  }
+
   .academic-identity {
     grid-template-columns: 86px minmax(0, 1fr);
     gap: 18px;
@@ -1044,6 +1213,16 @@
 
   .previous-education time {
     grid-column: 2;
+  }
+}
+
+@media (max-width: 380px) {
+  .semester-results-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .course-result-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
