@@ -70,9 +70,13 @@ class AiControllerTest {
             AiService.mapGroqError(HttpStatusCode.valueOf(401), "").getStatusCode());
         assertEquals(HttpStatus.TOO_MANY_REQUESTS,
             AiService.mapGroqError(HttpStatusCode.valueOf(429), "").getStatusCode());
-        assertTrue(AiService.mapGroqError(HttpStatusCode.valueOf(429),
-            "{\"error\":{\"message\":\"Rate limit reached on tokens per minute (TPM)\"}}")
-            .getBody().error().contains("token limit"));
+        var tokenLimit = AiService.mapGroqError(HttpStatusCode.valueOf(429),
+            "{\"error\":{\"message\":\"Rate limit reached on tokens per minute (TPM)\"}}");
+        assertEquals(HttpStatus.TOO_MANY_REQUESTS, tokenLimit.getStatusCode());
+        assertEquals("ভাই, একটু মায়া করেন! 😭🙏\n\n"
+            + "আমার টোকেনের পকেট একদম ফাঁকা! সাফায়েত ভাইয়েরও এত টাকা নাই যে আমাকে সারাদিন টোকেন কিনে খাওয়াবে! 😂💸\n\n"
+            + "একটু পরে আবার আসেন। ততক্ষণে আমি আমার ডিজিটাল পকেটের অবস্থা দেখি! 🤖",
+            tokenLimit.getBody().error());
         assertTrue(AiService.mapGroqError(HttpStatusCode.valueOf(429),
             "{\"error\":{\"message\":\"Rate limit reached on requests per minute (RPM)\"}}")
             .getBody().error().contains("rate-limited by the AI provider"));
@@ -95,7 +99,7 @@ class AiControllerTest {
     }
 
     @Test
-    void selectsRelevantPageExcerptsAndKeepsBalancedProfileSources() {
+    void usesAuthoritativeKnowledgeAndKeepsBalancedProfileSources() {
         String unrelated = "Unrelated archive text. ".repeat(120);
         var focused = new ChatRequest("What are Safayet's Java project skills?", null, "/",
             List.of(
@@ -105,8 +109,11 @@ class AiControllerTest {
             ), List.of());
         String focusedContext = AiService.systemContext(focused);
 
-        assertTrue(focusedContext.contains("Verified technical skills include Java and Spring Boot."));
-        assertTrue(focusedContext.contains("Java project demonstrates application development."));
+        assertTrue(focusedContext.contains("AUTHORITATIVE PUBLIC WEBSITE RECORDS"));
+        assertTrue(focusedContext.contains("Published page: /projects/"));
+        assertTrue(focusedContext.contains("Spring Boot"));
+        assertFalse(focusedContext.contains("Verified technical skills include Java and Spring Boot."));
+        assertFalse(focusedContext.contains("Java project demonstrates application development."));
         assertFalse(focusedContext.contains("Unrelated archive text."));
 
         var profile = new ChatRequest("Tell me about Safayet.", null, "/",
@@ -119,11 +126,11 @@ class AiControllerTest {
             ), List.of());
         String profileContext = AiService.systemContext(profile);
 
-        assertTrue(profileContext.contains("Portfolio introduction and purpose."));
-        assertTrue(profileContext.contains("verified technical skills."));
-        assertTrue(profileContext.contains("CGPA and academic standing."));
-        assertTrue(profileContext.contains("verified software projects."));
-        assertTrue(profileContext.contains("Research and publication records."));
+        assertTrue(profileContext.contains("VERIFIED ACADEMIC JOURNEY"));
+        assertTrue(profileContext.contains("VERIFIED PUBLIC RESEARCH RECORDS"));
+        assertTrue(profileContext.contains("Published page: /about"));
+        assertTrue(profileContext.contains("Published page: /projects/"));
+        assertFalse(profileContext.contains("Portfolio introduction and purpose."));
     }
 
     @Test
@@ -180,7 +187,7 @@ class AiControllerTest {
         String completeCourseList = AcademicJourneyService.academicKnowledge("What courses did he take?");
 
         assertTrue(cgpa.contains("CGPA: 3.99 / 4.00"));
-        assertTrue(cgpa.contains("Academic Standing: 1st Rank in Batch"));
+        assertTrue(cgpa.contains("Academic Standing: Ranked 1st in the Batch"));
         assertTrue(summer.contains("CSE161 — Programming Language I (3 credits, 3.75, A)"));
         assertTrue(spring2026.contains("Spring 2026 — Semester 10"));
         assertFalse(spring2026.contains("CSE444"));
@@ -207,7 +214,7 @@ class AiControllerTest {
     }
 
     @Test
-    void selectsProfilePagesForShortBanglishOwnerQuestions() {
+    void selectsAuthoritativeProfileKnowledgeForShortBanglishOwnerQuestions() {
         var request = new ChatRequest("safayet k", null, "/",
             List.of(
                 new SitePage("/", "Home", "Portfolio introduction."),
@@ -219,11 +226,11 @@ class AiControllerTest {
 
         String context = AiService.systemContext(request);
 
-        assertTrue(context.contains("Portfolio introduction."));
-        assertTrue(context.contains("Verified profile, personal introduction, and technical skills."));
-        assertTrue(context.contains("Verified degree and academic records."));
-        assertTrue(context.contains("Verified project details."));
-        assertTrue(context.contains("Verified research records."));
+        assertTrue(context.contains("VERIFIED ACADEMIC JOURNEY"));
+        assertTrue(context.contains("VERIFIED PUBLIC RESEARCH RECORDS"));
+        assertTrue(context.contains("Published page: /about"));
+        assertTrue(context.contains("Published page: /projects/"));
+        assertFalse(context.contains("Portfolio introduction."));
     }
 
     @Test
@@ -233,8 +240,9 @@ class AiControllerTest {
             new ChatTurn("assistant", "His verified university CGPA is 3.99 / 4.00.")),
             "/", List.of(new SitePage("/", "Home", "Portfolio introduction.")), List.of());
 
-        assertTrue(AiService.systemContext(request)
-            .contains("VERIFIED ACADEMIC RECORDS FROM THE PUBLIC ACADEMIC JOURNEY"));
+        String context = AiService.systemContext(request);
+        assertTrue(context.contains("VERIFIED ACADEMIC JOURNEY"));
+        assertTrue(context.contains("Current CGPA: 3.99 / 4.00"));
     }
 
     @Test

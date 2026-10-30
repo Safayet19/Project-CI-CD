@@ -450,7 +450,7 @@ public class AiService {
         }
 
         List<VerifiedLink> links = verifiedLinks(request);
-        if (!links.isEmpty() && remaining > 120) {
+        if (!isGreeting(request.message()) && !links.isEmpty() && remaining > 120) {
             String normalizedQuestion = normalizeConversationIntent(request.message()).toLowerCase(Locale.ROOT);
             boolean allProjectLinks = normalizedQuestion.matches("(?s).*\\b(?:all|every|list|show)\\b.*\\bprojects?\\b.*")
                 && normalizedQuestion.matches("(?s).*\\b(?:links?|repositories|github|demos?|urls?)\\b.*");

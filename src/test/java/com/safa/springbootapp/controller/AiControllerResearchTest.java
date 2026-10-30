@@ -1,8 +1,8 @@
 package com.safa.springbootapp.controller;
 
 import com.safa.springbootapp.dto.ChatRequest;
-import com.safa.springbootapp.dto.ChatResponse;
 import com.safa.springbootapp.dto.ChatTurn;
+import com.safa.springbootapp.dto.ErrorResponse;
 import com.safa.springbootapp.dto.SitePage;
 import com.safa.springbootapp.dto.VerifiedLink;
 import com.safa.springbootapp.service.AiRateLimitService;
@@ -73,7 +73,7 @@ class AiControllerResearchTest {
     }
 
     @Test
-    void answersFromAvailablePagesWithoutGroqAndRejectsUnverifiedLinks() {
+    void reportsUnavailableGroqAndRejectsUnverifiedLinks() {
         AiController controller = controller();
         var fallback = controller.chat(new ChatRequest("Explain a tutorial not on the site.", null),
             requestFrom("192.0.2.10"));
@@ -82,9 +82,9 @@ class AiControllerResearchTest {
                 List.of(new VerifiedLink("External", "https://example.com"))),
             requestFrom("192.0.2.11"));
 
-        assertEquals(HttpStatus.OK, fallback.getStatusCode());
-        assertEquals("This topic isn't available on Safayet's website yet.",
-            ((ChatResponse) fallback.getBody()).reply());
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, fallback.getStatusCode());
+        assertEquals("AI service is not configured",
+            ((ErrorResponse) fallback.getBody()).error());
         assertEquals(HttpStatus.BAD_REQUEST, invalidContext.getStatusCode());
     }
 
@@ -96,8 +96,9 @@ class AiControllerResearchTest {
             List.of(new VerifiedLink("Learning Hub", "/learning"))));
 
         assertTrue(context.contains("CURRENT PAGE: /learning/example"));
-        assertTrue(context.contains("Published lesson"));
-        assertTrue(context.contains("Actual lesson text."));
+        assertTrue(context.contains("AUTHORITATIVE PUBLIC WEBSITE RECORDS"));
+        assertFalse(context.contains("Published lesson"));
+        assertFalse(context.contains("Actual lesson text."));
         assertTrue(context.contains("Learning Hub: /learning"));
     }
 
@@ -113,7 +114,8 @@ class AiControllerResearchTest {
         String researchContext = AiService.systemContext(allPapers);
         String cgpaContext = AiService.systemContext(unrelatedFollowUp);
 
-        assertTrue(researchContext.contains("CALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE"));
+        assertTrue(researchContext.contains("VERIFIED PUBLIC RESEARCH RECORDS"));
+        assertTrue(researchContext.contains("Total papers: 6"));
         assertFalse(researchContext.contains("Raw research page text."));
         assertFalse(cgpaContext.contains("CALCULATED RESEARCH RECORDS FROM THE RESEARCH PAGE"));
         assertTrue(cgpaContext.contains("CGPA: 3.99 / 4.00"));
