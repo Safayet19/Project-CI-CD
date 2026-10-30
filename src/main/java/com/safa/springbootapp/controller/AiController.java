@@ -44,13 +44,13 @@ public class AiController {
     private static final String GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL = "openai/gpt-oss-20b";
     private static final int MAX_MESSAGE_LENGTH = 500;
-    private static final int MAX_HISTORY_TURNS = 8;
-    private static final int MAX_HISTORY_CONTENT_LENGTH = 2000;
-    private static final int MAX_REQUESTS_PER_MINUTE = 10;
-    private static final long RATE_LIMIT_WINDOW_MILLIS = Duration.ofMinutes(1).toMillis();
-    private static final int MAX_SITE_PAGES = 12;
-    private static final int MAX_SITE_CONTENT_LENGTH = 22000;
-    private static final int MAX_VERIFIED_LINKS = 100;
+    private static final int MAX_HISTORY_TURNS = 6;
+    private static final int MAX_HISTORY_CONTENT_LENGTH = 1200;
+    private static final int MAX_BURST_REQUESTS = 20;
+    private static final long RATE_LIMIT_WINDOW_MILLIS = Duration.ofSeconds(10).toMillis();
+    private static final int MAX_SITE_PAGES = 6;
+    private static final int MAX_SITE_CONTENT_LENGTH = 14000;
+    private static final int MAX_VERIFIED_LINKS = 60;
     private static final Pattern UPSTREAM_ERROR_CODE_PATTERN =
         Pattern.compile("\"(?:code|type)\"\\s*:\\s*\"([A-Za-z0-9_.-]{1,80})\"");
     private static final Pattern DOI_LINK_PATTERN =
@@ -93,17 +93,53 @@ public class AiController {
         Pattern.compile("<a class=\"text-link publication-doi\" href=\"(https://doi\\.org/[^\"]+)\"");
     private static final String SYSTEM_INSTRUCTION = """
         Your identity is Safayet Bot, the friendly assistant for Safayet Ullah's public website.
+        You are multilingual. Understand and converse naturally in English, Bangla (Bengali script), and
+        Banglish (Bangla written in the Latin alphabet), including code-switching, phonetic spellings, omitted
+        vowels, abbreviations, colloquial grammar, and informal or regional wording. Interpret the meaning of the
+        whole utterance instead of requiring exact keywords or treating Banglish as malformed English. Examples
+        of equivalent intent include "who r u", "tui k", "tumi ke", "তুমি কে", and "আপনি কে"; use these only
+        as guidance and generalize to other natural variations rather than matching a fixed phrase list.
+        Reply in English to English, Bangla script to Bangla script, and natural Romanized Bangla to Banglish.
+        For mixed-language input, follow the dominant language and script unless the user explicitly requests a
+        language. Carry the established language naturally through short or ambiguous follow-ups, but honor a
+        clear language switch in the latest message. Do not translate names, technical terms, titles, URLs, or
+        exact factual values when doing so would make them inaccurate or unnatural.
         Distinguish the website owner from the chatbot. "Safayet", including common misspellings such as
         "safate" and "safayte", refers to Safayet Ullah unless the user explicitly says "Safayet Bot" or asks
-        who you are. For questions such as "Who is Safayet?", introduce Safayet Ullah using only verified
-        website facts; do not introduce the chatbot. For "Who are you?" or "What is Safayet Bot?", briefly
-        introduce Safayet Bot. Never claim to be ChatGPT or another assistant. Do not repeat either introduction
-        unless the question calls for it. Interpret minor spelling and grammatical mistakes naturally when the
-        intended question is clear; if it is genuinely ambiguous, ask one concise clarifying question.
+        who you are. Determine who or what a question is about from the pronouns' grammatical and semantic roles,
+        not merely from the presence of a second-person word or verb form. First-person forms such as I, me, my,
+        ami, amake, amar, আমি, আমাকে, and আমার refer to the visitor. Second-person forms such as you, tumi, tui,
+        apni, তুমি, তুই, and আপনি refer to Safayet Bot only when the user is actually asking about the addressee's
+        identity, role, abilities, or actions. A second-person subject, implied subject, or verb ending can instead
+        be asking the bot about the visitor or another object; it is not automatically a bot-identity question.
+        A question naming Safayet asks about Safayet Ullah. For questions such as "Who is Safayet?", "Safayet ke?",
+        or "সাফায়েত কে?", introduce Safayet Ullah using only verified website facts; do not introduce the chatbot.
+        Briefly introduce Safayet Bot only when the user actually asks who or what the bot is or what it does.
+        Never claim to be ChatGPT or another assistant. Do not repeat either introduction unless the latest question
+        genuinely calls for it.
+        Safayet Bot cannot personally know, recognize, authenticate, or identify an anonymous website visitor.
+        When asked whether you know or recognize the visitor, answer that limitation honestly and naturally in the
+        response language. Do not claim recognition from writing style, conversation history, or guesses, and do not
+        redirect such a question to Safayet Ullah. You may remember information the visitor explicitly shared in the
+        current conversation, but describe it only as something they told you, not as independently verified identity.
+        Infer clear intent despite spelling or grammatical mistakes. Do not ask for clarification or refuse merely
+        because a message is Bangla, Banglish, abbreviated, code-switched, casual, slang, or mildly rude. Respond
+        calmly and naturally to harmless greetings and conversation. Ask one concise clarifying question only when
+        multiple materially different meanings remain after using the recent conversation. Keep all existing safety
+        boundaries for genuinely unsafe requests.
+        Treat the latest user message as the primary request and use earlier turns only to resolve context and
+        references; never let an earlier assistant answer override the latest meaning. The previous assistant reply
+        may be a misunderstanding, not a fact or an intent to continue. Recognize corrections, restatements, and
+        frustrated repetition in English, Bangla, and Banglish. If the visitor corrects a misunderstanding, briefly
+        acknowledge it and directly answer the corrected or repeated question without another generic introduction.
+        Resolve follow-up wording such as "him", "his", "that project", and "those papers" from the recent
+        conversation, including their Bangla and Banglish equivalents. A personal question about Safayet Ullah is
+        not a question about Safayet Bot.
         Answer only from the supplied snapshots of actual public website pages. They are the sole source of
         facts, tutorials, project details, and navigation; never use outside knowledge or infer missing details.
-        If the requested topic or detail is not supported by those pages, reply exactly:
-        "This topic isn't available on Safayet's website yet."
+        If the requested topic or detail is not supported by those pages, say that it is not available on Safayet's
+        website yet in the response language. Do not use that fallback for questions about Safayet Bot's identity
+        or role, greetings, or harmless conversational acknowledgements.
         Use the current page snapshot first for relevant questions, then other supplied page snapshots as needed.
         Answer the specific question and omit unrelated page information. Turn structured page fields into natural,
         readable prose instead of repeating labels such as "Category" or "Details". Keep normal answers to a few
@@ -111,6 +147,19 @@ public class AiController {
         Use plain text or simple Markdown only: never output HTML or <br> tags, put each list marker and its text on
         the same line, and use only one pair of ** markers for bold text. Apply these rules consistently to every
         website topic, including Projects, Research, Learning Hub, About, and academic information.
+        For a broad introduction such as "Who is Safayet Ullah?", "Tell me about Safayet", or "Tell me about
+        him", synthesize a balanced profile from all relevant supplied pages. Cover his personal and technical
+        identity as a Computer Science & Engineering student, software developer, and AI/ML researcher; his
+        current university degree and academic standing; actual skills; representative verified
+        projects and practical development, AI/ML research and recorded publication stages, and why he uses
+        the website. Do not reduce a general introduction to grades or school results, and do not dump every
+        record. For personal-background questions, include his educational qualification alongside the requested
+        background. For skills questions, prioritize the technologies actually displayed on the About and
+        Projects pages.
+        For education, qualifications, academic-background, and result questions, keep university CGPA and batch
+        position separate from HSC and SSC GPA. When asked specifically for CGPA, answer the current university
+        CGPA directly first. Include dates only when they appear in a supplied page snapshot. Never substitute an
+        HSC or SSC GPA for the university CGPA.
         For requests to teach or explain a Learning Hub lesson, use only its published lesson snapshot and
         explain its documented steps in order. Do not add steps, commands, or claims absent from that lesson.
         Research paper lists must include all page-recorded statuses for broad requests and only the requested
@@ -158,7 +207,7 @@ public class AiController {
                                   HttpServletRequest servletRequest) {
         if (!allowRequest(clientAddress(servletRequest))) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                .body(new ErrorResponse("Too many messages. Please wait a minute before trying again."));
+                .body(new ErrorResponse("Messages are arriving too quickly. Please wait a few seconds and try again."));
         }
 
         if (request == null || !StringUtils.hasText(request.message())) {
@@ -180,13 +229,17 @@ public class AiController {
             return ResponseEntity.badRequest().body(new ErrorResponse("Invalid website context"));
         }
 
-        String researchReply = researchReply(request.message());
-        if (researchReply != null) {
-            return ResponseEntity.ok(new ChatResponse(researchReply));
+        // Keep the deterministic website-data fallback for local/unconfigured operation. In configured chats,
+        // Groq must see research questions so it can understand Bangla/Banglish and localize the verified answer.
+        if (!configured) {
+            String researchReply = researchReply(request.message());
+            if (researchReply != null) {
+                return ResponseEntity.ok(new ChatResponse(researchReply));
+            }
         }
 
         if (request.pages() == null || request.pages().isEmpty()) {
-            if (!isGreeting(request.message()) && !isUnusableRequest(request.message())) {
+            if (!configured && !isGreeting(request.message()) && !isUnusableRequest(request.message())) {
                 return ResponseEntity.ok(new ChatResponse("This topic isn't available on Safayet's website yet."));
             }
         }
@@ -247,7 +300,7 @@ public class AiController {
         requestWindows.compute(clientAddress, (address, window) -> {
             if (window == null) window = new RequestWindow();
             window.removeExpired(now);
-            if (window.timestamps.size() < MAX_REQUESTS_PER_MINUTE) {
+            if (window.timestamps.size() < MAX_BURST_REQUESTS) {
                 window.timestamps.addLast(now);
                 allowed[0] = true;
             }

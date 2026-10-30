@@ -257,11 +257,19 @@
   typingText.textContent = 'Safayet Bot is typing...';
   typingIndicator.append(typingText);
   const conversationHistory = [];
-  let siteContextPromise;
+  const pageSnapshotCache = new Map();
   let verifiedLinkLabels = new Map();
   let verifiedLinkUrls = new Set();
-  const maxSitePages = 12;
-  const maxSiteContentLength = 22000;
+  const maxSitePages = 6;
+  const maxSiteContentLength = 14000;
+  const knowledgeHubPaths = [
+    '/', '/about', '/academic-journey', '/projects', '/research', '/learning',
+    '/training-certifications'
+  ];
+  const searchStopWords = new Set([
+    'about', 'and', 'are', 'does', 'for', 'from', 'have', 'him', 'his', 'how', 'is', 'me',
+    'more', 'safayet', 'tell', 'that', 'the', 'this', 'ullah', 'what', 'which', 'who', 'with'
+  ]);
   let isWaiting = false;
   let previousScrollPosition = 0;
 
@@ -367,7 +375,7 @@
       const text = node.textContent.trim();
       if (text) output.push(text);
     }
-    return output.join(' ').replace(/\s+/g, ' ').trim().slice(0, 8000);
+    return output.join(' ').replace(/\s+/g, ' ').trim().slice(0, 5000);
   }
 
   function pageLinks(documentToRead, sourcePath) {
@@ -392,84 +400,174 @@
     return discovered;
   }
 
-  async function loadSiteContext() {
+  function relevantKnowledgePaths(message) {
+    const followUp = /\b(?:he|him|his|it|its|that|those|them|more)\b/i.test(message);
+    const recentConversation = followUp
+      ? conversationHistory.slice(-2).map(turn => turn.content).join(' ')
+      : '';
+    const question = `${recentConversation} ${message}`.toLowerCase()
+      .replace(/\b(?:safate|safayte)\b/g, 'safayet');
+    const paths = new Set([window.location.pathname]);
+    const includes = pattern => pattern.test(question);
+    const broadProfile = includes(/\b(?:who\s+is|tell\s+me\s+(?:more\s+)?about|about)\s+(?:safayet(?:\s+ullah)?|him|he)\b|\bpersonal\s+(?:background|profile)\b/);
+
+    if (broadProfile) {
+      ['/', '/about', '/academic-journey', '/projects', '/research'].forEach(path => paths.add(path));
+    }
+    if (includes(/\b(?:education|academic|qualification|university|degree|bsc|cgpa|gpa|batch|hsc|ssc|college|school)\b/)) {
+      paths.add('/about');
+      paths.add('/academic-journey');
+    }
+    if (includes(/\b(?:skill|technology|technologies|language|framework|database|spring|java|python|docker|aws|devops|cloud|linux|kubernetes|terraform|jenkins|github)\b/)) {
+      paths.add('/about');
+      paths.add('/projects');
+    }
+    if (includes(/\b(?:project|built|build|software|application|development|experience)\b/)) {
+      paths.add('/projects');
+    }
+    if (includes(/\b(?:research|paper|publication|published|accepted|pending|review|machine learning|ai\/ml|artificial intelligence)\b/)) {
+      paths.add('/research');
+    }
+    if (includes(/\b(?:learn|learning|lesson|tutorial|guide|course|module|lab)\b/)) {
+      paths.add('/learning');
+    }
+    if (includes(/\b(?:training|certificate|certification|credential|penetration testing|cpte)\b/)) {
+      paths.add('/training-certifications');
+    }
+    if (includes(/\b(?:website|portfolio|purpose|share|document)\b/)) {
+      paths.add('/');
+    }
+    return [...paths].slice(0, maxSitePages);
+  }
+
+  function normalizedSearchText(value) {
+    return value.toLowerCase()
+      .replace(/\b(?:safate|safayte)\b/g, 'safayet')
+      .replace(/[^a-z0-9+#./-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function queryTerms(message) {
+    return [...new Set(normalizedSearchText(message).split(' ')
+      .filter(term => term.length >= 3 && !searchStopWords.has(term)))];
+  }
+
+  function pageRelevance(snapshot, terms) {
+    const title = normalizedSearchText(snapshot.page.title);
+    const content = normalizedSearchText(snapshot.page.content);
+    return terms.reduce((score, term) => score
+      + (title.includes(term) ? 4 : 0)
+      + (content.includes(term) ? 1 : 0), 0);
+  }
+
+  async function fetchPageSnapshot(path) {
+    if (path === window.location.pathname) {
+      const content = pageText(document);
+      return content ? {
+        page: { path, title: document.title || path, content },
+        links: pageLinks(document, path)
+      } : null;
+    }
+    if (pageSnapshotCache.has(path)) return pageSnapshotCache.get(path);
+
+    const pending = (async () => {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 2500);
+      try {
+        const response = await fetch(path, {
+          cache: 'no-store',
+          credentials: 'same-origin',
+          headers: { Accept: 'text/html' },
+          signal: controller.signal
+        });
+        if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) return null;
+        const responseUrl = new URL(response.url, window.location.origin);
+        if (responseUrl.origin !== window.location.origin) return null;
+        const pageDocument = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const content = pageText(pageDocument);
+        if (!content) return null;
+        return {
+          page: { path: responseUrl.pathname, title: (pageDocument.title || path).slice(0, 300), content },
+          links: pageLinks(pageDocument, responseUrl.pathname)
+        };
+      } catch (error) {
+        console.warn('Unable to load a relevant public page for Safayet Bot', path, error);
+        return null;
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    })();
+    pageSnapshotCache.set(path, pending);
+    return pending;
+  }
+
+  async function loadSiteContext(message) {
     const currentPath = window.location.pathname;
-    const currentTitle = document.title || currentPath;
-    const currentContent = pageText(document);
-    if (!currentContent) {
+    const routedPaths = relevantKnowledgePaths(message);
+    const catalogPaths = [...new Set([...knowledgeHubPaths, ...routedPaths])];
+    const catalog = (await Promise.all(catalogPaths.map(fetchPageSnapshot))).filter(Boolean);
+    const currentSnapshot = catalog.find(snapshot => snapshot.page.path === currentPath)
+      || await fetchPageSnapshot(currentPath);
+    if (!currentSnapshot) {
       return { pagePath: null, pages: null, links: [] };
     }
 
-    const pages = [{ path: currentPath, title: currentTitle, content: currentContent }];
-    const queued = new Map();
-    const verified = new Map([[currentPath, currentTitle]]);
+    const selected = new Map([[currentSnapshot.page.path, currentSnapshot]]);
+    const addSnapshot = snapshot => {
+      if (snapshot && selected.size < maxSitePages) selected.set(snapshot.page.path, snapshot);
+    };
+    routedPaths.forEach(path => addSnapshot(catalog.find(snapshot => snapshot.page.path === path)));
+
+    const terms = queryTerms(message);
+    catalog.filter(snapshot => !selected.has(snapshot.page.path))
+      .map(snapshot => ({ snapshot, score: pageRelevance(snapshot, terms) }))
+      .filter(match => match.score > 0)
+      .sort((left, right) => right.score - left.score)
+      .slice(0, 2)
+      .forEach(match => addSnapshot(match.snapshot));
+
+    const normalizedQuestion = normalizedSearchText(message);
+    const matchingDetailPaths = catalog.flatMap(snapshot => snapshot.links)
+      .filter(link => link.url.startsWith('/') && !selected.has(link.url))
+      .filter(link => {
+        const label = normalizedSearchText(link.label);
+        return label.length >= 4 && !/^(?:view details|learn more|read more)$/.test(label)
+          && normalizedQuestion.includes(label);
+      })
+      .map(link => link.url)
+      .filter((path, index, paths) => paths.indexOf(path) === index)
+      .slice(0, 2);
+    const detailSnapshots = await Promise.all(matchingDetailPaths.map(fetchPageSnapshot));
+    detailSnapshots.forEach(addSnapshot);
+    const snapshots = [...selected.values()];
+
+    const verified = new Map();
     const externalLinks = new Map();
-    const visited = new Set([currentPath]);
-    const addDiscovered = links => {
-      links.forEach(link => {
+    snapshots.forEach(snapshot => {
+      verified.set(snapshot.page.path, snapshot.page.title);
+      snapshot.links.forEach(link => {
         if (link.url.startsWith('/')) {
-          if (!visited.has(link.url) && !queued.has(link.url)) queued.set(link.url, link.label);
+          if (!verified.has(link.url)) verified.set(link.url, link.label);
         } else {
           externalLinks.set(link.url, link.label);
         }
       });
-    };
-    addDiscovered(pageLinks(document, currentPath));
-
-    while (queued.size && pages.length < maxSitePages) {
-      const batch = [...queued.entries()].slice(0, Math.min(4, maxSitePages - pages.length));
-      batch.forEach(([path]) => {
-        queued.delete(path);
-        visited.add(path);
-      });
-      await Promise.all(batch.map(async ([path, linkLabel]) => {
-        const controller = new AbortController();
-        const timeout = window.setTimeout(() => controller.abort(), 2500);
-        try {
-          const response = await fetch(path, {
-            cache: 'no-store',
-            credentials: 'same-origin',
-            headers: { Accept: 'text/html' },
-            signal: controller.signal
-          });
-          if (!response.ok) {
-            console.warn('A linked public page was unavailable to Safayet Bot', path, response.status);
-            return;
-          }
-          if (!response.headers.get('content-type')?.includes('text/html')) return;
-          const responseUrl = new URL(response.url, window.location.origin);
-          if (responseUrl.origin !== window.location.origin) return;
-          const source = await response.text();
-          const pageDocument = new DOMParser().parseFromString(source, 'text/html');
-          const content = pageText(pageDocument);
-          if (!content) return;
-          const pageTitle = (pageDocument.title || linkLabel || path).slice(0, 300);
-          const pagePathname = responseUrl.pathname;
-          if (pages.length >= maxSitePages) return;
-          pages.push({ path: pagePathname, title: pageTitle, content });
-          verified.set(pagePathname, pageTitle);
-          addDiscovered(pageLinks(pageDocument, pagePathname));
-        } catch (error) {
-          console.warn('Unable to load a linked public page for Safayet Bot', path, error);
-        } finally {
-          window.clearTimeout(timeout);
-        }
-      }));
-    }
+    });
 
     const contextPages = [];
     let totalLength = 0;
-    for (const page of pages) {
+    for (const { page } of snapshots) {
       const room = maxSiteContentLength - totalLength;
       if (room <= page.title.length + 100) break;
-      const content = page.content.slice(0, Math.min(6000, room - page.title.length));
+      const content = page.content.slice(0, Math.min(5000, room - page.title.length));
       contextPages.push({ ...page, content });
       totalLength += page.path.length + page.title.length + content.length;
     }
     const links = [
       ...[...verified.entries()].map(([url, label]) => ({ label, url })),
       ...[...externalLinks.entries()].map(([url, label]) => ({ label, url }))
-    ].slice(0, 100);
+    ].slice(0, 60);
     verifiedLinkLabels = new Map(links.map(link => [link.url, link.label]));
     verifiedLinkUrls = new Set(links.map(link => link.url));
     return { pagePath: currentPath, pages: contextPages, links };
@@ -707,14 +805,13 @@
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), 40000);
     try {
-      siteContextPromise ||= loadSiteContext();
-      const siteContext = await siteContextPromise;
+      const siteContext = await loadSiteContext(message);
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message,
-          history: conversationHistory.slice(-8),
+          history: conversationHistory.slice(-6),
           pagePath: siteContext.pagePath,
           pages: siteContext.pages,
           links: siteContext.links
@@ -725,12 +822,12 @@
       if (response.status === 429) {
         const data = await response.json().catch(() => null);
         const friendlyErrors = [
-          'Too many messages. Please wait a minute before trying again.',
+          'Messages are arriving too quickly. Please wait a few seconds and try again.',
           'Safayet Bot is temporarily at capacity. Please try again shortly.'
         ];
         addMessage(friendlyErrors.includes(data?.error)
           ? data.error
-          : 'Safayet Bot is temporarily busy. Please wait a minute and try again.', 'bot');
+          : 'Safayet Bot is temporarily busy. Please wait a few seconds and try again.', 'bot');
         return;
       }
 
@@ -757,9 +854,9 @@
 
       conversationHistory.push(
         { role: 'user', content: message },
-        { role: 'assistant', content: data.reply.slice(0, 2000) }
+        { role: 'assistant', content: data.reply.slice(0, 1200) }
       );
-      if (conversationHistory.length > 8) conversationHistory.splice(0, conversationHistory.length - 8);
+      if (conversationHistory.length > 6) conversationHistory.splice(0, conversationHistory.length - 6);
       addMessage(data.reply, 'bot');
     } catch (error) {
       const reply = error.name === 'AbortError'

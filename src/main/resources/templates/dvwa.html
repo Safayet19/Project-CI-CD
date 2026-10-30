@@ -20,11 +20,23 @@
 <section class="lp-container lp-course-top">
   <nav class="lp-breadcrumb" aria-label="Breadcrumb"><a th:href="@{/learning}">Learning Hub</a><span>/</span><span th:text="${course.title}">Course</span></nav>
   <div class="lp-eyebrow" th:text="${course.category}">Cybersecurity</div>
-  <div class="lp-course-heading"><div><h1 th:text="${course.title}">DVWA Practical Security Lab</h1><p th:text="${course.description}">Short course description</p><span class="lp-count" th:text="${course.modules.size()} + ' available modules'">10 available modules</span></div><a class="lp-action lp-solid" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${course.modules[0].slug})}">Start Learning <span aria-hidden="true">→</span></a></div>
+  <div class="lp-course-heading"><div><h1 th:text="${course.title}">DVWA Practical Security Lab</h1><p th:text="${course.description}">Short course description</p><span class="lp-count" th:text="${course.availableCount + ' available' + (course.upcomingCount > 0 ? ' · ' + course.upcomingCount + ' coming soon' : '')}">10 available modules</span></div><a class="lp-action lp-solid" th:if="${course.availableCount > 0}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${course.modules[0].slug})}">Start Learning <span aria-hidden="true">→</span></a></div>
 </section>
 <section class="lp-container lp-course-modules" aria-labelledby="lp-modules-title"><div class="lp-section-row"><h2 id="lp-modules-title">Course modules</h2><span class="lp-count" th:text="${course.modules.size()} + ' lessons'">10 lessons</span></div>
   <div class="lp-module-list">
-    <a class="lp-module-row" th:each="module,status : ${course.modules}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}"><span class="lp-module-number" th:text="${#numbers.formatInteger(status.count,2)}">01</span><strong th:text="${module.title}">Brute Force</strong><span class="lp-row-arrow" aria-hidden="true">→</span></a>
+    <th:block th:each="module,status : ${course.modules}">
+      <a class="lp-module-row" th:if="${module.available}" th:classappend="${course.slug == 'practical-devops' or course.slug == 'java-programming'} ? 'lp-module-row-status' : ''" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}">
+        <span class="lp-module-number" th:text="${#numbers.formatInteger(status.count,2)}">01</span>
+        <strong th:text="${module.title}">Module title</strong>
+        <span class="lp-available-tag" th:if="${course.slug == 'practical-devops' or course.slug == 'java-programming'}">Available</span>
+        <span class="lp-row-arrow" aria-hidden="true">→</span>
+      </a>
+      <div class="lp-module-row lp-coming-row" th:unless="${module.available}" aria-disabled="true">
+        <span class="lp-module-number" th:text="${#numbers.formatInteger(status.count,2)}">11</span>
+        <strong th:text="${module.title}">Coming module</strong>
+        <span class="lp-coming-tag">Coming Soon</span>
+      </div>
+    </th:block>
   </div>
 </section>
 </main>

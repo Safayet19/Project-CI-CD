@@ -22,9 +22,9 @@ class AiControllerTest {
     }
 
     @Test
-    void limitsForwardedVisitorsIndependentlyAndIgnoresUntrustedForwardedHeaders() {
+    void blocksOnlyAutomatedBurstsAndKeepsVisitorsIndependent() {
         AiController controller = new AiController("", List.of("127.0.0.1"));
-        for (int attempt = 0; attempt < 10; attempt++) {
+        for (int attempt = 0; attempt < 20; attempt++) {
             assertEquals(HttpStatus.SERVICE_UNAVAILABLE,
                 controller.chat(new AiController.ChatRequest("Hello", null),
                     forwardedRequest("198.51.100.10")).getStatusCode());
@@ -37,7 +37,7 @@ class AiControllerTest {
                 forwardedRequest("198.51.100.11")).getStatusCode());
 
         MockHttpServletRequest untrustedRequest = requestFrom("192.0.2.20");
-        for (int attempt = 0; attempt < 10; attempt++) {
+        for (int attempt = 0; attempt < 20; attempt++) {
             untrustedRequest.addHeader("X-Forwarded-For", "203.0.113.10");
             controller.chat(new AiController.ChatRequest("Hello", null), untrustedRequest);
             untrustedRequest.removeHeader("X-Forwarded-For");
@@ -67,11 +67,11 @@ class AiControllerTest {
     void rejectsOversizedWebsiteContextAndConversationHistory() {
         AiController controller = new AiController("", List.of("127.0.0.1"));
         MockHttpServletRequest request = requestFrom("192.0.2.10");
-        var page = new AiController.SitePage("/", "Home", "x".repeat(22001));
+        var page = new AiController.SitePage("/", "Home", "x".repeat(14001));
         var oversizedContext = new AiController.ChatRequest("Hello", null, "/",
             List.of(page), List.of());
         var oversizedHistory = new AiController.ChatRequest("Hello",
-            java.util.Collections.nCopies(9, new AiController.ChatTurn("user", "Hi")));
+            java.util.Collections.nCopies(7, new AiController.ChatTurn("user", "Hi")));
 
         assertEquals(HttpStatus.BAD_REQUEST, controller.chat(oversizedContext, request).getStatusCode());
         assertEquals(HttpStatus.BAD_REQUEST, controller.chat(oversizedHistory, request).getStatusCode());

@@ -1,5 +1,3303 @@
 [
   {
+    "slug": "java-programming",
+    "category": "Java",
+    "icon": "code",
+    "title": "Java Programming",
+    "description": "Practical Core Java, from your first program to OOP, collections, streams, testing and real JavaFX desktop projects.",
+    "modules": [
+      {
+        "slug": "java-introduction-setup",
+        "title": "Java Introduction & Environment Setup",
+        "objective": "Install or select the JDK, understand the compiler/runtime workflow, and run a real Java program.",
+        "prerequisites": [
+          "Java Development Kit (JDK) installed; IntelliJ IDEA or a terminal and text editor."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Check your Java installation",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Open the terminal and check the Java runtime and compiler. Both must point to a compatible JDK installation."
+              },
+              {
+                "kind": "code",
+                "label": "Terminal · Bash / PowerShell",
+                "text": "java -version\njavac -version"
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Create your first program",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Save this complete example as HelloWorld.java. Java starts execution from main(String[] args)."
+              },
+              {
+                "kind": "code",
+                "label": "HelloWorld.java · Java",
+                "text": "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Java!\");\n        System.out.println(\"My first Java program is running.\");\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "public class HelloWorld",
+                    "explanation": "Declares the main class. Because it is public, the filename must be HelloWorld.java."
+                  },
+                  {
+                    "term": "public static void main(String[] args)",
+                    "explanation": "Defines where this console application starts. You do not need to understand every modifier yet."
+                  },
+                  {
+                    "term": "System.out.println(\"Hello, Java!\");",
+                    "explanation": "Sends the message to the console. The semicolon ends the Java statement."
+                  },
+                  {
+                    "term": "{ and }",
+                    "explanation": "Curly braces group the statements belonging to the class or method."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Compile and run the class",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "javac produces HelloWorld.class. java starts the class by name without the .class suffix."
+              },
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac HelloWorld.java\njava HelloWorld"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "javac HelloWorld.java",
+                    "explanation": "Compiles the source and creates HelloWorld.class if no compile errors occur."
+                  },
+                  {
+                    "term": "java HelloWorld",
+                    "explanation": "Runs the compiled class by class name. Do not append .java or .class in this command."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Hello, Java!\nMy first Java program is running."
+              },
+              {
+                "kind": "output-note",
+                "text": "Two lines appear because the program contains two println statements. This is a simple, predictable check that your editor, compiler, and runtime are working together."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Practice in IntelliJ IDEA",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Create a Java project, add the same HelloWorld class, select the installed project SDK, and run the main method."
+              },
+              {
+                "kind": "exercise",
+                "text": "Change the printed message and run again. Then introduce a missing semicolon deliberately, read the compiler error, and restore it."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "If javac is not recognized, ensure a JDK (not only a runtime) is installed and selected on PATH.",
+          "If the class name or filename differs, make the public class and .java filename match."
+        ],
+        "finalOutcome": "A Java source file was compiled and executed. You can repeat the same example from a terminal or IntelliJ.",
+        "conceptOverview": [
+          "Java is a general-purpose programming language. You write instructions in a .java source file; the Java compiler checks the source and translates it into bytecode stored in .class files. The Java Virtual Machine (JVM) runs that bytecode. This separation makes the same compiled program usable on different supported operating systems.",
+          "The Java Development Kit (JDK) includes the compiler (javac), the java launcher, and other tools. IntelliJ IDEA is an editor and development environment; it helps you write and run code, but the JDK is what actually compiles and executes the program."
+        ],
+        "whyItMatters": "Before learning variables or classes, you must be able to compile and run a known working program. When an error occurs, understanding whether it came from the compiler, the runtime, or your own code saves time.",
+        "realLifeExample": "Imagine building the first version of a hospital registration application. You start with a tiny program that prints a message, verify your environment, and then gradually add patient information and application features.",
+        "coreIdeas": [
+          {
+            "term": "Source file (.java)",
+            "explanation": "Human-readable Java instructions that you create and edit."
+          },
+          {
+            "term": "Compiler (javac)",
+            "explanation": "Checks Java syntax and types, then produces bytecode in a .class file."
+          },
+          {
+            "term": "JVM and java command",
+            "explanation": "The JVM executes compiled bytecode; java is the command that starts the program."
+          },
+          {
+            "term": "main(String[] args)",
+            "explanation": "The entry point for this ordinary command-line example. Java begins here and executes statements in order."
+          },
+          {
+            "term": "System.out.println",
+            "explanation": "Displays text on the terminal and moves to the next line."
+          }
+        ],
+        "learningTakeaways": [
+          "Java source is compiled before the JVM runs it.",
+          "Class names, filenames and main must be used correctly in a basic console program.",
+          "Small changes followed by another run help you understand cause and effect."
+        ]
+      },
+      {
+        "slug": "variables-data-types-operators",
+        "title": "Variables, Data Types & Operators",
+        "objective": "Store and calculate values using Java primitives, strings, operators, and formatted output.",
+        "prerequisites": [
+          "Module 01 completed; ability to compile a .java file."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Declare variables and use operators",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Primitive types include int, double and boolean. String stores text. Java checks types during compilation."
+              },
+              {
+                "kind": "code",
+                "label": "VariablesDemo.java · Java",
+                "text": "public class VariablesDemo {\n    public static void main(String[] args) {\n        String student = \"Safayet\";\n        int courses = 5;\n        int creditsPerCourse = 3;\n        double feePerCredit = 1500.0;\n        boolean enrolled = true;\n\n        int totalCredits = courses * creditsPerCourse;\n        double tuition = totalCredits * feePerCredit;\n\n        System.out.printf(\"Student: %s%n\", student);\n        System.out.printf(\"Credits: %d%n\", totalCredits);\n        System.out.printf(\"Tuition: %.2f%n\", tuition);\n        System.out.printf(\"Enrolled: %b%n\", enrolled);\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "String student = \"Safayet\";",
+                    "explanation": "Stores a text label; the example uses it as the displayed student name."
+                  },
+                  {
+                    "term": "int totalCredits = courses * creditsPerCourse;",
+                    "explanation": "Calculates 5 × 3 = 15 credits using two previously declared variables."
+                  },
+                  {
+                    "term": "double tuition = totalCredits * feePerCredit;",
+                    "explanation": "Calculates 15 × 1500.0 = 22500.0."
+                  },
+                  {
+                    "term": "printf(\"Tuition: %.2f%n\", tuition)",
+                    "explanation": "Displays the tuition with exactly two digits after the decimal point and a new line."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Student: Safayet\nCredits: 15\nTuition: 22500.00\nEnrolled: true"
+              },
+              {
+                "kind": "output-note",
+                "text": "The example prints 15 credits and 22500.00 tuition. Those numbers come directly from the original values, so changing a course count or fee changes the result without rewriting the calculation."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Read user input",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Scanner reads terminal input. The next example uses nextLine to read a name."
+              },
+              {
+                "kind": "code",
+                "label": "InputDemo.java · Java",
+                "text": "import java.util.Scanner;\n\npublic class InputDemo {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.print(\"Enter your name: \");\n        String name = scanner.nextLine();\n        System.out.println(\"Welcome, \" + name + \"!\");\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "import java.util.Scanner;",
+                    "explanation": "Makes the standard Scanner class available in this source file."
+                  },
+                  {
+                    "term": "new Scanner(System.in)",
+                    "explanation": "Creates an object that reads standard keyboard input."
+                  },
+                  {
+                    "term": "scanner.nextLine()",
+                    "explanation": "Waits for a complete text line and returns what the user typed."
+                  },
+                  {
+                    "term": "\"Welcome, \" + name + \"!\"",
+                    "explanation": "Combines text and the supplied name into one output string."
+                  }
+                ]
+              },
+              {
+                "kind": "output-note",
+                "text": "This example is interactive. If you type Ayesha and press Enter, the program prints Welcome, Ayesha!; a different name produces a different message. This is an illustrative example, not an uploaded POC screenshot."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Compile and experiment",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac VariablesDemo.java\njava VariablesDemo"
+              },
+              {
+                "kind": "exercise",
+                "text": "Change the course count or fee per credit. Predict the total before running the program."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Use double for basic decimal exercises; real monetary applications need careful precision rules, often BigDecimal.",
+          "Integer division discards the decimal portion unless one operand is floating point."
+        ],
+        "finalOutcome": "You can work with Java data types, arithmetic, string values and simple input/output.",
+        "conceptOverview": [
+          "A variable is a named place to store a value while a program runs. Every Java variable has a type: for example, int stores whole numbers, double stores floating-point numbers, boolean stores true or false, and String represents text. Java checks that operations are consistent with the declared types.",
+          "Operators combine or compare values. Arithmetic operators such as * and + perform calculations; assignment with = stores a result in a variable. A program becomes useful when it can accept values, calculate something, and show the result."
+        ],
+        "whyItMatters": "Real applications work with different kinds of information. A student registration form needs text for the student name, whole numbers for courses and credits, decimal values for fees, and a true/false value for enrollment.",
+        "realLifeExample": "A university fee estimator can multiply the number of courses by credits per course, then multiply total credits by the fee for each credit. The output should explain the calculated values, not just print a bare number.",
+        "coreIdeas": [
+          {
+            "term": "int, double, boolean",
+            "explanation": "Primitive types for integers, floating-point numbers, and true/false values."
+          },
+          {
+            "term": "String",
+            "explanation": "An object type used for text. String values are enclosed in double quotes."
+          },
+          {
+            "term": "= and *",
+            "explanation": "Assignment stores a value; multiplication calculates a product."
+          },
+          {
+            "term": "System.out.printf",
+            "explanation": "Prints formatted values. %s is text, %d is an integer, %.2f shows two decimal places, and %b formats a boolean."
+          },
+          {
+            "term": "Scanner and nextLine()",
+            "explanation": "Read text typed into the terminal. The program waits until the user provides a line of input."
+          }
+        ],
+        "learningTakeaways": [
+          "Use an appropriate type for each value.",
+          "Compute intermediate values in named variables to keep logic readable.",
+          "Use Scanner for interactive input and printf for formatted output."
+        ]
+      },
+      {
+        "slug": "conditions-loops",
+        "title": "Conditional Statements & Loops",
+        "objective": "Use if/else, switch and loops to automate decisions and repeated processing.",
+        "prerequisites": [
+          "Variables and basic Java operators."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Decide a result from a mark",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "if/else chooses one branch. A for loop processes every element of an array."
+              },
+              {
+                "kind": "code",
+                "label": "GradeCalculator.java · Java",
+                "text": "public class GradeCalculator {\n    public static void main(String[] args) {\n        int[] marks = {85, 72, 93, 66};\n        int total = 0;\n\n        for (int mark : marks) {\n            total += mark;\n        }\n\n        double average = (double) total / marks.length;\n        String result = average >= 80 ? \"A\" :\n                        average >= 70 ? \"B\" :\n                        average >= 60 ? \"C\" : \"F\";\n\n        System.out.printf(\"Average: %.2f%n\", average);\n        System.out.println(\"Grade: \" + result);\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "int[] marks = {85, 72, 93, 66};",
+                    "explanation": "Creates an array containing four marks."
+                  },
+                  {
+                    "term": "for (int mark : marks)",
+                    "explanation": "Adds 85, 72, 93 and 66. The final total is 316."
+                  },
+                  {
+                    "term": "(double) total / marks.length",
+                    "explanation": "Converts the division to floating point so averages such as 79.5 remain possible."
+                  },
+                  {
+                    "term": "average >= 80 ? \"A\" : ...",
+                    "explanation": "Tests grade boundaries from highest to lowest, returning B for an average of 79."
+                  },
+                  {
+                    "term": "%.2f",
+                    "explanation": "Prints the numeric average with two decimal places."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Average: 79.00\nGrade: B"
+              },
+              {
+                "kind": "output-note",
+                "text": "316 divided by 4 is 79.00, so the grade is B. For the switch example, selected = 2 prints View students. Both outcomes follow directly from the conditions written in the code."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Use a switch for menu choices",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The switch expression maps a menu option to one result without a long if/else chain."
+              },
+              {
+                "kind": "code",
+                "label": "MenuDemo.java · Java",
+                "text": "public class MenuDemo {\n    public static void main(String[] args) {\n        int selected = 2;\n        String action = switch (selected) {\n            case 1 -> \"Add student\";\n            case 2 -> \"View students\";\n            case 3 -> \"Exit\";\n            default -> \"Invalid option\";\n        };\n        System.out.println(action);\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "int selected = 2;",
+                    "explanation": "Models the menu option chosen by a user."
+                  },
+                  {
+                    "term": "case 2 -> \"View students\";",
+                    "explanation": "When the selected value is 2, the switch expression returns View students."
+                  },
+                  {
+                    "term": "default -> \"Invalid option\";",
+                    "explanation": "Provides a result if none of the numbered choices match."
+                  }
+                ]
+              },
+              {
+                "kind": "output-note",
+                "text": "For selected = 2, this second program prints View students. Change selected to 1, 3, or an unknown number to see how switch picks a different branch."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Practice controlled repetition",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Rewrite the average calculation with a traditional for loop. Add an empty-array check before division and test with different marks."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "An off-by-one loop condition may access an invalid array index; use i < array.length.",
+          "When dividing totals, explicitly cast an operand to double to retain fractional results."
+        ],
+        "finalOutcome": "You can control program flow and calculate results from repeated values.",
+        "conceptOverview": [
+          "A condition is an expression that evaluates to true or false. A program uses if/else, the conditional (ternary) operator, or switch to select which action or result should be used. A loop repeats a section of code until its work is finished.",
+          "For a collection of marks, repetition is more reliable than manually writing a separate addition for every student. In the example, a for-each loop calculates the total, and a chained conditional expression chooses the grade based on the average."
+        ],
+        "whyItMatters": "Student grading, menu choices, stock checks, and access decisions all require different actions depending on data. Loops help process an entire group without copying the same statement many times.",
+        "realLifeExample": "A course result system receives several marks. It totals them, calculates the average, and chooses A, B, C, or F according to its grading rules. A separate menu chooses Add, View, or Exit based on the selected option.",
+        "coreIdeas": [
+          {
+            "term": "if / else",
+            "explanation": "Execute different statements according to a boolean condition."
+          },
+          {
+            "term": "for (int mark : marks)",
+            "explanation": "Visit each element of the marks array, one at a time."
+          },
+          {
+            "term": "total += mark",
+            "explanation": "Shorthand for total = total + mark; it accumulates a sum."
+          },
+          {
+            "term": "condition ? value1 : value2",
+            "explanation": "Conditional operator: choose one of two values. Nested conditions are possible, but can become hard to read."
+          },
+          {
+            "term": "switch expression",
+            "explanation": "Choose a result for a known menu case; default handles unrecognized choices."
+          }
+        ],
+        "learningTakeaways": [
+          "Conditions choose between alternative results.",
+          "Loops process multiple elements and avoid repeated code.",
+          "Check array length and numeric conversion before calculating an average."
+        ]
+      },
+      {
+        "slug": "methods-arrays-strings",
+        "title": "Methods, Arrays & Strings",
+        "objective": "Organize repeated logic into methods, search arrays, and normalize text safely.",
+        "prerequisites": [
+          "Basic loops and conditions."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Create small reusable methods",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A method takes arguments and returns a result; it makes testing and reuse easier."
+              },
+              {
+                "kind": "code",
+                "label": "MethodsDemo.java · Java",
+                "text": "public class MethodsDemo {\n    static int findIndex(int[] numbers, int target) {\n        for (int i = 0; i < numbers.length; i++) {\n            if (numbers[i] == target) {\n                return i;\n            }\n        }\n        return -1;\n    }\n\n    static String normalizeName(String value) {\n        return value.trim().toLowerCase();\n    }\n\n    public static void main(String[] args) {\n        int[] scores = {70, 85, 91, 66};\n        System.out.println(\"Index: \" + findIndex(scores, 91));\n        System.out.println(\"Name: \" + normalizeName(\"  Java Student  \"));\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "findIndex(int[] numbers, int target)",
+                    "explanation": "Accepts an array and the value to search for, then returns its first matching position."
+                  },
+                  {
+                    "term": "for (int i = 0; i < numbers.length; i++)",
+                    "explanation": "Checks each valid index without going past the end of the array."
+                  },
+                  {
+                    "term": "return -1;",
+                    "explanation": "Signals that no matching value was found; callers should handle this case explicitly."
+                  },
+                  {
+                    "term": "value.trim().toLowerCase()",
+                    "explanation": "Removes leading/trailing spaces, then converts the returned string to lowercase."
+                  },
+                  {
+                    "term": "findIndex(scores, 91)",
+                    "explanation": "Finds 91 at position 2 in {70, 85, 91, 66}."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Index: 2\nName: java student"
+              },
+              {
+                "kind": "output-note",
+                "text": "The search result is 2 because Java starts counting array indexes at 0. The normalized name becomes java student because spaces are trimmed and letters converted to lowercase."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Run the class",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac MethodsDemo.java\njava MethodsDemo"
+              },
+              {
+                "kind": "text",
+                "text": "Arrays have a fixed length. String values are immutable, so trim and toLowerCase return new strings."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Extend the methods",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Write findMaximum(int[] values). Decide how to handle an empty input array and add at least three test cases."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "findIndex returns -1 when no match exists; callers must check that value before indexing an array."
+        ],
+        "finalOutcome": "You can reuse methods for array operations and basic string processing.",
+        "conceptOverview": [
+          "A method is a named block of instructions that performs one task. It can receive parameters and optionally return a result. Methods help you avoid duplicating logic and make it easier to test a small piece of behavior independently.",
+          "An array holds multiple values of the same type in a fixed-size sequence. Each element has a zero-based index. String represents text; methods such as trim() and toLowerCase() produce new strings rather than changing the original text."
+        ],
+        "whyItMatters": "Searching for an ID or cleaning up a name should not require rewriting a loop or text operation everywhere in a real application. A reusable method makes the behavior consistent for every caller.",
+        "realLifeExample": "In a university registration program, a search method can locate a student score in an array, while a name-normalization method removes accidental spaces from form input before comparing entries.",
+        "coreIdeas": [
+          {
+            "term": "Parameter and argument",
+            "explanation": "The parameter is the method’s declared input; an argument is the actual value supplied when calling it."
+          },
+          {
+            "term": "return",
+            "explanation": "Ends a method and gives the result back to the caller."
+          },
+          {
+            "term": "int[] and length",
+            "explanation": "A fixed-length array of integer values; length is the number of elements."
+          },
+          {
+            "term": "Index starts at zero",
+            "explanation": "The first array element is at index 0, the second at 1, and so on."
+          },
+          {
+            "term": "String immutability",
+            "explanation": "String operations produce new values; existing strings are not modified in place."
+          }
+        ],
+        "learningTakeaways": [
+          "Give each method a clear, single responsibility.",
+          "Array indexes begin at zero; always consider the not-found case.",
+          "String methods typically return new text rather than editing an existing String."
+        ]
+      },
+      {
+        "slug": "classes-objects-encapsulation",
+        "title": "Classes, Objects & Encapsulation",
+        "objective": "Model a student with a class, constructors, private fields and controlled updates.",
+        "prerequisites": [
+          "Methods and fundamental Java syntax."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Create a student class and enforce valid data",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A constructor prepares a usable object. Private fields prevent uncontrolled direct modification."
+              },
+              {
+                "kind": "code",
+                "label": "StudentDemo.java · Java",
+                "text": "class Student {\n    private final String name;\n    private int credits;\n\n    Student(String name, int credits) {\n        this.name = name;\n        setCredits(credits);\n    }\n\n    public String getName() {\n        return name;\n    }\n\n    public int getCredits() {\n        return credits;\n    }\n\n    public void setCredits(int credits) {\n        if (credits < 0) {\n            throw new IllegalArgumentException(\"Credits cannot be negative\");\n        }\n        this.credits = credits;\n    }\n}\n\npublic class StudentDemo {\n    public static void main(String[] args) {\n        Student student = new Student(\"Safayet\", 15);\n        student.setCredits(18);\n        System.out.println(student.getName() + \": \" + student.getCredits());\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "private final String name;",
+                    "explanation": "Stores the name and prevents outside code from directly changing it or reassigning it after initialization."
+                  },
+                  {
+                    "term": "Student(String name, int credits)",
+                    "explanation": "Constructs a Student; it sets the name and delegates credit validation to setCredits."
+                  },
+                  {
+                    "term": "setCredits(int credits)",
+                    "explanation": "Allows a controlled update instead of exposing the field for direct assignment."
+                  },
+                  {
+                    "term": "if (credits < 0) throw ...",
+                    "explanation": "Rejects invalid negative credits by throwing an IllegalArgumentException."
+                  },
+                  {
+                    "term": "new Student(\"Safayet\", 15)",
+                    "explanation": "Creates one real student object, initially storing 15 credits."
+                  },
+                  {
+                    "term": "student.setCredits(18)",
+                    "explanation": "Changes the valid credit count to 18, which is then returned by getCredits()."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Safayet: 18"
+              },
+              {
+                "kind": "output-note",
+                "text": "The output Safayet: 18 confirms that the Student was constructed with 15 credits and later updated through a validated method to 18. The example demonstrates controlled access to object state."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Compile and run",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac StudentDemo.java\njava StudentDemo"
+              },
+              {
+                "kind": "text",
+                "text": "The filename matches the public StudentDemo class. The non-public Student class is available in the same source file."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Experiment with validation",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Try student.setCredits(-1). Observe the exception, then change the value back. Add a method that returns a formatted summary."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "A private field cannot be accessed directly from outside its class; use an intentional public method.",
+          "Validate inputs before assigning fields so invalid object states are prevented."
+        ],
+        "finalOutcome": "You can construct objects and protect state using encapsulation.",
+        "conceptOverview": [
+          "A class is a blueprint that describes the data and behavior of objects. An object is one particular instance created from that class. For example, a Student class defines the fields and methods common to students; each Student object stores its own name and credit count.",
+          "Encapsulation means keeping a class’s state under its control. In Java, private fields block direct changes from other classes, while constructors and methods can check whether proposed values are valid. This protects rules such as “credits cannot be negative.”"
+        ],
+        "whyItMatters": "In a real student or hospital system, arbitrary code must not be able to put invalid values into an important record. Encapsulation gives the application one clear place to validate updates and keep each object consistent.",
+        "realLifeExample": "A student enrollment system creates a Student object with a name and 15 credits. Later the user registers another course, so the application updates credits through a method that checks the new number before storing it.",
+        "coreIdeas": [
+          {
+            "term": "class versus object",
+            "explanation": "A class defines the structure; an object is a concrete item with its own field values."
+          },
+          {
+            "term": "Constructor",
+            "explanation": "Runs when new creates an object; it establishes the object’s initial state."
+          },
+          {
+            "term": "private field",
+            "explanation": "Can be accessed directly only from within its declaring class."
+          },
+          {
+            "term": "Getter and setter",
+            "explanation": "Methods used to read a value or update it under controlled rules."
+          },
+          {
+            "term": "this",
+            "explanation": "Refers to the current object, distinguishing a field from a parameter with the same name."
+          },
+          {
+            "term": "final field",
+            "explanation": "A field whose reference/value cannot be reassigned after construction."
+          }
+        ],
+        "learningTakeaways": [
+          "A class describes; an object holds actual values.",
+          "Constructors initialize valid objects.",
+          "Private fields and validated methods protect data from accidental invalid changes."
+        ]
+      },
+      {
+        "slug": "inheritance-polymorphism-interfaces",
+        "title": "Inheritance, Polymorphism & Interfaces",
+        "objective": "Understand overriding, abstraction and interface-based behavior with a small payment model.",
+        "prerequisites": [
+          "Classes, objects and methods."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Define shared behavior with an interface",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Payable describes what an object must calculate. Each employee class provides its own implementation."
+              },
+              {
+                "kind": "code",
+                "label": "PolymorphismDemo.java · Java",
+                "text": "interface Payable {\n    double calculatePay();\n}\n\nabstract class Employee implements Payable {\n    protected final String name;\n\n    Employee(String name) {\n        this.name = name;\n    }\n}\n\nclass FullTimeEmployee extends Employee {\n    FullTimeEmployee(String name) {\n        super(name);\n    }\n\n    @Override\n    public double calculatePay() {\n        return 40000;\n    }\n}\n\nclass ContractEmployee extends Employee {\n    ContractEmployee(String name) {\n        super(name);\n    }\n\n    @Override\n    public double calculatePay() {\n        return 20000;\n    }\n}\n\npublic class PolymorphismDemo {\n    public static void main(String[] args) {\n        Payable[] workers = {\n            new FullTimeEmployee(\"A\"),\n            new ContractEmployee(\"B\")\n        };\n        for (Payable worker : workers) {\n            System.out.printf(\"Pay: %.0f%n\", worker.calculatePay());\n        }\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "interface Payable { double calculatePay(); }",
+                    "explanation": "Defines a common operation without deciding how any particular worker calculates pay."
+                  },
+                  {
+                    "term": "abstract class Employee implements Payable",
+                    "explanation": "Shares the employee name field and constructor; subclasses supply the calculation."
+                  },
+                  {
+                    "term": "super(name)",
+                    "explanation": "Calls the parent Employee constructor to initialize the inherited name field."
+                  },
+                  {
+                    "term": "FullTimeEmployee / ContractEmployee",
+                    "explanation": "Each overrides calculatePay() and returns its own example pay amount."
+                  },
+                  {
+                    "term": "Payable[] workers",
+                    "explanation": "Stores different concrete employee objects in one interface-typed array."
+                  },
+                  {
+                    "term": "worker.calculatePay()",
+                    "explanation": "Calls the correct implementation for the actual object during the loop."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Pay: 40000\nPay: 20000"
+              },
+              {
+                "kind": "output-note",
+                "text": "Two different values, 40000 and 20000, are produced by the same method call on different objects. That is runtime polymorphism; the values are illustrative payment amounts, not a complete payroll calculation."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Explain dynamic dispatch",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The loop holds Payable references, but calculatePay runs the concrete implementation of each object. This is runtime polymorphism."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Practice overriding and abstraction",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Create a PartTimeEmployee with hours and hourly rate, add it to the array, and verify its calculation."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Prefer interfaces for shared capabilities; inheritance is most useful when classes truly share a common abstraction."
+        ],
+        "finalOutcome": "You can reuse common class structure while selecting behavior through interfaces.",
+        "conceptOverview": [
+          "Inheritance lets one class reuse or specialize behavior from a parent class. An interface describes a capability that different classes promise to provide. Polymorphism lets one piece of code use objects with different implementations through a shared parent or interface type.",
+          "The example has a Payable interface, an abstract Employee parent class, and two concrete employee types. Both know how to calculate pay, but use different values. The caller needs only the common Payable method."
+        ],
+        "whyItMatters": "Without a shared interface, a payroll program may require a different if statement for every employee type. Polymorphism lets the payroll loop call one method and rely on each object to perform its own calculation.",
+        "realLifeExample": "A hospital has permanent employees and contract workers. Both must receive payment, but their payment rules may differ. A payroll service can process any Payable worker without knowing the specific employee type.",
+        "coreIdeas": [
+          {
+            "term": "extends",
+            "explanation": "Makes a class inherit from another class."
+          },
+          {
+            "term": "implements",
+            "explanation": "Declares that a class provides the methods required by an interface."
+          },
+          {
+            "term": "abstract class",
+            "explanation": "A base class that can share code but cannot be instantiated directly."
+          },
+          {
+            "term": "@Override",
+            "explanation": "Marks a method as an implementation or override of an inherited/interface method."
+          },
+          {
+            "term": "Dynamic dispatch",
+            "explanation": "When an interface reference invokes a method, Java chooses the concrete object’s implementation at runtime."
+          }
+        ],
+        "learningTakeaways": [
+          "Inheritance reuses a parent class’s members.",
+          "Interfaces define common capabilities shared by different classes.",
+          "Polymorphism simplifies client code by removing type-specific branching."
+        ]
+      },
+      {
+        "slug": "exceptions-debugging",
+        "title": "Exception Handling & Debugging",
+        "objective": "Handle invalid input without hiding errors and practice tracing exceptions to their causes.",
+        "prerequisites": [
+          "Methods and objects; IntelliJ debugger or terminal."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Validate input and throw a meaningful exception",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The validation method rejects incorrect ages. The caller handles the problem in one place."
+              },
+              {
+                "kind": "code",
+                "label": "ExceptionDemo.java · Java",
+                "text": "public class ExceptionDemo {\n    static int validateAge(int age) {\n        if (age < 0 || age > 120) {\n            throw new IllegalArgumentException(\"Invalid age: \" + age);\n        }\n        return age;\n    }\n\n    public static void main(String[] args) {\n        int[] ages = {20, -4, 35};\n        for (int age : ages) {\n            try {\n                System.out.println(\"Accepted: \" + validateAge(age));\n            } catch (IllegalArgumentException error) {\n                System.out.println(\"Rejected: \" + error.getMessage());\n            }\n        }\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "validateAge(int age)",
+                    "explanation": "Contains one rule: accept ages from 0 through 120."
+                  },
+                  {
+                    "term": "throw new IllegalArgumentException(...)",
+                    "explanation": "Reports invalid ages immediately, including the rejected value in the message."
+                  },
+                  {
+                    "term": "for (int age : ages)",
+                    "explanation": "Processes ages 20, -4 and 35 independently."
+                  },
+                  {
+                    "term": "try { ... } catch (IllegalArgumentException error)",
+                    "explanation": "Handles this expected validation problem without hiding unrelated errors."
+                  },
+                  {
+                    "term": "error.getMessage()",
+                    "explanation": "Prints Invalid age: -4 for the rejected entry."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Accepted: 20\nRejected: Invalid age: -4\nAccepted: 35"
+              },
+              {
+                "kind": "output-note",
+                "text": "The first and third ages are accepted. Only -4 is rejected, and processing continues. This is an example of placing validation in one method and handling a specific, known failure at the caller."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Use the debugger to inspect execution",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Set a breakpoint at validateAge, run in Debug mode, inspect age and step into the failing branch."
+              },
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac ExceptionDemo.java\njava ExceptionDemo"
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Practice error handling",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Add 121 to the ages array and verify the rejected message. Avoid catching Exception or Throwable everywhere merely to suppress a problem."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Check the exception message and stack trace before changing the code.",
+          "Use exceptions for invalid situations, not as a substitute for ordinary loop or branch logic."
+        ],
+        "finalOutcome": "You can diagnose and handle predictable invalid-input conditions while preserving useful error information.",
+        "conceptOverview": [
+          "An exception is an object that describes a problem encountered while a program runs. Some problems should interrupt normal execution, such as invalid input or a missing file. Java uses throw to signal an exception and try/catch to handle a specific exception without necessarily ending the whole program.",
+          "Debugging means observing what the program is doing and finding why it behaves incorrectly. A debugger can pause execution at a breakpoint, show variable values, and advance through statements one at a time."
+        ],
+        "whyItMatters": "Applications should reject invalid data clearly instead of silently accepting it or crashing without explanation. For example, a hospital form should not accept an impossible patient age.",
+        "realLifeExample": "A registration system reads an age. It accepts 20, rejects -4 with a meaningful message, then continues processing 35. The program should recover from one invalid entry and still handle the remaining data.",
+        "coreIdeas": [
+          {
+            "term": "throw",
+            "explanation": "Creates and raises an exception at the point where the problem is detected."
+          },
+          {
+            "term": "IllegalArgumentException",
+            "explanation": "A standard exception for an invalid argument passed to a method."
+          },
+          {
+            "term": "try / catch",
+            "explanation": "Tries an operation and handles a matching exception if one occurs."
+          },
+          {
+            "term": "error.getMessage()",
+            "explanation": "Retrieves the explanatory message from the caught exception."
+          },
+          {
+            "term": "Breakpoint",
+            "explanation": "A debugger marker that pauses execution so variables and control flow can be inspected."
+          }
+        ],
+        "learningTakeaways": [
+          "Validate inputs where the rule is defined.",
+          "Catch only errors you can meaningfully handle.",
+          "Use a debugger to observe the exact values and branches involved in a problem."
+        ]
+      },
+      {
+        "slug": "collections-generics",
+        "title": "Collections & Generics",
+        "objective": "Store and retrieve variable-sized data with type-safe Java collections.",
+        "prerequisites": [
+          "Classes and fundamental loops."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Use lists, sets and maps",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "ArrayList keeps ordered entries; LinkedHashSet removes duplicates while preserving insertion order; Map associates keys with values."
+              },
+              {
+                "kind": "code",
+                "label": "CollectionsDemo.java · Java",
+                "text": "import java.util.ArrayList;\nimport java.util.LinkedHashMap;\nimport java.util.LinkedHashSet;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.Set;\n\npublic class CollectionsDemo {\n    static <T> void showItems(List<T> items) {\n        for (T item : items) {\n            System.out.println(item);\n        }\n    }\n\n    public static void main(String[] args) {\n        List<String> names = new ArrayList<>();\n        names.add(\"Java\");\n        names.add(\"Python\");\n        names.add(\"Java\");\n\n        Set<String> unique = new LinkedHashSet<>(names);\n        Map<String, Integer> scores = new LinkedHashMap<>();\n        scores.put(\"Java\", 95);\n        scores.put(\"Python\", 87);\n\n        System.out.println(\"Unique: \" + unique);\n        System.out.println(\"Java score: \" + scores.get(\"Java\"));\n        showItems(List.of(\"Type-safe\", \"Generic method\"));\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "List<String> names = new ArrayList<>();",
+                    "explanation": "Creates a growable list whose elements must be String values."
+                  },
+                  {
+                    "term": "names.add(\"Java\") twice",
+                    "explanation": "Lists allow duplicate entries, so the original list can contain Java more than once."
+                  },
+                  {
+                    "term": "new LinkedHashSet<>(names)",
+                    "explanation": "Creates a set that removes duplicate names while retaining their first-seen order."
+                  },
+                  {
+                    "term": "scores.put(\"Java\", 95)",
+                    "explanation": "Associates the key Java with the integer score 95."
+                  },
+                  {
+                    "term": "static <T> void showItems(List<T> items)",
+                    "explanation": "Defines a generic method that can print elements from a correctly typed List."
+                  },
+                  {
+                    "term": "List.of(\"Type-safe\", \"Generic method\")",
+                    "explanation": "Passes a short immutable List of strings to the generic printer."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Unique: [Java, Python]\nJava score: 95\nType-safe\nGeneric method"
+              },
+              {
+                "kind": "output-note",
+                "text": "The unique set contains [Java, Python], not a second Java. The map lookup returns 95, and the generic method prints its two strings on separate lines."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Compile and test",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac CollectionsDemo.java\njava CollectionsDemo"
+              },
+              {
+                "kind": "text",
+                "text": "The generic <T> method works with typed lists without unsafe casts."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Choose the right collection",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Add another language and its score. Experiment with duplicate entries, missing map keys and list iteration."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Map.get returns null for absent keys unless a default is provided; check missing cases explicitly."
+        ],
+        "finalOutcome": "You can choose a collection based on ordering, uniqueness and lookup requirements.",
+        "conceptOverview": [
+          "Collections store groups of objects that can grow or shrink as a program runs. A List preserves sequence and allows duplicates, a Set keeps unique values, and a Map associates each key with a value. These structures solve different problems and are often easier to use than fixed-size arrays.",
+          "Generics specify which types a collection or method accepts. For example, List<String> communicates that each element should be a String, helping the compiler detect accidental type mistakes before the program runs."
+        ],
+        "whyItMatters": "A project may need a list of registered users, a unique set of course names, or a lookup from course name to score. Choosing the right collection makes these operations simpler and more reliable.",
+        "realLifeExample": "A student enters Java, Python, and Java as chosen learning topics. The program keeps the original list, creates a unique set containing Java and Python, and looks up a numeric score for each course name.",
+        "coreIdeas": [
+          {
+            "term": "List and ArrayList",
+            "explanation": "Ordered collection; can contain repeated values and can grow."
+          },
+          {
+            "term": "Set and LinkedHashSet",
+            "explanation": "Keeps unique elements; LinkedHashSet also preserves insertion order."
+          },
+          {
+            "term": "Map and LinkedHashMap",
+            "explanation": "Stores key/value pairs; LinkedHashMap maintains insertion order."
+          },
+          {
+            "term": "<String>, <Integer>, <T>",
+            "explanation": "Generic type parameters describing what kinds of values are allowed."
+          },
+          {
+            "term": "get(key)",
+            "explanation": "Retrieves the value associated with a key; it may return null for a missing key."
+          }
+        ],
+        "learningTakeaways": [
+          "Use a List for ordered, possibly repeated values.",
+          "Use a Set for uniqueness and a Map for key-based lookup.",
+          "Generics help the compiler enforce which types can be placed in collections."
+        ]
+      },
+      {
+        "slug": "lambdas-stream-api",
+        "title": "Lambda Expressions & Stream API",
+        "objective": "Filter, transform and sort collection data with concise Java stream operations.",
+        "prerequisites": [
+          "Collections, methods and basic OOP."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Filter and sort student results",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The stream pipeline selects high-scoring students, sorts by score and maps to names without changing the original list."
+              },
+              {
+                "kind": "code",
+                "label": "StreamDemo.java · Java",
+                "text": "import java.util.Comparator;\nimport java.util.List;\n\nrecord Result(String name, int score) {}\n\npublic class StreamDemo {\n    public static void main(String[] args) {\n        List<Result> results = List.of(\n            new Result(\"A\", 70),\n            new Result(\"B\", 92),\n            new Result(\"C\", 85)\n        );\n\n        List<String> topStudents = results.stream()\n            .filter(item -> item.score() >= 80)\n            .sorted(Comparator.comparingInt(Result::score).reversed())\n            .map(Result::name)\n            .toList();\n\n        System.out.println(topStudents);\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "record Result(String name, int score)",
+                    "explanation": "Creates a small data carrier with name() and score() accessors."
+                  },
+                  {
+                    "term": "results.stream()",
+                    "explanation": "Starts a processing pipeline from the three original Result objects."
+                  },
+                  {
+                    "term": ".filter(item -> item.score() >= 80)",
+                    "explanation": "Removes A=70 and keeps B=92 and C=85."
+                  },
+                  {
+                    "term": ".sorted(Comparator.comparingInt(Result::score).reversed())",
+                    "explanation": "Orders B before C because 92 is greater than 85."
+                  },
+                  {
+                    "term": ".map(Result::name).toList()",
+                    "explanation": "Turns the remaining Result objects into the strings B and C."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "[B, C]"
+              },
+              {
+                "kind": "output-note",
+                "text": "The output [B, C] shows that filtering, sorting and mapping all ran in the intended order. The original results list is not modified by this pipeline."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Review the pipeline",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "filter keeps matching elements, sorted orders them, map transforms them, and toList collects the result."
+              },
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac StreamDemo.java\njava StreamDemo"
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Extend the data analysis",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Add a fourth student. Use mapToInt(Result::score).average() to calculate the class average. Decide how an empty list should be handled."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Intermediate operations do not execute until a terminal operation such as toList, count or forEach runs."
+        ],
+        "finalOutcome": "You can express common collection operations as readable stream pipelines.",
+        "conceptOverview": [
+          "A lambda expression is a concise way to represent an operation such as a predicate (test) or transformation. Java Streams let you describe a sequence of data-processing operations: filter records, sort them, convert them to another form, and collect the result.",
+          "A stream is not a stored collection. It is a pipeline that reads a source when a terminal operation executes. In this example, the source List remains unchanged and the result is a new List of selected student names."
+        ],
+        "whyItMatters": "A results dashboard may need to show only high-scoring students, ordered from highest mark to lowest. Stream operations express the steps directly and avoid manually managing an intermediate array for every transformation.",
+        "realLifeExample": "A university results page contains records A=70, B=92 and C=85. The dashboard shows only scores of at least 80, sorts those students by descending score, and displays names B then C.",
+        "coreIdeas": [
+          {
+            "term": "Lambda: item -> item.score() >= 80",
+            "explanation": "A short function that checks whether one result meets the score threshold."
+          },
+          {
+            "term": "filter",
+            "explanation": "Keeps only elements satisfying a predicate."
+          },
+          {
+            "term": "sorted and Comparator",
+            "explanation": "Orders elements; reversed() changes ascending score order into descending."
+          },
+          {
+            "term": "map(Result::name)",
+            "explanation": "Transforms each Result object into its name using a method reference."
+          },
+          {
+            "term": "toList()",
+            "explanation": "Collects the processed stream into a new List."
+          },
+          {
+            "term": "record",
+            "explanation": "A concise class for carrying data; used here for each name/score pair."
+          }
+        ],
+        "learningTakeaways": [
+          "Streams describe a sequence of data transformations.",
+          "Intermediate operations such as filter and map are applied when a terminal operation runs.",
+          "Keep the original collection and the new result distinct."
+        ]
+      },
+      {
+        "slug": "file-handling-java-io",
+        "title": "File Handling & Java I/O",
+        "objective": "Write a small CSV file and read its contents using standard Java file APIs.",
+        "prerequisites": [
+          "Java classes and basic exception handling; a writable local practice directory."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Write and read a CSV file",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Files.writeString and Files.readAllLines work with Path objects. Use UTF-8 to keep text encoding explicit."
+              },
+              {
+                "kind": "code",
+                "label": "FileDemo.java · Java",
+                "text": "import java.io.IOException;\nimport java.nio.charset.StandardCharsets;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.util.List;\n\npublic class FileDemo {\n    public static void main(String[] args) throws IOException {\n        Path file = Path.of(\"grades.csv\");\n        String data = \"name,score\\nJava,95\\nPython,87\\n\";\n        Files.writeString(file, data, StandardCharsets.UTF_8);\n\n        List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);\n        for (String line : lines) {\n            System.out.println(line);\n        }\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "Path file = Path.of(\"grades.csv\")",
+                    "explanation": "Selects the relative destination for the report."
+                  },
+                  {
+                    "term": "\"name,score\\nJava,95\\nPython,87\\n\"",
+                    "explanation": "Provides three CSV lines. The \\n escape starts a new line in the stored text."
+                  },
+                  {
+                    "term": "Files.writeString(file, data, StandardCharsets.UTF_8)",
+                    "explanation": "Saves the CSV data to disk using UTF-8."
+                  },
+                  {
+                    "term": "Files.readAllLines(file, StandardCharsets.UTF_8)",
+                    "explanation": "Reopens the saved file and reads back all three lines."
+                  },
+                  {
+                    "term": "for (String line : lines)",
+                    "explanation": "Prints each saved line in the order it was read."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "name,score\nJava,95\nPython,87"
+              },
+              {
+                "kind": "output-note",
+                "text": "The program writes grades.csv and then reads its lines back. The three console lines mirror the file content; no database or network connection is involved."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Check the saved file",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac FileDemo.java\njava FileDemo"
+              },
+              {
+                "kind": "text",
+                "text": "After execution, grades.csv is created in the current working directory. Open it in a text editor and verify the rows."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Handle real file errors",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Try a path inside a nonexistent directory to observe the error. Then add suitable exception handling. Do not write this example into a production application folder."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Always choose an intended writable path; check permissions and encoding when file operations fail."
+        ],
+        "finalOutcome": "You can persist plain-text data and read it back from a file.",
+        "conceptOverview": [
+          "Input/output (I/O) is how an application exchanges information with files, the console, or other resources. File I/O allows data to persist after the program exits, unlike ordinary in-memory variables that disappear when the program stops.",
+          "Modern Java uses Path to represent a filesystem location and Files to read or write data. A CSV file stores records as lines of comma-separated text. Explicitly choosing UTF-8 helps the program read and write text consistently."
+        ],
+        "whyItMatters": "A desktop application may need to export data or store a small report locally. The ability to save and read information is essential before working with databases and full-scale persistence systems.",
+        "realLifeExample": "A learning app exports a simple grade report containing a header row and course scores. A user can open the resulting grades.csv file in a text editor or spreadsheet and confirm its contents.",
+        "coreIdeas": [
+          {
+            "term": "Path.of(\"grades.csv\")",
+            "explanation": "Creates a relative path for a file named grades.csv in the process working directory."
+          },
+          {
+            "term": "Files.writeString",
+            "explanation": "Writes text to the file, creating or replacing it as configured."
+          },
+          {
+            "term": "Files.readAllLines",
+            "explanation": "Reads a text file into a list where each element is one line."
+          },
+          {
+            "term": "StandardCharsets.UTF_8",
+            "explanation": "Specifies a widely used text encoding so the bytes are interpreted consistently."
+          },
+          {
+            "term": "IOException",
+            "explanation": "Signals file-related failures such as missing access rights or an invalid location."
+          }
+        ],
+        "learningTakeaways": [
+          "Files persist data beyond the lifetime of one run.",
+          "Path identifies a location; Files performs I/O operations.",
+          "Real applications should handle failed file operations rather than assume storage always works."
+        ]
+      },
+      {
+        "slug": "multithreading-concurrency",
+        "title": "Multithreading & Concurrency",
+        "objective": "Run independent tasks on a thread pool and collect their completed results safely.",
+        "prerequisites": [
+          "Classes, collections and checked exceptions."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Run two tasks through an executor",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "ExecutorService manages worker threads. Future.get waits for the submitted calculation to finish; results are combined in one thread."
+              },
+              {
+                "kind": "code",
+                "label": "ConcurrencyDemo.java · Java",
+                "text": "import java.util.concurrent.ExecutorService;\nimport java.util.concurrent.Executors;\nimport java.util.concurrent.Future;\n\npublic class ConcurrencyDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService executor = Executors.newFixedThreadPool(2);\n        try {\n            Future<Integer> first = executor.submit(() -> 10 + 20);\n            Future<Integer> second = executor.submit(() -> 30 + 40);\n            int total = first.get() + second.get();\n            System.out.println(\"Total: \" + total);\n        } finally {\n            executor.shutdown();\n        }\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "Executors.newFixedThreadPool(2)",
+                    "explanation": "Creates a pool capable of running two independent tasks at once."
+                  },
+                  {
+                    "term": "executor.submit(() -> 10 + 20)",
+                    "explanation": "Schedules the first calculation, whose eventual result is 30."
+                  },
+                  {
+                    "term": "executor.submit(() -> 30 + 40)",
+                    "explanation": "Schedules the second calculation, whose eventual result is 70."
+                  },
+                  {
+                    "term": "first.get() + second.get()",
+                    "explanation": "Waits for both calculations to finish and adds 30 + 70 = 100."
+                  },
+                  {
+                    "term": "finally { executor.shutdown(); }",
+                    "explanation": "Requests that the worker pool shut down even when a problem occurs."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Total: 100"
+              },
+              {
+                "kind": "output-note",
+                "text": "The output Total: 100 is deterministic for these simple calculations. The order in which worker threads execute is not guaranteed; Future.get() makes the main thread wait for their returned values."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Explain safe completion",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac ConcurrencyDemo.java\njava ConcurrencyDemo"
+              },
+              {
+                "kind": "text",
+                "text": "Calling shutdown in finally releases the executor. Avoid writing to shared mutable fields from multiple tasks without coordination."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Practice concurrent tasks",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Create a third task that returns 50. Add its Future to the sum and verify the total. Try introducing Thread.sleep inside a task to observe waiting."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Thread completion order is not guaranteed; use Future.get when a result is required.",
+          "Always close or shut down executors when work is finished."
+        ],
+        "finalOutcome": "You can submit concurrent work and combine results without relying on unpredictable execution order.",
+        "conceptOverview": [
+          "A thread is one path of execution within a running Java process. Concurrency means handling multiple tasks whose lifetimes overlap. On some systems tasks may run in parallel on different CPU cores; on others, the runtime interleaves them.",
+          "Instead of manually creating and managing every Thread, Java provides ExecutorService to accept units of work. When you submit a task, you can get a Future representing a result that may not be ready yet."
+        ],
+        "whyItMatters": "In a desktop program, long-running work can make the interface unresponsive if it runs on the UI thread. Concurrency allows suitable background tasks to run separately; the application still needs careful coordination before using their results.",
+        "realLifeExample": "A reporting program calculates two independent totals. An executor runs both calculations, and the main thread waits for each Future before adding the results and displaying the combined number.",
+        "coreIdeas": [
+          {
+            "term": "Thread",
+            "explanation": "A sequence of instructions that can execute independently within one process."
+          },
+          {
+            "term": "Executors.newFixedThreadPool(2)",
+            "explanation": "Creates an executor that can run up to two tasks concurrently."
+          },
+          {
+            "term": "submit(() -> expression)",
+            "explanation": "Schedules a task described with a lambda expression."
+          },
+          {
+            "term": "Future<Integer>",
+            "explanation": "Represents the eventual integer result of a submitted task."
+          },
+          {
+            "term": "get()",
+            "explanation": "Waits if necessary until the task finishes, then returns the result."
+          },
+          {
+            "term": "shutdown() and finally",
+            "explanation": "Stops accepting new work and ensures the shutdown request happens even if an error occurs."
+          }
+        ],
+        "learningTakeaways": [
+          "Concurrency coordinates overlapping tasks; it does not guarantee faster execution.",
+          "Futures let a caller wait for task results.",
+          "Avoid unprotected shared mutable state and release executor resources."
+        ]
+      },
+      {
+        "slug": "modern-java-features",
+        "title": "Modern Java Features",
+        "objective": "Use records, enhanced switch expressions and pattern matching for clearer Java programs.",
+        "prerequisites": [
+          "Methods, objects and conditional statements; Java 21 or newer for these stable examples."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Define concise data and a switch expression",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A record provides a compact immutable data carrier. Enhanced switch returns a value directly."
+              },
+              {
+                "kind": "code",
+                "label": "ModernJavaDemo.java · Java",
+                "text": "record Book(String title, int pages) {}\n\npublic class ModernJavaDemo {\n    static String readingLevel(int pages) {\n        return switch (pages / 100) {\n            case 0 -> \"Short\";\n            case 1, 2 -> \"Medium\";\n            default -> \"Long\";\n        };\n    }\n\n    public static void main(String[] args) {\n        Object value = new Book(\"Java Notes\", 240);\n        if (value instanceof Book book) {\n            System.out.println(book.title());\n            System.out.println(readingLevel(book.pages()));\n        }\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "record Book(String title, int pages) {}",
+                    "explanation": "Declares a compact book value object with title and pages components."
+                  },
+                  {
+                    "term": "Object value = new Book(\"Java Notes\", 240)",
+                    "explanation": "Stores a Book instance in a general Object-typed reference."
+                  },
+                  {
+                    "term": "value instanceof Book book",
+                    "explanation": "Checks the actual object type and introduces the typed name book."
+                  },
+                  {
+                    "term": "switch (pages / 100)",
+                    "explanation": "Groups page counts using integer division."
+                  },
+                  {
+                    "term": "case 1, 2 -> \"Medium\"",
+                    "explanation": "Returns Medium for a grouping result of 1 or 2; a 240-page book falls in group 2."
+                  }
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "Expected console output · Text",
+                "text": "Java Notes\nMedium"
+              },
+              {
+                "kind": "output-note",
+                "text": "Java Notes and Medium are printed. The example uses records, instanceof pattern matching and switch expressions together without writing a separate Book class full of boilerplate methods."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Compile and run",
+            "blocks": [
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "javac ModernJavaDemo.java\njava ModernJavaDemo"
+              },
+              {
+                "kind": "text",
+                "text": "Record accessors use title() and pages() instead of manually written getters. The instanceof pattern declares book only inside the matching branch."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Try another record",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Create a Course record with title and credits. Print its values and observe the generated toString output."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Records are well suited to data carriers but should not be used blindly as mutable entities."
+        ],
+        "finalOutcome": "You can recognize and apply several standard features of modern Java.",
+        "conceptOverview": [
+          "Java has added language features that reduce repetitive code and clarify intent. Records give a concise way to declare immutable data carriers. Switch expressions can produce a value directly. Pattern matching for instanceof allows a type check and a safely typed variable in the same expression.",
+          "These features are particularly useful when a program moves structured values between components. They do not replace understanding classes, methods or conditions; they provide cleaner ways to express some of those ideas."
+        ],
+        "whyItMatters": "In a library or management application, you often need simple value objects and readable branching rules. Records avoid hand-writing repetitive accessor methods for such values, while switch expressions keep a classification rule together.",
+        "realLifeExample": "A small reading tracker stores a book title and its page count, then displays a category. The sample considers a 240-page book to be Medium and prints the title alongside the category.",
+        "coreIdeas": [
+          {
+            "term": "record Book(String title, int pages)",
+            "explanation": "Defines a data carrier with a constructor, accessor methods, equality and useful text representation."
+          },
+          {
+            "term": "book.title() and book.pages()",
+            "explanation": "Access values through generated record accessors."
+          },
+          {
+            "term": "switch (...) { case ... -> ...; }",
+            "explanation": "A switch expression chooses and returns a value without separate break statements."
+          },
+          {
+            "term": "instanceof Book book",
+            "explanation": "Checks the type and creates a Book variable that is valid in the matching branch."
+          },
+          {
+            "term": "pages / 100",
+            "explanation": "Uses integer division to group page counts into ranges. In this specific sample, 240 / 100 is 2."
+          }
+        ],
+        "learningTakeaways": [
+          "Records provide a compact way to model immutable data carriers.",
+          "Switch expressions return values directly.",
+          "Pattern matching reduces repetitive casts after a successful instanceof check."
+        ]
+      },
+      {
+        "slug": "maven-junit-testing",
+        "title": "Maven & Unit Testing",
+        "objective": "Understand Maven’s project workflow and write a focused JUnit test for Java business logic.",
+        "prerequisites": [
+          "A separate practice Maven project with JUnit 5 available on its test classpath; JDK and Maven or Maven Wrapper."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Create the class to test",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "This is a standalone learning example, not a modification to this website’s pom.xml or dependencies."
+              },
+              {
+                "kind": "code",
+                "label": "src/main/java/Calculator.java · Java",
+                "text": "public class Calculator {\n    public int add(int first, int second) {\n        return first + second;\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "public class Calculator",
+                    "explanation": "Defines the small class we want to verify independently."
+                  },
+                  {
+                    "term": "public int add(int first, int second)",
+                    "explanation": "Accepts two integers and returns their sum. A method this small is easy to unit-test."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Write a JUnit 5 assertion",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "JUnit tests call the method and check its returned value. Store this file in src/test/java in your separate practice project."
+              },
+              {
+                "kind": "code",
+                "label": "src/test/java/CalculatorTest.java · Java",
+                "text": "import org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\n\nclass CalculatorTest {\n    @Test\n    void addsTwoNumbers() {\n        Calculator calculator = new Calculator();\n        assertEquals(7, calculator.add(3, 4));\n    }\n}"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "import org.junit.jupiter.api.Test",
+                    "explanation": "Imports the JUnit 5 annotation. JUnit must already be configured in the separate practice project."
+                  },
+                  {
+                    "term": "@Test",
+                    "explanation": "Marks addsTwoNumbers as a test method."
+                  },
+                  {
+                    "term": "assertEquals(7, calculator.add(3, 4))",
+                    "explanation": "Checks that calling add(3, 4) returns exactly 7; a different result makes the assertion fail."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Run tests with Maven",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The existing practice project must already declare a suitable JUnit 5 test dependency. The code shown here does not change the deployed website."
+              },
+              {
+                "kind": "code",
+                "label": "Terminal · Shell",
+                "text": "./mvnw test"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Code explained",
+                "items": [
+                  {
+                    "term": "./mvnw test",
+                    "explanation": "Runs Maven’s tests using the existing project wrapper. The command is not itself evidence that a test has passed."
+                  }
+                ]
+              },
+              {
+                "kind": "exercise",
+                "text": "Add subtract(int, int) and test zero, positive and negative inputs. Inspect Maven’s test report if an assertion fails."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Understand the build directories",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Maven typically places application source in src/main/java, tests in src/test/java, and generated output in target/. Keep generated target content out of Git."
+              },
+              {
+                "kind": "output-note",
+                "text": "The expected result of the test assertion is that 3 + 4 equals 7. A passing Maven/JUnit test depends on the separate practice project having a working JUnit 5 setup; this lesson does not claim a verified test execution or change this website’s pom.xml."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "If JUnit imports cannot be resolved, verify the practice project’s test dependencies and IDE Maven reload.",
+          "Do not change this production website’s pom.xml merely to run the standalone tutorial."
+        ],
+        "finalOutcome": "You can structure a Maven project and write a JUnit test that specifies expected behavior.",
+        "conceptOverview": [
+          "Maven is a Java project build tool. It organizes standard source directories, resolves declared dependencies, compiles code, runs tests and packages applications. The pom.xml file describes the project and its dependencies.",
+          "Unit testing checks a small unit of behavior against an expected result. JUnit 5 is a testing framework: @Test marks a test method, and assertions such as assertEquals compare the actual result with what you expect. Tests help catch regressions when code changes."
+        ],
+        "whyItMatters": "A calculator can appear correct for one example but fail for another. Automated tests allow you to repeat checks after every change, which is important when a project grows and multiple features depend on shared methods.",
+        "realLifeExample": "Suppose a hospital billing component calculates totals. Instead of checking each addition manually, a test verifies that add(3, 4) returns 7 and reports a failure if a future change breaks the logic.",
+        "coreIdeas": [
+          {
+            "term": "pom.xml",
+            "explanation": "Maven’s project configuration file; it identifies the project, dependencies and build configuration."
+          },
+          {
+            "term": "src/main/java",
+            "explanation": "Conventional location for application source code."
+          },
+          {
+            "term": "src/test/java",
+            "explanation": "Conventional location for test source code."
+          },
+          {
+            "term": "@Test",
+            "explanation": "Marks a method that a JUnit-enabled test runner should execute."
+          },
+          {
+            "term": "assertEquals(expected, actual)",
+            "explanation": "Fails the test if the actual value differs from the expected value."
+          },
+          {
+            "term": "./mvnw test",
+            "explanation": "Uses the Maven Wrapper in a project that has one; it runs the test phase without modifying this website’s dependencies."
+          }
+        ],
+        "learningTakeaways": [
+          "Build tools make compiling, testing and packaging repeatable.",
+          "A unit test checks a specified behavior with a clear expected result.",
+          "Do not claim tests passed unless the actual test runner completed successfully."
+        ]
+      },
+      {
+        "slug": "real-world-javafx-projects",
+        "title": "Real-World Java & JavaFX Desktop Applications",
+        "objective": "Connect the Core Java lessons to two actual JavaFX desktop projects already documented in the Projects section.",
+        "prerequisites": [
+          "Core Java classes, OOP, methods and collections; familiarity with basic JavaFX interfaces is useful."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Explore the Hospital Management System",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "This existing Java/JavaFX desktop application presents login, administrator and doctor interfaces. The project gallery describes a database-backed structure; the screenshots here are from the real existing project, not reconstructed samples."
+              },
+              {
+                "kind": "link",
+                "label": "View Hospital Management System →",
+                "text": "/projects/hospital-management",
+                "caption": "Project details, features, architecture and original screenshots."
+              },
+              {
+                "kind": "link",
+                "label": "View original Hospital repository →",
+                "text": "https://github.com/Safayet19/Hospital-Management-System-JavaFX-",
+                "caption": "Source repository recorded in the current Projects catalog."
+              },
+              {
+                "kind": "image",
+                "image": "/images/projects/hospital-management/02-admin-dashboard.webp",
+                "caption": "Original Hospital Management System administrator dashboard."
+              },
+              {
+                "kind": "image",
+                "image": "/images/projects/hospital-management/03-doctor-dashboard.webp",
+                "caption": "Original Hospital Management System doctor dashboard."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Explore the Student Excuse Generator",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "This existing JavaFX project uses a desktop form to generate structured student excuse documents. Its project page provides the original login, dashboard and generator screens."
+              },
+              {
+                "kind": "link",
+                "label": "View Student Excuse Generator →",
+                "text": "/projects/student-excuse",
+                "caption": "Existing project details and original screenshots."
+              },
+              {
+                "kind": "link",
+                "label": "View original Student Excuse repository →",
+                "text": "https://github.com/Safayet19/Student-Excuse-Generator",
+                "caption": "Source repository recorded in the current Projects catalog."
+              },
+              {
+                "kind": "image",
+                "image": "/images/projects/student-excuse/02-dashboard.webp",
+                "caption": "Original Student Excuse Generator dashboard."
+              },
+              {
+                "kind": "image",
+                "image": "/images/projects/student-excuse/03-generate-excuse.webp",
+                "caption": "Original Student Excuse Generator form."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Connect Java lessons with the actual projects",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Use the course concepts as a checklist while reading the existing project pages and repositories; individual implementation claims should be confirmed in the source code."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Course topic",
+                    "Where to investigate"
+                  ],
+                  [
+                    "Classes and objects",
+                    "Application models, UI controllers and other Java classes"
+                  ],
+                  [
+                    "Methods and encapsulation",
+                    "How data moves between forms and application logic"
+                  ],
+                  [
+                    "Collections and data handling",
+                    "Lists, records and the documented persistence or document workflow"
+                  ],
+                  [
+                    "Exceptions and validation",
+                    "Actual input checks and error messages in the repository"
+                  ]
+                ]
+              },
+              {
+                "kind": "walkthrough",
+                "title": "How to investigate the real project safely",
+                "items": [
+                  {
+                    "term": "Start at the project page",
+                    "explanation": "Read the stated features and compare them with the original screen captures."
+                  },
+                  {
+                    "term": "Follow the GitHub source link",
+                    "explanation": "Look for actual classes and UI controller logic. Identify files based on what really exists, not assumed names."
+                  },
+                  {
+                    "term": "Trace one user action",
+                    "explanation": "Locate the code invoked by one visible interface action and note input, validation and output."
+                  },
+                  {
+                    "term": "Connect to this course",
+                    "explanation": "Identify one genuine use of an OOP, Collections, I/O or exception concept only after finding the relevant source line."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Review a genuine implementation",
+            "blocks": [
+              {
+                "kind": "exercise",
+                "text": "Choose one of the two real repositories. Find a controller or model class, identify its fields and methods, trace one UI action through the code, and document what you can directly verify. Do not invent unverified code or output."
+              },
+              {
+                "kind": "output-note",
+                "text": "Use the two existing project-detail pages and repository links to investigate real Java/JavaFX work. The four images are original project screenshots, not newly generated proof. The module does not claim that any specific internal design has been verified without examining its source."
+              }
+            ]
+          }
+        ],
+        "problems": [],
+        "finalOutcome": "The course ends by connecting core concepts with two existing JavaFX projects and their verified project and repository links.",
+        "conceptOverview": [
+          "A desktop application has a user interface that runs on a computer rather than only printing text in a terminal. JavaFX is a Java toolkit for creating graphical desktop interfaces with windows, controls and layouts. The Java concepts covered in this course—classes, methods, event handling, validation and data processing—help organize such applications.",
+          "This final module uses two real projects already published in the website’s Projects section. The goal is to explore authentic project material and understand how a larger application is structured, not to invent a new demonstration or present screenshots as proof of unverified internal behavior."
+        ],
+        "whyItMatters": "Seeing a full application helps connect the smaller console exercises to software people actually use. Instead of learning every feature again, you investigate how UI screens, Java classes and application logic fit together.",
+        "realLifeExample": "A hospital administrator interacts with a management interface, while a student uses a form-based application to prepare an excuse document. These are distinct desktop workflows that can be explored through the project pages and original repository links.",
+        "coreIdeas": [
+          {
+            "term": "JavaFX controls and views",
+            "explanation": "UI elements such as screens and form fields through which a user interacts with a desktop program."
+          },
+          {
+            "term": "Controller or event handler",
+            "explanation": "Application code that responds when a user clicks a button or submits a form."
+          },
+          {
+            "term": "Model/data class",
+            "explanation": "A Java class that represents or carries information used by the application."
+          },
+          {
+            "term": "Validation and exceptions",
+            "explanation": "Checks and error handling that protect the application against invalid input."
+          },
+          {
+            "term": "Source evidence versus inference",
+            "explanation": "A screenshot proves that a certain interface was shown; code review is needed to confirm how its features work internally."
+          }
+        ],
+        "learningTakeaways": [
+          "Desktop apps connect Java logic with interactive UI components.",
+          "Use original screenshots for visible features and repository code to verify implementation details.",
+          "The earlier Java modules provide the building blocks for investigating larger applications."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "practical-devops",
+    "category": "DevOps",
+    "icon": "terminal",
+    "title": "Practical DevOps Journey",
+    "description": "My documented Spring Boot, Docker, GitHub Actions, AWS, Nginx, HTTPS and Terraform exercises, with original commands and proof of concept.",
+    "modules": [
+      {
+        "title": "AWS Foundations & Architecture",
+        "objective": "Understand the AWS components that support the recorded Spring Boot deployment, particularly EC2, networking, identities, security boundaries, storage, and HTTPS.",
+        "prerequisites": [
+          "Basic familiarity with a web application and the difference between a local computer and a hosted server."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Understand the deployment architecture",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The hands-on project runs a Java Spring Boot API inside Docker on an Ubuntu EC2 instance. GitHub Actions publishes container images and updates that instance; Nginx handles incoming web requests and TLS."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Layer",
+                    "Component",
+                    "Actual role"
+                  ],
+                  [
+                    "Source / automation",
+                    "GitHub + GitHub Actions",
+                    "Source repository, image build, automated deployment"
+                  ],
+                  [
+                    "Container registry",
+                    "Docker Hub",
+                    "Holds the application image"
+                  ],
+                  [
+                    "Compute",
+                    "AWS EC2 (Ubuntu, t3.micro)",
+                    "Runs Docker, Nginx and the API"
+                  ],
+                  [
+                    "Network edge",
+                    "Security group, DNS, TLS",
+                    "Controls network access and provides a named HTTPS endpoint"
+                  ],
+                  [
+                    "Infrastructure as code",
+                    "Terraform",
+                    "Adopts and manages the existing AWS resources"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Distinguish the cloud concepts used in this project",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The AWS Foundation notes distinguish IaaS, PaaS and SaaS. EC2 is IaaS: AWS supplies the virtual machine, but the user manages the guest OS, application, Docker and web server. A region is a geographical AWS deployment location; availability zones are isolated fault domains within a region."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Connect AWS network and security concepts to the actual deployment",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "An EC2 instance is launched within a VPC and subnet. Its security group controls allowed traffic. The recorded final web access uses HTTP 80 for redirect and certificate validation, HTTPS 443 for browsers, and a restricted SSH 22 rule. Public exposure of application port 8080 belongs only to the earlier learning stage, not the final configuration."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Understand IAM and AWS storage responsibilities",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Use IAM identities, roles and policies to define which AWS actions are permitted. Keep access keys out of Java source and Git. EBS stores a VM’s disk data, while S3 provides object storage; in the later Terraform practice, S3 holds a remote state file and a separate application-storage bucket. These are distinct purposes."
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Review the recorded architecture values",
+            "blocks": [
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Field",
+                    "Recorded value"
+                  ],
+                  [
+                    "AWS Region",
+                    "ap-southeast-2 (Sydney)"
+                  ],
+                  [
+                    "EC2 instance type",
+                    "t3.micro"
+                  ],
+                  [
+                    "Deployment host",
+                    "safayet.flashhub.net"
+                  ],
+                  [
+                    "Application test path",
+                    "/api/welcome"
+                  ],
+                  [
+                    "Public web interface",
+                    "Nginx on HTTP 80 / HTTPS 443"
+                  ],
+                  [
+                    "Backend interface",
+                    "Spring Boot container on host port 8080"
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "The Foundation notes emphasize that placing an application on AWS does not make it automatically secure or highly available. Security groups, backups, authentication, cost monitoring and software maintenance remain operational responsibilities."
+        ],
+        "finalOutcome": "Established the vocabulary and the actual architectural context needed for the hands-on deployment modules that follow.",
+        "slug": "aws-foundations",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "Spring Boot Application & Docker",
+        "objective": "Build and run the existing Java 26 Spring Boot application in a reproducible Docker image, then test the API locally.",
+        "prerequisites": [
+          "A Spring Boot/Maven project, Docker, Maven Wrapper files, and an available host port."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Prepare the existing Spring Boot API",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The project provides a /api/welcome endpoint used to verify local runs, manual deployment and automated updates. The documentation records a later change to the response string for the CI/CD test."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED WELCOMECONTROLLER UPDATE — ORIGINAL JAVA SNIPPET",
+                "text": "@GetMapping(\"/welcome\")\npublic ResponseEntity<String> welcome() {\n    return ResponseEntity.ok(\n            \"Welcome! Here we will learn CI/CD with Spring Boot.\" +\n                    \"\\\"CI/CD Automation Test Successful - Version 2\\\"\"\n    );\n}"
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Use the original two-stage Dockerfile",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The build stage uses Eclipse Temurin Java 26 and Maven Wrapper to build the JAR. The runtime stage uses the Java 26 JRE and starts app.jar. The following block is copied verbatim from the original Word document."
+              },
+              {
+                "kind": "code",
+                "label": "DOCKERFILE — VERBATIM ORIGINAL",
+                "text": "# Stage 1: Build the Spring Boot application\nFROM eclipse-temurin:26-jdk AS build\nWORKDIR /app\n\nCOPY .mvn .mvn\nCOPY mvnw pom.xml ./\n\nRUN chmod +x mvnw\nCOPY src ./src\n\nRUN ./mvnw -B -ntp clean package\n\n# Stage 2: Run the application\nFROM eclipse-temurin:26-jre\n\nLABEL authors=\"SAFAYET\"\n\nWORKDIR /app\n\nCOPY --from=build /app/target/*.jar app.jar\n\nEXPOSE 8080\n\nENTRYPOINT [\"java\", \"-jar\", \"app.jar\"]"
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Build and run the image locally",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The source first records a local container using port 8080; a later check uses host port 8081 because port 8080 was occupied on Windows. These are recorded alternatives, not contradictory commands to run together."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED LOCAL RUN AND API TEST COMMANDS",
+                "text": "docker run -d -p 8080:8080 --name spring-boot-app  spring-boot-app:latest\ndocker build -t springboot-app:java26 .\ndocker run --rm -d --name springboot-check -p 8081:8080 springboot-app:java26\nInvoke-RestMethod http://localhost:8081/api/welcome\ndocker stop springboot-check"
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Inspect and stop a test container",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Use the original Docker commands to list the running containers and stop a test container when the exercise ends."
+              },
+              {
+                "kind": "code",
+                "label": "CONTAINER INSPECTION AND STOP",
+                "text": "docker ps\ndocker stop <container_id>"
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "The original notes say port 8080 was already occupied on Windows. A later local validation therefore maps 8081 on the host to 8080 in the container.",
+          "The Dockerfile uses ./mvnw; the original source explicitly includes chmod +x mvnw to make that wrapper executable in Linux."
+        ],
+        "finalOutcome": "A documented container build and local API validation path using Java 26 and Maven Wrapper, with the original Dockerfile preserved.",
+        "slug": "spring-boot-docker",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "GitHub & Docker Hub",
+        "objective": "Publish the source project and container image, keep build artifacts and secrets out of source control, and prepare a stable Git workflow.",
+        "prerequisites": [
+          "Existing project repository, Docker Hub account and Git credentials."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Authenticate and publish the Docker image",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The original manual workflow logs in, applies a registry tag and pushes an image to Docker Hub."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL DOCKER HUB COMMANDS",
+                "text": "docker login\ndocker tag spring-boot-app safayet19/spring-boot-app:latest\ndocker push safayet19/spring-boot-app:latest"
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Configure the Git remote and branch",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The recorded repository address is Safayet19/Project-CI-CD. Setting the remote does not upload code; the initial commit and push come later."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED REPOSITORY SETUP AND CHECKS",
+                "text": "git remote add origin https://github.com/Safayet19/Project-CI-CD.git\ngit status\ngit remote -v\ngit branch --show-current\ngit branch -M main"
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Keep generated files and secrets out of Git and Docker build context",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The project notes explicitly separate the roles of .gitignore and .dockerignore. Both are shown as originally recorded; do not store actual tokens or passwords in tracked files."
+              },
+              {
+                "kind": "code",
+                "label": ".GITIGNORE — ORIGINAL EXAMPLE",
+                "text": "# Maven build output\ntarget/\n\n# IntelliJ IDEA\n.idea/\n*.iml\n\n# VS Code\n.vscode/\n\n# Local environment and secrets\n.env\n.env.*\n!.env.example\n\n# Logs\n*.log\n\n# Operating system files\n.DS_Store\nThumbs.db"
+              },
+              {
+                "kind": "code",
+                "label": ".DOCKERIGNORE — ORIGINAL EXAMPLE",
+                "text": "# Git files\n.git/\n.github/\n.gitignore\n\n# IDE files\n.idea/\n.vscode/\n*.iml\n\n# Local Maven output\ntarget/\n\n# Logs\n*.log\n\n# Environment and secret files\n.env\n.env.*\n*.pem\n*.key"
+              },
+              {
+                "kind": "code",
+                "label": ".GITATTRIBUTES — ORIGINAL EXAMPLE",
+                "text": "* text=auto\n\nmvnw text eol=lf\nmvnw.cmd text eol=crlf\n*.sh text eol=lf"
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Review, commit and push the initial source",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Check staged changes before committing. The recorded commands include a specific check to prevent committing credentials in application.properties."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED STAGING, REVIEW AND PUSH COMMANDS",
+                "text": "Step 3 — Stage project files\ngit diff --cached --name-only\ngit diff --cached -- src/main/resources/application.properties\ngit diff --cached --check\ngit restore --staged .env\ngit commit -m \"Initial Spring Boot Java 26 Docker setup\"\ngit push -u origin main"
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Use feature branches for later infrastructure changes",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The manual describes keeping main stable and adding future automation or Terraform work on separate feature branches, with review before merging."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          ".gitignore does not untrack files already committed; the source warns that sensitive files must be removed from tracking and exposed secrets rotated.",
+          "The notes explicitly distinguish an initial manual Docker Hub push from the later automatic, SHA-tagged image publication."
+        ],
+        "finalOutcome": "The project source can be versioned safely and the Docker image can be published with the original recorded commands.",
+        "slug": "github-docker-hub",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "AWS EC2 Deployment",
+        "objective": "Manually deploy the Docker image on an Ubuntu EC2 instance and verify the initial browser-accessible application.",
+        "prerequisites": [
+          "An accessible AWS EC2 instance, SSH or EC2 Connect access, and the Docker Hub image."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Inspect the running EC2 instance",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The source records a running Sydney-region t3.micro instance and its public/private network identities."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-01.png",
+                "label": "Original Figure 01",
+                "caption": "Figure 1. AWS EC2 console instance summary for the initial manual deployment."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Install Docker on Ubuntu",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The server installs docker.io from the Ubuntu package repository and checks Docker availability."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED INSTALLATION COMMAND",
+                "text": "sudo apt install docker.io"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-02.png",
+                "label": "Original Figure 02",
+                "caption": "Figure 2. Ubuntu terminal after Docker installation and version verification."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Pull and run the Docker Hub image",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "After pulling the image, the original practical demonstrates starting a container on the EC2 server. Docker group membership commands are recorded for allowing the current user to communicate with Docker without repeating sudo."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED PULL AND GROUP-ACCESS COMMANDS",
+                "text": "docker pull safayet19/spring-boot-app\nsudo usermod -aG docker $USER\nnewgrp docker\ngroups\ndocker ps"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-03.png",
+                "label": "Original Figure 03",
+                "caption": "Figure 3. EC2 terminal showing Docker image and running container output."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Temporarily open port 8080 for an initial browser test",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "At this early learning stage, the source temporarily allows public traffic to port 8080 and checks /api/welcome through the instance public IP. This is a temporary exposure and is explicitly removed in the later secure configuration."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-04.png",
+                "label": "Original Figure 04",
+                "caption": "Figure 4. Temporary EC2 security group rule allowing public port 8080."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-05.png",
+                "label": "Original Figure 05",
+                "caption": "Figure 5. Original browser result at the public EC2 IPv4 address and port 8080."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Manual deployments required repeating pull, stop and start operations, motivating the GitHub Actions pipeline.",
+          "The public 8080 rule shown here is a temporary learning state. It must not be presented as the final HTTPS architecture."
+        ],
+        "finalOutcome": "A Spring Boot response was visible from EC2 during the manual deployment phase; the later modules replace repeated deployment work and close the public application port.",
+        "slug": "aws-ec2-deployment",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "GitHub Actions CI/CD Automation",
+        "objective": "Build and publish a commit-tagged Docker image automatically, then update the running EC2 application over SSH when main changes.",
+        "prerequisites": [
+          "GitHub repository, Docker Hub credentials stored as repository secrets, SSH connectivity to EC2, and the existing Dockerfile."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Understand the documented pipeline",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A push to main starts a GitHub-hosted Ubuntu runner, which checks out the code, logs in to Docker Hub, builds and pushes a tagged image, then connects to EC2 to replace the container. The runner and EC2 instance are different machines."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-06.png",
+                "label": "Original Figure 06",
+                "caption": "Figure 6. Original GitHub-to-Docker-Hub-to-EC2 deployment flow diagram."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Add the exact recorded GitHub Actions workflow",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The complete YAML below is the original editable source from the CI/CD practical. The secrets and workflow action versions are preserved exactly as recorded."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL WORKFLOW — SPRING BOOT BUILD AND DEPLOY",
+                "text": "# Workflow name and trigger\nname: Spring Boot Build and Deploy\n\non:\n  push:\n    branches:\n      - main\n\n# Application configuration\nenv:\n  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-app\n  CONTAINER_NAME: spring-boot-app\n  APP_PORT: 8080\n\njobs:\n  build-deploy:\n    runs-on: ubuntu-latest\n\n    steps:\n      # 1. Get source code\n      - name: Checkout Repository\n        uses: actions/checkout@v7\n\n      # 2. Login to Docker Hub\n      - name: Docker Hub Login\n        uses: docker/login-action@v4\n        with:\n          username: ${{ secrets.DOCKERHUB_USERNAME }}\n          password: ${{ secrets.DOCKERHUB_TOKEN }}\n\n      # 3. Build and push Docker image\n      - name: Build and Push Image\n        uses: docker/build-push-action@v7\n        with:\n          context: .\n          push: true\n          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}\n\n      # 4. Deploy to AWS EC2\n      - name: Deploy to EC2\n        uses: appleboy/ssh-action@v1\n        with:\n          host: ${{ secrets.EC2_HOST }}\n          username: ${{ secrets.EC2_USER }}\n          key: ${{ secrets.EC2_SSH_KEY }}\n          script: |\n            set -e\n\n            # Pull the new image\n            docker pull \"${{ env.IMAGE_NAME }}:${{ github.sha }}\"\n\n            # Remove the old container\n            docker rm -f \"${{ env.CONTAINER_NAME }}\" 2>/dev/null || true\n\n            # Run the updated container\n            docker run -d \\\n              --name \"${{ env.CONTAINER_NAME }}\" \\\n              --restart unless-stopped \\\n              -p \"${{ env.APP_PORT }}:8080\" \\\n              \"${{ env.IMAGE_NAME }}:${{ github.sha }}\""
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Configure GitHub repository secrets",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The documented workflow refers to DOCKERHUB_USERNAME, DOCKERHUB_TOKEN, EC2_HOST, EC2_USER and EC2_SSH_KEY; its secret-variable references are placeholders rather than actual credential values."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-07.png",
+                "label": "Original Figure 07",
+                "caption": "Figure 7. GitHub Actions repository secret names in the original setup."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Trigger and observe the automated update",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The original experiment modifies the welcome response, commits the change, and pushes it to main. The workflow view and browser output show the before-and-after API response."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL CI/CD UPDATE TRIGGER",
+                "text": "git add .\ngit commit -m \"Test automatic CI/CD deployment\"\ngit push origin main"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-08.png",
+                "label": "Original Figure 08",
+                "caption": "Figure 8. GitHub Actions workflow runs after the test commit."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-09.png",
+                "label": "Original Figure 09",
+                "caption": "Figure 9. Browser response before the CI/CD test push."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-10.png",
+                "label": "Original Figure 10",
+                "caption": "Figure 10. Changed browser response after the automatic deployment."
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Distinguish CI from deployment",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Continuous integration is the checkout, build and image-publish work. The deployment step connects to the live server and restarts the container from the new image tag. The source includes both responsibilities in one workflow."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "The long CI/CD notes show DOCKERHUB_USERNAME referenced once using secrets and later using vars. Both forms appear in the original material. The complete workflow above intentionally retains the original secrets-based version without silently reconciling the difference.",
+          "In the initial YAML, docker run publishes the application port to the host. The later Nginx setup adds loopback-only binding and closes the public EC2 inbound rule as a separate security improvement."
+        ],
+        "finalOutcome": "The source screenshots show a successful workflow run and the updated Spring Boot API response after push to main.",
+        "slug": "github-actions-cicd",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "Nginx Reverse Proxy",
+        "objective": "Place Nginx in front of the Spring Boot Docker container so users can reach the API through the standard HTTP port without typing :8080.",
+        "prerequisites": [
+          "Running Spring Boot Docker container on EC2 and permission to manage Nginx on Ubuntu."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Install and verify Nginx",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The original practical installs Nginx and confirms that the EC2 public address initially displays its default welcome page."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED NGINX INSTALL COMMAND",
+                "text": "sudo apt install nginx"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-11.png",
+                "label": "Original Figure 11",
+                "caption": "Figure 11. Ubuntu terminal showing Nginx service installation and status."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-12.png",
+                "label": "Original Figure 12",
+                "caption": "Figure 12. Default Nginx welcome page before the proxy configuration."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Inspect the Nginx site configuration structure",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The source identifies /etc/nginx/sites-available/default as the site definition and sites-enabled/default as the active linked site. Preserve the original configuration before editing."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED BACKUP AND EDIT COMMANDS",
+                "text": "sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak\nsudo nano /etc/nginx/sites-available/default"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-13.png",
+                "label": "Original Figure 13",
+                "caption": "Figure 13. Actual /etc/nginx directory listing from EC2."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-14.png",
+                "label": "Original Figure 14",
+                "caption": "Figure 14. Backup copy of the original default site configuration."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Apply the original HTTP reverse proxy configuration",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The proxy forwards all request paths to the Spring Boot host port and passes the Host and client-IP headers. The default server block shown below is transcribed from the original embedded configuration screenshot."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL REVERSE PROXY CONFIGURATION",
+                "text": "server {\n    listen 80 default_server;\n    server_name _;\n\n    location / {\n        proxy_pass http://127.0.0.1:8080;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n    }\n}"
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Validate and reload Nginx",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Test syntax before applying the new configuration. The original practical records a successful Nginx validation and reload."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL SYNTAX, RELOAD AND LOCAL VERIFICATION COMMANDS",
+                "text": "sudo nginx -t\nsudo systemctl reload nginx\ncurl http://localhost/api/welcome"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-15.png",
+                "label": "Original Figure 15",
+                "caption": "Figure 15. Nginx syntax check, reload and curl verification in the EC2 terminal."
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Compare browser access before and after",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Before the proxy, the visitor requested the EC2 IP with :8080. After Nginx forwarding, the same API was available through HTTP port 80 without an explicit port suffix."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-16.png",
+                "label": "Original Figure 16",
+                "caption": "Figure 16. Browser request to the same API through Nginx on port 80."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Without a configured reverse proxy, the public address displayed the default Nginx welcome page while the application was still reached via :8080.",
+          "A safe backup was created before changing the default server configuration; the source uses nginx -t before reloading to avoid activating an invalid file."
+        ],
+        "finalOutcome": "Nginx was configured as the HTTP entry point, forwarding /api/welcome to the existing Spring Boot container.",
+        "slug": "nginx-reverse-proxy",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "Domain Configuration, HTTPS & TLS",
+        "objective": "Associate the EC2 server with a Dynu hostname, obtain a Let’s Encrypt certificate using Certbot, verify encrypted browser access, and remove the temporary public application port.",
+        "prerequisites": [
+          "Working Nginx reverse proxy, a Dynu DNS record pointing to the EC2 public IP, and inbound HTTP/HTTPS rules."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Set up the recorded Dynu hostname",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The learning notes register the free DNS hostname safayet.flashhub.net and point it to the EC2 public IPv4 address. DNS provides the hostname; the virtual machine still handles the application."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-17.png",
+                "label": "Original Figure 17",
+                "caption": "Figure 17. Original Dynu dynamic DNS configuration for safayet.flashhub.net."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-18.png",
+                "label": "Original Figure 18",
+                "caption": "Figure 18. Browser response using the Dynu hostname over HTTP."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Confirm why HTTPS is needed",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The original browser and TLS-test screenshots show that the HTTP-only site was not encrypted. This is evidence of the pre-certificate stage, not the final security status."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-19.png",
+                "label": "Original Figure 19",
+                "caption": "Figure 19. Browser warning for the earlier unencrypted HTTP connection."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-20.png",
+                "label": "Original Figure 20",
+                "caption": "Figure 20. Original TLS diagnostic before certificate installation."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Update Nginx server_name and install Certbot",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The source updates the default server_name from _ to the real hostname, validates Nginx, and installs Certbot via Snap."
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED HOSTNAME AND CERTBOT SETUP COMMANDS",
+                "text": "sudo vi /etc/nginx/sites-available/default\nsudo nginx -t\nsudo systemctl reload nginx\nsudo snap install --classic certbot"
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Issue the Let’s Encrypt certificate with Nginx integration",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The recorded Certbot command configures HTTPS for the hostname and enables redirect from HTTP. The source also describes keeping port 80 accessible for HTTP-01 validation and allowing port 443 for encrypted browser access."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL CERTBOT COMMAND",
+                "text": "sudo /snap/bin/certbot --nginx -d safayet.flashhub.net --redirect"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-21.png",
+                "label": "Original Figure 21",
+                "caption": "Figure 21. Certbot terminal output documenting successful certificate issuance and Nginx installation."
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Verify HTTPS and certificate handling",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The original browser and independent TLS diagnostic show a valid certificate and enabled HTTPS. A later step checks the automated renewal timer."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-22.png",
+                "label": "Original Figure 22",
+                "caption": "Figure 22. Browser security panel showing a secure connection and valid certificate."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-23.png",
+                "label": "Original Figure 23",
+                "caption": "Figure 23. TLS test after certificate setup, showing the improved HTTPS status."
+              }
+            ]
+          },
+          {
+            "title": "Step 6 — Close the old public port 8080 exposure",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "After the reverse proxy and TLS endpoint are working, the source removes the EC2 public inbound rule for port 8080. Browser traffic should enter through Nginx on 443, while the backend is reached locally."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-24.png",
+                "label": "Original Figure 24",
+                "caption": "Figure 24. Security group edited to remove public port 8080 access."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-25.png",
+                "label": "Original Figure 25",
+                "caption": "Figure 25. Direct public request to :8080 fails after the public rule is removed."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "The earlier HTTP browser session reported that the connection was not secure. Certbot with Nginx enabled the documented HTTPS endpoint.",
+          "The document records removing the temporary 8080 inbound rule after the domain and reverse proxy were in place."
+        ],
+        "finalOutcome": "The recorded hostname responded with HTTPS and a valid certificate; the direct public application port was subsequently closed.",
+        "slug": "domain-https-tls",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "Terraform Fundamentals",
+        "objective": "Introduce Terraform as Infrastructure as Code for managing the already-running AWS environment, and configure the AWS provider and CLI safely.",
+        "prerequisites": [
+          "The existing Project-CI-CD checkout, Terraform CLI, AWS CLI and authorized AWS session."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Define the Terraform scope without recreating the live server",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The practical explicitly targets the existing EC2 instance and security group. The existing VPC and subnet are referenced; Nginx, Certbot, Docker and the GitHub Actions deployment pipeline remain outside Terraform’s intended management scope."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Work on a dedicated feature branch",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The Terraform work was initiated on a separate Git branch to keep the main deployment stable during infrastructure changes."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL FEATURE-BRANCH WORKFLOW COMMANDS",
+                "text": "git switch -c feature/terraform\ngit branch"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-26.png",
+                "label": "Original Figure 26",
+                "caption": "Figure 26. Original terminal result for creating and checking the Terraform branch."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Define the AWS provider and region",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The sample main.tf uses hashicorp/aws and the Sydney region, where the existing EC2 instance was running. The Terraform CLI initializes the provider, then checks configuration syntax."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL AWS PROVIDER CONFIGURATION FROM THE SOURCE IMAGE",
+                "text": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 6.0\"\n    }\n  }\n}\n\nprovider \"aws\" {\n  region = \"ap-southeast-2\"\n}"
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED INITIALIZATION AND VALIDATION COMMANDS",
+                "text": "terraform init\nterraform validate"
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Verify AWS CLI access and fix the documented session errors",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The first command failed with a NoRegion error; the source fixes the CLI default to ap-southeast-2. A subsequent call reported an expired AWS session, after which the documented flow logs in again."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL DIAGNOSTIC AND CORRECTION COMMANDS",
+                "text": "aws sts get-caller-identity\naws configure set region ap-southeast-2\naws sts get-caller-identity\naws login"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-27.png",
+                "label": "Original Figure 27",
+                "caption": "Figure 27. Original AWS CLI NoRegion error in the terminal."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-28.png",
+                "label": "Original Figure 28",
+                "caption": "Figure 28. Original expired-session error after setting the AWS region."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-29.png",
+                "label": "Original Figure 29",
+                "caption": "Figure 29. Original AWS session selection screen during reauthentication."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-30.png",
+                "label": "Original Figure 30",
+                "caption": "Figure 30. Original browser confirmation of AWS credential sharing."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-31.png",
+                "label": "Original Figure 31",
+                "caption": "Figure 31. AWS STS caller-identity response after successful login."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "terraform init was initially run from the repository root and reported an empty directory; the actual configuration resides in infrastructure/terraform.",
+          "The AWS CLI initially reported NoRegion, then an expired session. The original corrections were setting ap-southeast-2 and running aws login."
+        ],
+        "finalOutcome": "Terraform was configured to target the correct AWS region and authenticate to the account containing the original EC2 instance.",
+        "slug": "terraform-fundamentals",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "Terraform Infrastructure Management",
+        "objective": "Adopt the live EC2 instance into Terraform state, inspect plans carefully, add a controlled change, and integrate infrastructure work into Git review.",
+        "prerequisites": [
+          "Terraform initialized in infrastructure/terraform, valid AWS access and the verified EC2 resource identifiers."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Audit the existing infrastructure before adoption",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The recorded audit includes the live instance, security group, VPC and subnet. Importing the existing resources is essential; a second EC2 instance would not preserve the running deployment."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Resource",
+                    "Original verified value"
+                  ],
+                  [
+                    "AWS Region",
+                    "ap-southeast-2 (Sydney)"
+                  ],
+                  [
+                    "Instance ID",
+                    "i-0ae13516803892e8d"
+                  ],
+                  [
+                    "Instance Type",
+                    "t3.micro"
+                  ],
+                  [
+                    "AMI ID",
+                    "ami-0dd60a46ecc6eac16"
+                  ],
+                  [
+                    "VPC ID",
+                    "vpc-0e07846ebce1bba04"
+                  ],
+                  [
+                    "Subnet ID",
+                    "subnet-0e28c16fdda521d35"
+                  ],
+                  [
+                    "Security Group ID",
+                    "sg-0d8e850cf887fada6"
+                  ],
+                  [
+                    "Public IP",
+                    "3.25.227.199"
+                  ],
+                  [
+                    "Private IP",
+                    "172.31.37.94"
+                  ],
+                  [
+                    "Instance State",
+                    "Running"
+                  ],
+                  [
+                    "IAM Role",
+                    "None"
+                  ],
+                  [
+                    "Elastic IP",
+                    "None"
+                  ],
+                  [
+                    "IMDSv2",
+                    "Required"
+                  ]
+                ]
+              },
+              {
+                "kind": "code",
+                "label": "RECORDED READ-ONLY EC2 INSPECTION COMMAND",
+                "text": "Details Check: aws ec2 describe-instances --instance-ids i-0ae13516803892e8d --query \"Reservations[].Instances[].{ID:InstanceId,State:State.Name,Type:InstanceType}\" --output table"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-32.png",
+                "label": "Original Figure 32",
+                "caption": "Figure 32. CLI verification that the original EC2 instance is running."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Declare the import block for the existing EC2 instance",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The import block maps the real instance ID to an aws_instance resource address; it is not an instruction to create a new server."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL EC2 IMPORT BLOCK FROM SOURCE SCREENSHOT",
+                "text": "import {\n  to = aws_instance.spring_boot\n  id = \"i-0ae13516803892e8d\"\n}"
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Generate an initial configuration and review the plan",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The recorded plan uses -generate-config-out to write EC2 settings. The first attempt ran from the wrong directory and produced a command-line argument error; the source then changes into infrastructure/terraform and repeats the plan."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL DIRECTORY CORRECTION AND GENERATE COMMAND",
+                "text": "cd infrastructure/terraform\nterraform plan -generate-config-out=\"ec2.tf\""
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-33.png",
+                "label": "Original Figure 33",
+                "caption": "Figure 33. Original Terraform error from running the configuration-generation command in the wrong location."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-34.png",
+                "label": "Original Figure 34",
+                "caption": "Figure 34. Terminal showing the corrected infrastructure/terraform working directory."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-35.png",
+                "label": "Original Figure 35",
+                "caption": "Figure 35. Generated EC2 configuration visible in the IDE."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-36.png",
+                "label": "Original Figure 36",
+                "caption": "Figure 36. Terraform output showing conflicting configuration arguments that required review."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Inspect the import plan before making changes",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The practical shows a plan to adopt existing resources and a later plan with no unexpected infrastructure changes. It also documents reviewing proposed changes rather than blindly applying them."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL PLAN AND STATE-INSPECTION COMMANDS",
+                "text": "terraform plan\nterraform state list"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-37.png",
+                "label": "Original Figure 37",
+                "caption": "Figure 37. Terraform plan documenting import without unintended destruction."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-38.png",
+                "label": "Original Figure 38",
+                "caption": "Figure 38. Terraform CLI output after adoption and state verification."
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Commit the Terraform work and review it through GitHub",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The changes were put on a Terraform branch and reviewed through a pull request before merging. The source explicitly reminds readers that GitHub CLI must be installed when using the gh command."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-39.png",
+                "label": "Original Figure 39",
+                "caption": "Figure 39. Terminal output showing Terraform state, used before the Git workflow."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-40.png",
+                "label": "Original Figure 40",
+                "caption": "Figure 40. GitHub pull request from the Terraform feature branch."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-41.png",
+                "label": "Original Figure 41",
+                "caption": "Figure 41. GitHub Actions executions after the Terraform changes were reviewed."
+              }
+            ]
+          },
+          {
+            "title": "Step 6 — Add variables, outputs and local values",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Later practical steps separate provider configuration from reusable inputs and record EC2 properties as outputs. The original screenshots show the configuration and resulting plan and output values."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL VARIABLE.TF EXAMPLE FROM THE SCREENSHOT",
+                "text": "variable \"aws_region\" {\n  description = \"AWS region\"\n  type        = string\n}"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-42.png",
+                "label": "Original Figure 42",
+                "caption": "Figure 42. Terraform validation output for the variable/output configuration."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-43.png",
+                "label": "Original Figure 43",
+                "caption": "Figure 43. Plan showing expected outputs without unintended resource changes."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-44.png",
+                "label": "Original Figure 44",
+                "caption": "Figure 44. Source IDE output demonstrating the controlled EC2 tag update."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-45.png",
+                "label": "Original Figure 45",
+                "caption": "Figure 45. Terraform plan and output values after reviewing the practical configuration."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "Terraform import and generated resource configuration required careful reconciliation to avoid conflicting values and replacement of the running EC2 instance.",
+          "The notes warn that prevent_destroy is a guardrail, not an absolute guarantee; removing or changing configuration can change protection behavior.",
+          "The source documents an incorrect Terraform working directory, repaired by changing to infrastructure/terraform before re-running the plan."
+        ],
+        "finalOutcome": "Terraform was used to track and inspect the existing EC2 environment and related inputs/outputs while preserving the ongoing application deployment.",
+        "slug": "terraform-infrastructure",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "title": "Terraform State Management & S3",
+        "objective": "Create and protect S3-backed Terraform state, migrate from local state, and extend the practice to an existing application storage bucket and IAM role.",
+        "prerequisites": [
+          "Existing working Terraform configuration, authorized AWS access, and the prior EC2 infrastructure adoption exercise."
+        ],
+        "practicalSteps": [
+          {
+            "title": "Step 1 — Separate local Terraform state from infrastructure configuration",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The notes distinguish Terraform source files from Terraform state, which records actual resource associations. State files can contain sensitive infrastructure metadata and should not be committed to Git. The bootstrap project creates remote-storage resources separately from the EC2 configuration."
+              }
+            ]
+          },
+          {
+            "title": "Step 2 — Bootstrap an S3 bucket for remote state",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The Terraform Practical source includes editable HCL for an S3 bucket, versioning and blocking public ACL/policy access. The complete block below is copied verbatim from its original Word text."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL S3 STATE-BOOTSTRAP HCL — VERBATIM",
+                "text": "resource \"aws_s3_bucket\" \"terraform_state\" {\n  bucket_prefix = local.bucket_prefix\n\n  tags = {\n    Project = var.platform_name\n    Purpose = \"Terraform State\"\n  }\n\n  lifecycle {\n    prevent_destroy = true\n  }\n}\n\nresource \"aws_s3_bucket_versioning\" \"terraform_state\" {\n  bucket = aws_s3_bucket.terraform_state.id\n\n  versioning_configuration {\n    status = \"Enabled\"\n  }\n}\n\nresource \"aws_s3_bucket_public_access_block\" \"terraform_state\" {\n  bucket = aws_s3_bucket.terraform_state.id\n\n  block_public_acls       = true\n  block_public_policy     = true\n  ignore_public_acls      = true\n  restrict_public_buckets = true\n}"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-46.png",
+                "label": "Original Figure 46",
+                "caption": "Figure 46. Recorded S3 bucket Terraform configuration from the original practical."
+              }
+            ]
+          },
+          {
+            "title": "Step 3 — Apply, then verify the S3 bucket",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The source shows the AWS console after bootstrap and documents checking that the state bucket exists before attempting the backend migration."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL BOOTSTRAP WORKING-DIRECTORY COMMAND",
+                "text": "cd terraform-bootstrap"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-47.png",
+                "label": "Original Figure 47",
+                "caption": "Figure 47. Terraform bootstrap apply result for the state bucket."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-48.png",
+                "label": "Original Figure 48",
+                "caption": "Figure 48. AWS S3 console showing the created remote-state bucket."
+              }
+            ]
+          },
+          {
+            "title": "Step 4 — Configure the backend and migrate state",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The EC2 Terraform configuration was then pointed to the new S3 backend. The original migration prompt and console output are preserved below; migration moves state storage, not the EC2 server itself."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL BACKEND.TF CONFIGURATION FROM THE SOURCE IMAGE",
+                "text": "terraform {\n  backend \"s3\" {\n    bucket       = \"my-personal-world-tfstate-7f987cc388eb8a910e81566eb9\"\n    key          = \"ec2/terraform.tfstate\"\n    region       = \"ap-southeast-2\"\n    encrypt      = true\n    use_lockfile = true\n  }\n}"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-49.png",
+                "label": "Original Figure 49",
+                "caption": "Figure 49. Original backend configuration for migrating EC2 state to S3."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL STATE MIGRATION COMMAND",
+                "text": "terraform init -migrate-state"
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-50.png",
+                "label": "Original Figure 50",
+                "caption": "Figure 50. Terraform backend re-initialization prompting for state migration."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-51.png",
+                "label": "Original Figure 51",
+                "caption": "Figure 51. Successful state-backend migration output."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-52.png",
+                "label": "Original Figure 52",
+                "caption": "Figure 52. AWS S3 console showing the uploaded remote Terraform state object."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-53.png",
+                "label": "Original Figure 53",
+                "caption": "Figure 53. S3 object metadata verifying the EC2 remote-state path."
+              }
+            ]
+          },
+          {
+            "title": "Step 5 — Confirm normal Terraform operations after migration",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The source verifies that the plan still contains no unintended resource changes and lists the actual remote-state location. This is the main confirmation that remote state was successfully adopted."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL RECORDED STATE/PLAN AND S3 LISTING COMMANDS",
+                "text": "terraform plan\nterraform state list\naws s3 ls s3://my-personal-world-tfstate-7f987cc388eb8a910e81566eb9/ec2/"
+              }
+            ]
+          },
+          {
+            "title": "Step 6 — Create an application-storage bucket and bring it under Terraform",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A later exercise creates my-personal-world-storage through the AWS console, then imports that existing bucket into Terraform management. This storage bucket is distinct from the Terraform state bucket."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Setting",
+                    "Original value"
+                  ],
+                  [
+                    "Bucket",
+                    "my-personal-world-storage"
+                  ],
+                  [
+                    "Region",
+                    "ap-southeast-2"
+                  ],
+                  [
+                    "Ownership",
+                    "ACLs disabled"
+                  ],
+                  [
+                    "Public access",
+                    "Block all public access enabled"
+                  ],
+                  [
+                    "Encryption",
+                    "SSE-S3"
+                  ],
+                  [
+                    "Bucket versioning",
+                    "Disabled initially in this separate storage exercise"
+                  ]
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-54.png",
+                "label": "Original Figure 54",
+                "caption": "Figure 54. AWS S3 create-bucket interface from the original application-storage exercise."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-55.png",
+                "label": "Original Figure 55",
+                "caption": "Figure 55. AWS confirmation of the application-storage bucket creation."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-56.png",
+                "label": "Original Figure 56",
+                "caption": "Figure 56. Generated Terraform code for adopting the previously created S3 bucket."
+              }
+            ]
+          },
+          {
+            "title": "Step 7 — Define narrowly scoped object-storage permissions",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The original source includes an editable JSON IAM permission policy for the application-storage bucket. ListBucket applies to the bucket, while GetObject/PutObject apply to objects under the bucket prefix. No credentials are embedded in the policy itself."
+              },
+              {
+                "kind": "code",
+                "label": "ORIGINAL S3 IAM POLICY JSON — VERBATIM",
+                "text": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:ListBucket\"\n      ],\n      \"Resource\": \"arn:aws:s3:::my-personal-world-storage\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:GetObject\",\n        \"s3:PutObject\"\n      ],\n      \"Resource\": \"arn:aws:s3:::my-personal-world-storage/*\"\n    }\n  ]\n}"
+              }
+            ]
+          },
+          {
+            "title": "Step 8 — Attach an EC2 IAM role and verify instance credentials",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "The practical proceeds with instance-profile/role attachment so that the running EC2 instance can use AWS APIs without hard-coded access keys. The terminal output shows the assumed role identity and a bucket-list command that returned no objects."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-57.png",
+                "label": "Original Figure 57",
+                "caption": "Figure 57. AWS console during EC2 IAM role and policy attachment."
+              },
+              {
+                "kind": "image",
+                "image": "/images/learning/practical-devops/figure-58.png",
+                "label": "Original Figure 58",
+                "caption": "Figure 58. Original EC2 terminal identity showing the instance role and empty S3 bucket listing."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "The two Terraform source files overlap heavily. Repeated images and repeated explanations have been consolidated; the longer file provides the additional unique S3/IAM practical material.",
+          "The original notes separately mention storing Terraform state in S3 and using S3 for application objects. These are separate buckets and purposes, not one shared data store.",
+          "The final S3 list command shown in the source has no objects in its result. It proves the command completed under the instance identity, not that an upload had occurred."
+        ],
+        "finalOutcome": "The source documents the state bucket creation, remote-state migration and continued Terraform planning, then a separate application S3 bucket with IAM role-based access verification.",
+        "slug": "terraform-state-s3",
+        "concept": "",
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": []
+      },
+      {
+        "slug": "jenkins-cicd",
+        "title": "Jenkins CI/CD Automation",
+        "comingSoon": true,
+        "concept": "",
+        "objective": "",
+        "prerequisites": [],
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": [],
+        "practicalSteps": [],
+        "problems": [],
+        "finalOutcome": ""
+      },
+      {
+        "slug": "kubernetes-deployment",
+        "title": "Kubernetes Deployment",
+        "comingSoon": true,
+        "concept": "",
+        "objective": "",
+        "prerequisites": [],
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": [],
+        "practicalSteps": [],
+        "problems": [],
+        "finalOutcome": ""
+      },
+      {
+        "slug": "prometheus-grafana",
+        "title": "Prometheus & Grafana Monitoring",
+        "comingSoon": true,
+        "concept": "",
+        "objective": "",
+        "prerequisites": [],
+        "steps": [],
+        "commands": [],
+        "evidence": [],
+        "observations": "",
+        "findings": "",
+        "prevention": [],
+        "practicalSteps": [],
+        "problems": [],
+        "finalOutcome": ""
+      }
+    ]
+  },
+  {
     "slug": "dvwa",
     "category": "Cybersecurity",
     "icon": "shield",

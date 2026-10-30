@@ -17,12 +17,29 @@ import java.util.List;
 public class LearningController {
     public record Evidence(String image, String title, String caption) {}
     public record Command(String label, String code) {}
+    public record ExplanationItem(String term, String explanation) {}
+    // Optional practical blocks let courses place original code and POC images beside each step.
+    // Existing DVWA lessons continue using their original fields and rendering flow.
+    public record PracticalBlock(String kind, String label, String text, String image,
+                                 String caption, List<List<String>> rows,
+                                 String title, List<ExplanationItem> items) {}
+    public record PracticalStep(String title, List<PracticalBlock> blocks) {}
     public record Lesson(String slug, String title, String concept, String objective,
                          List<String> prerequisites, List<String> steps, List<Command> commands,
                          List<Evidence> evidence, String observations, String findings,
-                         List<String> prevention) {}
+                         List<String> prevention, Boolean comingSoon,
+                         List<PracticalStep> practicalSteps, List<String> problems,
+                         String finalOutcome,
+                         List<String> conceptOverview, String whyItMatters,
+                         String realLifeExample, List<ExplanationItem> coreIdeas,
+                         List<String> learningTakeaways) {
+        public boolean isAvailable() { return !Boolean.TRUE.equals(comingSoon); }
+    }
     public record Course(String slug, String category, String icon, String title,
-                         String description, List<Lesson> modules) {}
+                         String description, List<Lesson> modules) {
+        public long getAvailableCount() { return modules.stream().filter(Lesson::isAvailable).count(); }
+        public long getUpcomingCount() { return modules.size() - getAvailableCount(); }
+    }
 
     private static final List<Course> COURSES = loadCourses();
 
@@ -43,7 +60,8 @@ public class LearningController {
     @GetMapping("/learning")
     public String catalog(Model model) {
         model.addAttribute("activePage", "learning");
-        model.addAttribute("courses", COURSES.stream().filter(item -> !item.modules().isEmpty()).toList());
+        model.addAttribute("courses", COURSES);
+        model.addAttribute("categories", COURSES.stream().map(Course::category).distinct().toList());
         return "learning";
     }
 
@@ -62,13 +80,22 @@ public class LearningController {
         for (int i = 0; i < course.modules().size(); i++) {
             if (course.modules().get(i).slug().equals(slug)) { index = i; break; }
         }
-        if (index == -1) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
+        if (index == -1 || !course.modules().get(index).isAvailable())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not available");
+        Lesson previous = null;
+        Lesson next = null;
+        for (int i = index - 1; i >= 0; i--) {
+            if (course.modules().get(i).isAvailable()) { previous = course.modules().get(i); break; }
+        }
+        for (int i = index + 1; i < course.modules().size(); i++) {
+            if (course.modules().get(i).isAvailable()) { next = course.modules().get(i); break; }
+        }
         model.addAttribute("activePage", "learning");
         model.addAttribute("course", course);
         model.addAttribute("lesson", course.modules().get(index));
         model.addAttribute("lessonIndex", index);
-        model.addAttribute("previous", index == 0 ? null : course.modules().get(index - 1));
-        model.addAttribute("next", index == course.modules().size() - 1 ? null : course.modules().get(index + 1));
+        model.addAttribute("previous", previous);
+        model.addAttribute("next", next);
         return "dvwa-detail";
     }
 }

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/css/style.css?v=20261030" th:href="@{/css/style.css(v=20261030)}">
   <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
   <script defer src="/js/main.js?v=20261032" th:src="@{/js/main.js(v=20261032)}"></script>
+  <script defer src="/js/learning-highlight.js" th:src="@{/js/learning-highlight.js}"></script>
 </head>
 <body id="top" class="subpage"><a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
@@ -21,10 +22,11 @@
 <div class="lp-container lp-doc-layout">
   <aside class="lp-doc-sidebar"><details class="lp-module-nav" data-mobile-collapsible open>
     <summary><span th:text="${course.title}">DVWA Security Lab</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-    <div class="lp-sidebar-details"><p class="lp-sidebar-counter" th:text="${course.modules.size()} + ' MODULES'">10 MODULES</p><nav aria-label="Course modules"><ol><li th:each="module,status : ${course.modules}"><a th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}" th:classappend="${module.slug == lesson.slug} ? ' is-current' : ''" th:attr="aria-current=${module.slug == lesson.slug} ? 'page' : null"><span th:text="${#numbers.formatInteger(status.count,2)}">01</span><span th:text="${module.title}">Module</span></a></li></ol></nav><a class="lp-back-course" th:href="@{/learning/{track}(track=${course.slug})}">← All modules</a></div>
+    <div class="lp-sidebar-details"><p class="lp-sidebar-counter" th:text="${course.modules.size()} + ' MODULES'">10 MODULES</p><nav aria-label="Course modules"><ol><li th:each="module,status : ${course.modules}"><a th:if="${module.available}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${module.slug})}" th:classappend="${module.slug == lesson.slug} ? ' is-current' : ''" th:attr="aria-current=${module.slug == lesson.slug} ? 'page' : null"><span th:text="${#numbers.formatInteger(status.count,2)}">01</span><span th:text="${module.title}">Module</span></a><span class="lp-sidebar-placeholder" th:unless="${module.available}"><span th:text="${#numbers.formatInteger(status.count,2)}">11</span><span th:text="${module.title}">Future module</span><small>Coming Soon</small></span></li></ol></nav><a class="lp-back-course" th:href="@{/learning/{track}(track=${course.slug})}">← All modules</a></div>
   </details></aside>
   <article class="lp-reading">
     <div class="lp-reading-header"><div class="lp-eyebrow" th:text="'MODULE ' + ${#numbers.formatInteger(lessonIndex + 1,2)}">MODULE 01</div><h1 th:text="${lesson.title}">Module title</h1></div>
+    <div th:if="${lesson.practicalSteps == null or #lists.isEmpty(lesson.practicalSteps)}">
     <section class="lp-doc-section" aria-labelledby="concept-heading"><h2 id="concept-heading">Introduction &amp; Concept</h2><p th:text="${lesson.concept}">Source-derived overview</p></section>
     <section class="lp-doc-section" aria-labelledby="objective-heading"><h2 id="objective-heading">Objective &amp; Prerequisites</h2><p th:text="${lesson.objective}"></p><ul><li th:each="req : ${lesson.prerequisites}" th:text="${req}">Prerequisite</li></ul></section>
     <section class="lp-doc-section" aria-labelledby="practical-heading"><h2 id="practical-heading">Practical Steps</h2><ol class="lp-steps"><li th:each="step : ${lesson.steps}" th:text="${step}">Practical lab step</li></ol></section>
@@ -32,6 +34,80 @@
     <section class="lp-doc-section" aria-labelledby="screens-heading" th:if="${!#lists.isEmpty(lesson.evidence)}"><h2 id="screens-heading">Original Screenshots &amp; Evidence</h2><div class="lp-evidence-grid"><figure class="lp-evidence" th:each="proof : ${lesson.evidence}"><button type="button" class="lp-evidence-trigger" th:attr="data-full=${proof.image},data-caption=${proof.caption}" th:aria-label="${'Enlarge screenshot: ' + proof.title}"><img th:src="@{${proof.image}}" th:alt="${proof.title}" loading="lazy"><span class="lp-zoom" aria-hidden="true">&rarr;</span></button><figcaption><strong th:text="${proof.title}">Screenshot title</strong><span th:text="${proof.caption}">Original evidence caption</span></figcaption></figure></div></section>
     <section class="lp-doc-section" aria-labelledby="observ-heading"><h2 id="observ-heading">Observations &amp; Results</h2><p th:text="${lesson.observations}">Observed lab behavior</p></section>
     <section class="lp-doc-section" aria-labelledby="findings-heading"><h2 id="findings-heading">Findings &amp; Prevention</h2><p th:text="${lesson.findings}">Lab findings</p><h3>Prevention</h3><ul><li th:each="tip : ${lesson.prevention}" th:text="${tip}">Prevention guidance</li></ul></section>
+    </div>
+    <div th:if="${lesson.practicalSteps != null and !#lists.isEmpty(lesson.practicalSteps)}">
+      <!-- Java-only educational context; other Learning Hub courses remain unchanged. -->
+      <th:block th:if="${course.slug == 'java-programming' and lesson.conceptOverview != null}">
+        <section class="lp-doc-section lp-java-concept" aria-labelledby="java-concept-heading">
+          <h2 id="java-concept-heading">Understand the Concept</h2>
+          <p th:each="paragraph : ${lesson.conceptOverview}" th:text="${paragraph}">Clear explanation of the topic.</p>
+        </section>
+        <section class="lp-doc-section lp-java-relevance" aria-labelledby="java-why-heading">
+          <h2 id="java-why-heading">Why Do We Need It?</h2>
+          <p th:text="${lesson.whyItMatters}">Explain the practical benefit.</p>
+        </section>
+        <section class="lp-doc-section lp-java-example" aria-labelledby="java-example-heading">
+          <h2 id="java-example-heading">Real-Life Example</h2>
+          <p th:text="${lesson.realLifeExample}">A familiar real-life scenario.</p>
+        </section>
+        <section class="lp-doc-section lp-java-mechanics" aria-labelledby="java-how-heading">
+          <h2 id="java-how-heading">How It Works</h2>
+          <dl class="lp-java-terms">
+            <div th:each="item : ${lesson.coreIdeas}">
+              <dt th:text="${item.term}">Term or syntax</dt>
+              <dd th:text="${item.explanation}">Plain-English explanation.</dd>
+            </div>
+          </dl>
+        </section>
+      </th:block>
+      <section class="lp-doc-section" aria-labelledby="devops-objective"><h2 id="devops-objective">Objective</h2><p th:text="${lesson.objective}">Recorded objective.</p></section>
+      <section class="lp-doc-section" aria-labelledby="devops-requirements"><h2 id="devops-requirements">Prerequisites</h2><ul><li th:each="req : ${lesson.prerequisites}" th:text="${req}">Prerequisite</li></ul></section>
+      <section class="lp-doc-section lp-practical-content" aria-labelledby="devops-steps"><h2 id="devops-steps">Step-by-Step Implementation</h2>
+        <div class="lp-practical-step" th:each="item : ${lesson.practicalSteps}">
+          <h3 th:text="${item.title}">Step 1 — Practical work</h3>
+          <div th:each="block : ${item.blocks}" th:switch="${block.kind}">
+            <p th:case="'text'" th:text="${block.text}">Recorded explanation.</p>
+            <div th:case="'code'" class="lp-code-panel">
+              <div class="lp-code-top"><span th:text="${block.label}">Original command or configuration</span><button type="button" class="lp-copy" aria-label="Copy original command or configuration">Copy</button></div>
+              <pre><code th:text="${block.text}">Original command</code></pre>
+            </div>
+            <div th:case="'link'" class="lp-lesson-project-link">
+              <a th:href="${block.text}" th:text="${block.label}"
+                 th:attr="target=${#strings.startsWith(block.text, 'https://') ? '_blank' : null},rel=${#strings.startsWith(block.text, 'https://') ? 'noopener noreferrer' : null}">View project →</a>
+              <p th:if="${block.caption != null}" th:text="${block.caption}">Existing project details.</p>
+            </div>
+            <aside th:case="'walkthrough'" class="lp-code-walkthrough" aria-label="Explanation of the code">
+              <h4 th:text="${block.title}">Code explained</h4>
+              <dl>
+                <div th:each="item : ${block.items}">
+                  <dt><code th:text="${item.term}">Java expression</code></dt>
+                  <dd th:text="${item.explanation}">What this code does.</dd>
+                </div>
+              </dl>
+            </aside>
+            <aside th:case="'output-note'" class="lp-output-explain" aria-label="Explanation of the example result">
+              <strong>What this demonstrates</strong>
+              <p th:text="${block.text}">Explain the example output.</p>
+            </aside>
+            <aside th:case="'exercise'" class="lp-lesson-exercise" aria-label="Practice exercise">
+              <strong>Try it yourself</strong>
+              <p th:text="${block.text}">Small Java practice exercise.</p>
+            </aside>
+            <div th:case="'table'" class="lp-practical-table-wrap"><table class="lp-practical-table"><thead><tr><th th:each="column : ${block.rows[0]}" th:text="${column}">Column</th></tr></thead><tbody><tr th:each="row, r : ${block.rows}" th:if="${r.index > 0}"><td th:each="cell : ${row}" th:text="${cell}">Value</td></tr></tbody></table></div>
+            <figure th:case="'image'" class="lp-evidence lp-practical-figure">
+              <button type="button" class="lp-evidence-trigger" th:attr="data-full=${block.image},data-caption=${block.caption}" th:aria-label="${'Enlarge original evidence: ' + block.caption}"><img th:src="@{${block.image}}" th:alt="${block.caption}" loading="lazy"><span class="lp-zoom" aria-hidden="true">&rarr;</span></button>
+              <figcaption><span th:text="${block.caption}">Original proof-of-concept screenshot.</span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section class="lp-doc-section lp-java-recap" th:if="${course.slug == 'java-programming' and lesson.learningTakeaways != null}" aria-labelledby="java-takeaways-heading">
+        <h2 id="java-takeaways-heading">Key Takeaways</h2>
+        <ul><li th:each="takeaway : ${lesson.learningTakeaways}" th:text="${takeaway}">Essential lesson.</li></ul>
+      </section>
+      <section class="lp-doc-section" th:if="${lesson.problems != null and !#lists.isEmpty(lesson.problems)}" aria-labelledby="devops-problems"><h2 id="devops-problems"><span th:if="${course.slug == 'java-programming'}">Common Mistakes &amp; How to Fix Them</span><span th:unless="${course.slug == 'java-programming'}">Problems &amp; Solutions</span></h2><ul><li th:each="problem : ${lesson.problems}" th:text="${problem}">Recorded problem and solution.</li></ul></section>
+      <section class="lp-doc-section" aria-labelledby="devops-result"><h2 id="devops-result">Final Outcome</h2><p th:text="${lesson.finalOutcome}">Verified result.</p></section>
+    </div>
     <nav class="lp-lesson-pager" aria-label="Lesson navigation"><a th:if="${previous != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${previous.slug})}"><small>← Previous Module</small><strong th:text="${previous.title}">Previous</strong></a><a th:if="${previous == null}" class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>← Course Overview</small><strong>All modules</strong></a><a th:if="${next != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${next.slug})}"><small>Next Module →</small><strong th:text="${next.title}">Next</strong></a><a th:if="${next == null}" class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>Course Overview →</small><strong>All modules</strong></a></nav>
   </article>
 </div>

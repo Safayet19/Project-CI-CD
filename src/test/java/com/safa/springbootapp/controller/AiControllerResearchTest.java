@@ -98,8 +98,46 @@ class AiControllerResearchTest {
         String context = AiController.systemContext(new AiController.ChatRequest("Who is safate?", null));
 
         assertTrue(context.contains("introduce Safayet Ullah"));
-        assertTrue(context.contains("What is Safayet Bot?"));
+        assertTrue(context.contains("Briefly introduce Safayet Bot only"));
         assertTrue(context.contains("do not introduce the chatbot"));
+        assertTrue(context.contains("balanced profile"));
+        assertTrue(context.contains("university CGPA"));
+        assertTrue(context.contains("HSC and SSC GPA"));
+    }
+
+    @Test
+    void instructsModelToUnderstandAndLocalizeBanglaBanglishAndFollowUps() {
+        String context = AiController.systemContext(new AiController.ChatRequest("tui k", List.of(
+            new AiController.ChatTurn("user", "Safayet er project gula bolo"),
+            new AiController.ChatTurn("assistant", "O kichu verified project build koreche."))));
+
+        assertTrue(context.contains("Bangla (Bengali script)"));
+        assertTrue(context.contains("Banglish (Bangla written in the Latin alphabet)"));
+        assertTrue(context.contains("natural Romanized Bangla to Banglish"));
+        assertTrue(context.contains("whole utterance instead of requiring exact keywords"));
+        assertTrue(context.contains("grammatical and semantic roles"));
+        assertTrue(context.contains("Safayet ke?"));
+        assertTrue(context.contains("সাফায়েত কে?"));
+        assertTrue(context.contains("Do not ask for clarification or refuse merely"));
+        assertTrue(context.contains("Carry the established language naturally through short or ambiguous follow-ups"));
+    }
+
+    @Test
+    void distinguishesVisitorRecognitionFromBotIdentityAndPrioritizesCorrections() {
+        String context = AiController.systemContext(new AiController.ChatRequest(
+            "ami bolsi amake chinos??", List.of(
+                new AiController.ChatTurn("user", "amake chinos?"),
+                new AiController.ChatTurn("assistant", "I'm Safayet Bot, the website assistant."))));
+
+        assertTrue(context.contains("First-person forms such as I, me, my"));
+        assertTrue(context.contains("ami, amake, amar"));
+        assertTrue(context.contains("it is not automatically a bot-identity question"));
+        assertTrue(context.contains("cannot personally know, recognize, authenticate, or identify"));
+        assertTrue(context.contains("Do not claim recognition"));
+        assertTrue(context.contains("redirect such a question to Safayet Ullah"));
+        assertTrue(context.contains("Treat the latest user message as the primary request"));
+        assertTrue(context.contains("may be a misunderstanding, not a fact"));
+        assertTrue(context.contains("directly answer the corrected or repeated question"));
     }
 
     @Test
