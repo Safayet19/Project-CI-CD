@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3EDE2">
+  <meta name="description" content="Prometheus, Grafana and Slack monitoring learning module.">
+  <title>Prometheus, Grafana &amp; Slack Monitoring | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body id="top" class="subpage lp-monitoring-course lp-monitoring-overview"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content" class="platform">
+  <section class="lp-container lp-lesson-breadcrumb">
+    <nav class="lp-breadcrumb" aria-label="Breadcrumb">
+      <a th:href="@{/learning}">Learning Hub</a><span>/</span>
+      <a th:href="@{/learning/{track}(track=${course.slug})}" th:text="${course.title}">Practical DevOps Journey</a><span>/</span>
+      <span aria-current="page">Module 13</span>
+    </nav>
+  </section>
+
+  <article class="lp-container lp-monitoring-overview-surface">
+    <header class="lp-monitoring-hero">
+      <div class="lp-eyebrow" th:text="'MODULE ' + ${#numbers.formatInteger(lessonIndex + 1,2)}">MODULE 13</div>
+      <h1 th:text="${lesson.title}">Prometheus, Grafana &amp; Slack Monitoring</h1>
+      <p th:each="paragraph : ${lesson.conceptOverview}" th:text="${paragraph}">Module introduction.</p>
+    </header>
+
+    <section class="lp-monitoring-overview-section" aria-labelledby="monitoring-objective-heading">
+      <h2 id="monitoring-objective-heading">Learning Objective</h2>
+      <p th:text="${lesson.objective}">Learning objective.</p>
+      <ul class="lp-monitoring-prerequisites">
+        <li th:each="requirement : ${lesson.prerequisites}" th:text="${requirement}">Prerequisite</li>
+      </ul>
+    </section>
+
+    <section class="lp-monitoring-overview-section" aria-labelledby="monitoring-architecture-heading">
+      <h2 id="monitoring-architecture-heading">Monitoring Architecture</h2>
+      <p th:text="${lesson.whyItMatters}">Architecture explanation.</p>
+      <div class="lp-monitoring-info-grid">
+        <article class="lp-monitoring-info" th:each="item : ${lesson.coreIdeas}">
+          <h3 th:text="${item.term}">What is measured?</h3>
+          <p th:text="${item.explanation}">Explanation.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="lp-monitoring-overview-section lp-monitoring-sequence" aria-labelledby="monitoring-submodules-heading">
+      <div class="lp-monitoring-section-heading">
+        <div><h2 id="monitoring-submodules-heading">Five-Part Learning Sequence</h2><p>Move from monitoring fundamentals to verified automatic notifications.</p></div>
+        <span>12 chapters</span>
+      </div>
+      <div class="lp-monitoring-card-grid">
+        <a class="lp-monitoring-card" th:each="item : ${submodules}"
+           th:href="@{/learning/{track}/{module}/{part}(track=${course.slug},module=${lesson.slug},part=${item.slug})}">
+          <span class="lp-monitoring-card-number" th:text="${item.number}">01</span>
+          <h3 th:text="${item.title}">Monitoring Fundamentals</h3>
+          <p th:text="${item.description}">Description.</p>
+          <span class="lp-monitoring-card-meta"><span th:text="${item.chapterCount == 1 ? '1 chapter' : item.chapterCount + ' chapters'}">3 chapters</span><span aria-hidden="true">&rarr;</span></span>
+        </a>
+      </div>
+    </section>
+
+    <nav class="lp-lesson-pager lp-monitoring-course-pager" aria-label="Course module navigation">
+      <a th:if="${previous != null}" th:href="@{/learning/{track}/{slug}(track=${course.slug},slug=${previous.slug})}"><small>&larr; Previous Module</small><strong th:text="${previous.title}">Previous module</strong></a>
+      <a class="lp-pager-return" th:href="@{/learning/{track}(track=${course.slug})}"><small>Course Overview &rarr;</small><strong>All modules</strong></a>
+    </nav>
+  </article>
+</main>
+</body></html>

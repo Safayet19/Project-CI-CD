@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 350" role="img" aria-label="docker network.svg"><rect width="1100" height="350" rx="15" fill="#FFFDF8"/><style>
+  text {font-family:Inter,Arial,sans-serif;fill:#202B29} .h {font-size:22px;font-weight:750;fill:#103D39} .t {font-size:17px;font-weight:680;fill:#174B46}
+  .s {font-size:13px;fill:#526159} .k {font-family:Consolas,monospace;font-size:13px;fill:#16584F}
+  .bx {fill:#FFFDF8;stroke:#205653;stroke-width:2} .mint {fill:#DCEAE3;stroke:#205653;stroke-width:2}
+  .navy {fill:#103D39;stroke:#205653;stroke-width:2} .wt {fill:#FFFDF8}.line{stroke:#205653;stroke-width:2.5;fill:none;marker-end:url(#a)}
+</style><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#205653"/></marker></defs><text x="40" y="42" class="h">Windows host and Docker monitoring network</text>
+<rect x="29" y="73" width="1040" height="250" rx="15" fill="#FFFDF8" stroke="#CABFAB" stroke-width="2"/>
+<text x="48" y="101" class="t">Windows PC</text>
+<rect x="46" y="124" width="272" height="152" rx="12" class="bx"/><text x="182" y="168" text-anchor="middle" class="t">Spring Boot</text><text x="182" y="199" text-anchor="middle" class="k">localhost:8080</text><text x="182" y="224" text-anchor="middle" class="s">IntelliJ (outside Docker)</text>
+<rect x="361" y="114" width="684" height="182" rx="13" fill="#DCEAE3" stroke="#205653" stroke-width="2"/><text x="702" y="141" text-anchor="middle" class="t">Docker Network: monitoring</text>
+<rect x="389" y="164" width="284" height="104" rx="10" class="bx"/><text x="531" y="197" text-anchor="middle" class="t">prometheus :9090</text><text x="531" y="221" text-anchor="middle" class="s">volume: prometheus-data</text><text x="531" y="244" text-anchor="middle" class="s">bind mount: prometheus.yml</text>
+<rect x="742" y="164" width="270" height="104" rx="10" class="bx"/><text x="877" y="197" text-anchor="middle" class="t">grafana :3000</text><text x="877" y="221" text-anchor="middle" class="s">volume: grafana-data</text><text x="877" y="244" text-anchor="middle" class="s">queries Prometheus by name</text>
+<path d="M389 214H320" class="line"/><path d="M739 214H677" class="line"/>
+<text x="357" y="302" text-anchor="middle" class="s">host.docker.internal:8080</text>
+<text x="709" y="302" text-anchor="middle" class="s">http://prometheus:9090</text></svg>

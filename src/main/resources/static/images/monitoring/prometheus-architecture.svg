@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 350" role="img" aria-label="prometheus architecture.svg"><rect width="1100" height="350" rx="15" fill="#FFFDF8"/><style>
+  text {font-family:Inter,Arial,sans-serif;fill:#202B29} .h {font-size:22px;font-weight:750;fill:#103D39} .t {font-size:17px;font-weight:680;fill:#174B46}
+  .s {font-size:13px;fill:#526159} .k {font-family:Consolas,monospace;font-size:13px;fill:#16584F}
+  .bx {fill:#FFFDF8;stroke:#205653;stroke-width:2} .mint {fill:#DCEAE3;stroke:#205653;stroke-width:2}
+  .navy {fill:#103D39;stroke:#205653;stroke-width:2} .wt {fill:#FFFDF8}.line{stroke:#205653;stroke-width:2.5;fill:none;marker-end:url(#a)}
+</style><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#205653"/></marker></defs><text x="40" y="42" class="h">Inside the Prometheus system</text>
+<rect x="32" y="91" width="214" height="184" rx="12" class="bx"/><text x="139" y="126" class="t" text-anchor="middle">Metric endpoints</text><text x="139" y="157" class="s" text-anchor="middle">Spring Boot Actuator</text><text x="139" y="180" class="s" text-anchor="middle">Optional exporters</text><text x="139" y="203" class="s" text-anchor="middle">Node Exporter / cAdvisor</text>
+<rect x="306" y="91" width="470" height="184" rx="12" class="mint"/><text x="541" y="122" class="t" text-anchor="middle">Prometheus Server</text>
+<rect x="328" y="142" width="128" height="92" rx="8" class="bx"/><text x="392" y="178" text-anchor="middle" class="s">Scrape manager</text><text x="392" y="202" text-anchor="middle" class="k">targets</text>
+<rect x="477" y="142" width="123" height="92" rx="8" class="bx"/><text x="538" y="178" text-anchor="middle" class="s">Time-series DB</text><text x="538" y="202" text-anchor="middle" class="k">samples</text>
+<rect x="621" y="142" width="128" height="92" rx="8" class="bx"/><text x="685" y="178" text-anchor="middle" class="s">Query engine</text><text x="685" y="202" text-anchor="middle" class="k">PromQL</text>
+<path d="M246 188H304" class="line"/><path d="M456 188H476" class="line"/><path d="M601 188H619" class="line"/>
+<rect x="840" y="96" width="222" height="78" rx="12" class="bx"/><text x="951" y="131" text-anchor="middle" class="t">Grafana</text><text x="951" y="152" text-anchor="middle" class="s">Query + visualize</text><path d="M777 144H836" class="line"/>
+<rect x="840" y="207" width="222" height="67" rx="12" fill="#F8F4EB" stroke="#CABFAB" stroke-width="2"/><text x="951" y="234" text-anchor="middle" class="t">Alertmanager</text><text x="951" y="254" text-anchor="middle" class="s">Optional; NOT installed</text>
+<text x="36" y="331" class="s">Our tutorial uses Grafana-managed alerts instead of a separate Prometheus Alertmanager.</text></svg>

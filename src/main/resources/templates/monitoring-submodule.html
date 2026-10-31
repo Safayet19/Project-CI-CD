@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F3EDE2">
+  <meta name="description" content="Prometheus, Grafana and Slack monitoring learning submodule.">
+  <title th:text="${submodule.title + ' | Safayet Ullah'}">Monitoring Submodule | Safayet Ullah</title>
+  <link rel="icon" href="/images/logo-s.svg" th:href="@{/images/logo-s.svg}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="/css/platform.css" th:href="@{/css/platform.css}">
+  <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
+  <script defer src="/js/learning-highlight.js" th:src="@{/js/learning-highlight.js}"></script>
+</head>
+<body id="top" class="subpage lp-monitoring-course lp-monitoring-submodule"><a class="skip-link" href="#main-content">Skip to main content</a>
+<div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
+<main id="main-content" class="platform">
+  <section class="lp-container lp-lesson-breadcrumb">
+    <nav class="lp-breadcrumb" aria-label="Breadcrumb">
+      <a th:href="@{/learning}">Learning Hub</a><span>/</span>
+      <a th:href="@{/learning/{track}(track=${course.slug})}" th:text="${course.title}">Practical DevOps Journey</a><span>/</span>
+      <a th:href="@{/learning/{track}/{module}(track=${course.slug},module=${lesson.slug})}">Module 13</a><span>/</span>
+      <span aria-current="page" th:text="${submodule.title}">Selected Submodule</span>
+    </nav>
+  </section>
+
+  <div class="lp-container lp-doc-layout lp-monitoring-layout">
+    <aside class="lp-doc-sidebar lp-monitoring-sidebar">
+      <details class="lp-module-nav" data-mobile-collapsible open>
+        <summary><span>Module 13 Submodules</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="lp-sidebar-details">
+          <p class="lp-sidebar-counter">5 SUBMODULES</p>
+          <nav aria-label="Module 13 submodules"><ol>
+            <li th:each="item : ${submodules}">
+              <a th:href="@{/learning/{track}/{module}/{part}(track=${course.slug},module=${lesson.slug},part=${item.slug})}"
+                 th:classappend="${item.slug == submodule.slug} ? ' is-current' : ''"
+                 th:attr="aria-current=${item.slug == submodule.slug} ? 'page' : null">
+                <span th:text="${item.number}">01</span><span th:text="${item.title}">Monitoring Fundamentals</span>
+              </a>
+            </li>
+          </ol></nav>
+          <a class="lp-back-course" th:href="@{/learning/{track}/{module}(track=${course.slug},module=${lesson.slug})}">&larr; Module 13 overview</a>
+          <a class="lp-back-course lp-back-course-secondary" th:href="@{/learning/{track}(track=${course.slug})}">&larr; All course modules</a>
+        </div>
+      </details>
+    </aside>
+
+    <article class="lp-reading lp-monitoring-reading">
+      <header class="lp-reading-header lp-monitoring-submodule-header">
+        <div class="lp-eyebrow" th:text="'SUBMODULE ' + ${submodule.number}">SUBMODULE 01</div>
+        <h1 th:text="${submodule.title}">Monitoring Fundamentals</h1>
+        <p th:text="${submodule.description}">Submodule introduction.</p>
+      </header>
+
+      <nav class="lp-monitoring-toc" aria-label="Chapter contents">
+        <div class="lp-monitoring-toc-title"><strong>Chapter Contents</strong><span th:text="${submodule.chapterCount + (submodule.chapterCount == 1 ? ' chapter' : ' chapters')}">3 chapters</span></div>
+        <ol>
+          <li th:each="chapter : ${chapters}"><a th:href="${'#chapter-' + chapter.number}"><span th:text="${#numbers.formatInteger(chapter.number,2)}">01</span><span th:text="${chapter.title}">Chapter title</span></a></li>
+        </ol>
+      </nav>
+
+      <section class="lp-monitoring-chapter" th:each="chapter : ${chapters}" th:id="${'chapter-' + chapter.number}">
+        <h2><span th:text="${'Chapter ' + chapter.number}">Chapter 1</span><span th:text="${chapter.title}">Chapter title</span></h2>
+        <div class="lp-monitoring-chapter-content">
+          <div th:each="block : ${chapter.content.blocks}" th:switch="${block.kind}">
+            <p th:case="'text'" th:text="${block.text}">Recorded explanation.</p>
+            <h3 th:case="'subheading'" class="lp-monitoring-subheading" th:text="${block.text}">Detailed section heading</h3>
+            <div th:case="'code'" class="lp-code-panel">
+              <div class="lp-code-top"><span th:text="${block.label}">Original command or configuration</span><button type="button" class="lp-copy" aria-label="Copy original command or configuration">Copy</button></div>
+              <pre><code th:text="${block.text}">Original command</code></pre>
+            </div>
+            <div th:case="'link'" class="lp-lesson-project-link">
+              <a th:href="${block.text}" th:text="${block.label}" th:attr="target=${#strings.startsWith(block.text, 'https://') ? '_blank' : null},rel=${#strings.startsWith(block.text, 'https://') ? 'noopener noreferrer' : null}">View resource &rarr;</a>
+              <p th:if="${block.caption != null}" th:text="${block.caption}">Existing resource details.</p>
+            </div>
+            <aside th:case="'walkthrough'" class="lp-code-walkthrough lp-monitoring-info-block" aria-label="Explanation of the code or interface">
+              <h4 th:text="${block.title}">Explained</h4><dl><div th:each="item : ${block.items}"><dt><code th:text="${item.term}">Term</code></dt><dd th:text="${item.explanation}">Explanation.</dd></div></dl>
+            </aside>
+            <aside th:case="'output-note'" class="lp-output-explain lp-monitoring-info-block" aria-label="Explanation of the result"><strong>What this demonstrates</strong><p th:text="${block.text}">Explanation.</p></aside>
+            <aside th:case="'exercise'" class="lp-lesson-exercise lp-monitoring-info-block" aria-label="Practice exercise"><strong>Try it yourself</strong><p th:text="${block.text}">Exercise.</p></aside>
+            <div th:case="'table'" class="lp-practical-table-wrap"><table class="lp-practical-table"><thead><tr><th th:each="column : ${block.rows[0]}" th:text="${column}">Column</th></tr></thead><tbody><tr th:each="row, status : ${block.rows}" th:if="${status.index > 0}"><td th:each="cell : ${row}" th:text="${cell}">Value</td></tr></tbody></table></div>
+            <figure th:case="'image'" class="lp-evidence lp-practical-figure">
+              <button type="button" class="lp-evidence-trigger" th:attr="data-full=${block.image},data-caption=${block.caption}" th:aria-label="${'Enlarge original evidence: ' + block.caption}"><img th:src="@{${block.image}}" th:alt="${block.caption}" loading="lazy"><span class="lp-zoom" aria-hidden="true">&rarr;</span></button>
+              <figcaption><span th:text="${block.caption}">Original screenshot caption.</span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="lp-monitoring-closing" th:if="${submodule.number == '05'}">
+        <div class="lp-doc-section" th:if="${lesson.problems != null and !#lists.isEmpty(lesson.problems)}"><h2>Problems &amp; Solutions</h2><ul><li th:each="problem : ${lesson.problems}" th:text="${problem}">Problem and solution.</li></ul></div>
+        <div class="lp-doc-section" th:if="${lesson.learningTakeaways != null and !#lists.isEmpty(lesson.learningTakeaways)}"><h2>Key Takeaways</h2><ul><li th:each="takeaway : ${lesson.learningTakeaways}" th:text="${takeaway}">Key takeaway.</li></ul></div>
+        <div class="lp-doc-section"><h2>Final Outcome</h2><p th:text="${lesson.finalOutcome}">Verified result.</p></div>
+      </section>
+
+      <nav class="lp-lesson-pager lp-monitoring-submodule-pager" aria-label="Submodule navigation">
+        <a th:if="${previousSubmodule != null}" th:href="@{/learning/{track}/{module}/{part}(track=${course.slug},module=${lesson.slug},part=${previousSubmodule.slug})}"><small>&larr; Previous Submodule</small><strong th:text="${previousSubmodule.title}">Previous</strong></a>
+        <a th:if="${previousSubmodule == null}" class="lp-pager-return" th:href="@{/learning/{track}/{module}(track=${course.slug},module=${lesson.slug})}"><small>&larr; Module Overview</small><strong>All submodules</strong></a>
+        <a th:if="${nextSubmodule != null}" th:href="@{/learning/{track}/{module}/{part}(track=${course.slug},module=${lesson.slug},part=${nextSubmodule.slug})}"><small>Next Submodule &rarr;</small><strong th:text="${nextSubmodule.title}">Next</strong></a>
+        <a th:if="${nextSubmodule == null}" class="lp-pager-return" th:href="@{/learning/{track}/{module}(track=${course.slug},module=${lesson.slug})}"><small>Module Overview &rarr;</small><strong>All submodules</strong></a>
+      </nav>
+    </article>
+  </div>
+  <dialog class="lp-lightbox" aria-label="Full-size monitoring evidence"><button type="button" class="lp-lightbox-close" aria-label="Close screenshot">&times;</button><img alt="Expanded evidence screenshot"><p></p></dialog>
+</main>
+</body></html>

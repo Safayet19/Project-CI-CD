@@ -50,13 +50,15 @@
     java: 'JAVA', shell: 'TERMINAL', docker: 'DOCKERFILE', yaml: 'YAML',
     hcl: 'TERRAFORM', json: 'JSON', nginx: 'NGINX', sql: 'SQL',
     php: 'PHP', javascript: 'JAVASCRIPT', html: 'HTML',
-    config: 'CONFIG', output: 'OUTPUT'
+    config: 'CONFIG', output: 'OUTPUT', promql: 'PROMQL', xml: 'XML'
   };
 
   function detectLanguage(label, source) {
     const name = (label || '').toLowerCase();
     const code = source.trimStart();
     if (/console output|terminal output|^output\b|^result\b/.test(name)) return 'output';
+    if (/promql|prometheus query/.test(name)) return 'promql';
+    if (/\.xml\b|xml snippet/.test(name)) return 'xml';
     if (/\.java\b|java snippet|java controller|spring mvc controller|junit/.test(name) ||
         /^(?:import java\.|public class |class [A-Z]\w*\s*\{|@GetMapping\b)/.test(code)) return 'java';
     if (/dockerfile/.test(name) || /^(FROM|WORKDIR|COPY|RUN|EXPOSE|ENTRYPOINT)\b/m.test(code)) return 'docker';
@@ -83,7 +85,7 @@
       pieces.push('#[^\\r\\n]*');
     }
     if (language === 'sql') pieces.push('--[^\\r\\n]*');
-    if (language === 'html' || language === 'php') {
+    if (language === 'html' || language === 'php' || language === 'xml') {
       pieces.push('<!--[\\s\\S]*?-->', '<\\/?[A-Za-z][^>]*>');
     }
     pieces.push('"(?:\\\\.|[^"\\\\])*"', "'(?:\\\\.|[^'\\\\])*'");
@@ -105,7 +107,7 @@
           (value.startsWith('#') && ['shell', 'hcl', 'docker', 'nginx', 'yaml', 'config', 'php'].includes(language)) ||
           (value.startsWith('--') && language === 'sql') || value.startsWith('<!--')) {
         kind = 'comment';
-      } else if (value.startsWith('<') && (language === 'html' || language === 'php')) {
+      } else if (value.startsWith('<') && (language === 'html' || language === 'php' || language === 'xml')) {
         kind = 'tag';
       } else if (value.startsWith('"') || value.startsWith("'") || value.startsWith('`')) {
         kind = (language === 'json' && /^\s*:/.test(rest)) ? 'property' : 'string';
@@ -124,6 +126,12 @@
         kind = 'function';
       } else if (language === 'sql' && sqlKeywords.has(value.toUpperCase())) {
         kind = 'keyword';
+      } else if (language === 'promql' && /^(?:sum|rate|increase|avg|min|max|count|by|without|vector|histogram_quantile|irate|clamp_min|clamp_max)$/.test(value)) {
+        kind = 'keyword';
+      } else if (language === 'promql' && /^(?:up|jvm_[\w]+|process_[\w]+|http_[\w]+)$/.test(value)) {
+        kind = 'type';
+      } else if (language === 'promql' && /^(?:job|instance|area|status|method|uri|id)$/.test(value)) {
+        kind = 'property';
       } else if (language === 'shell' && shellKeywords.has(value)) {
         kind = 'keyword';
       } else if (['hcl', 'nginx', 'yaml', 'docker', 'config'].includes(language) && configKeywords.has(value)) {

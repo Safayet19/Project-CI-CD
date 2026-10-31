@@ -1865,3 +1865,499 @@ body.subpage .platform .lp-learning-catalog .lp-track-card:hover{
     text-align: left;
   }
 }
+
+
+/* Module 13 only: Sand & Deep Teal technical-documentation system. */
+body.lp-monitoring-course .platform {
+  --monitoring-sand:#F3EDE2;
+  --monitoring-surface:#FFFDF8;
+  --monitoring-raised:#FFFFFF;
+  --monitoring-heading:#103D39;
+  --monitoring-subheading:#174B46;
+  --monitoring-text:#202B29;
+  --monitoring-secondary:#41504A;
+  --monitoring-muted:#526159;
+  --monitoring-copper:#C17B41;
+  --monitoring-copper-dark:#94511F;
+  --monitoring-table:#205653;
+  --monitoring-border:#CABFAB;
+  --monitoring-divider:#CFC4B1;
+  --monitoring-selected:#DCEAE3;
+  --monitoring-hover:#EAE0D0;
+  --monitoring-link:#16584F;
+  --monitoring-code:#183C3A;
+  min-height:calc(100vh - 72px);
+  padding-bottom:64px;
+  background:var(--monitoring-sand);
+  color:var(--monitoring-text);
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
+}
+body.lp-monitoring-course .platform .lp-container { max-width:1220px; }
+body.lp-monitoring-course .platform .lp-breadcrumb,
+body.lp-monitoring-course .platform .lp-breadcrumb a { color:var(--monitoring-secondary); }
+body.lp-monitoring-course .platform .lp-breadcrumb a:hover { color:var(--monitoring-link); }
+body.lp-monitoring-course .platform .lp-eyebrow { color:var(--monitoring-copper-dark); font-weight:800; }
+
+/* Module overview */
+body.lp-monitoring-course .platform .lp-monitoring-overview-surface {
+  padding:clamp(28px,4vw,48px);
+  background:var(--monitoring-surface);
+  border:1px solid var(--monitoring-border);
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(44,52,47,.06);
+}
+body.lp-monitoring-course .platform .lp-monitoring-hero {
+  max-width:880px;
+  padding-bottom:30px;
+  border-bottom:1px solid var(--monitoring-divider);
+}
+body.lp-monitoring-course .platform .lp-monitoring-hero h1 {
+  margin:8px 0 16px;
+  color:var(--monitoring-heading);
+  font-size:34px;
+  font-weight:800;
+  line-height:1.17;
+  letter-spacing:-.025em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-hero p,
+body.lp-monitoring-course .platform .lp-monitoring-overview-section>p {
+  max-width:78ch;
+  margin:0 0 15px;
+  color:var(--monitoring-text);
+  font-size:16.5px;
+  font-weight:450;
+  line-height:1.7;
+  text-align:justify;
+  text-align-last:left;
+  hyphens:none;
+}
+body.lp-monitoring-course .platform .lp-monitoring-overview-section { padding-top:32px; }
+body.lp-monitoring-course .platform .lp-monitoring-overview-section>h2,
+body.lp-monitoring-course .platform .lp-monitoring-section-heading h2 {
+  margin:0 0 12px;
+  color:var(--monitoring-subheading);
+  font-size:22px;
+  font-weight:700;
+  line-height:1.3;
+  letter-spacing:-.015em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-prerequisites {
+  max-width:82ch;
+  margin:16px 0 0;
+  padding-left:24px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-prerequisites li {
+  margin:0 0 8px;
+  color:var(--monitoring-text);
+  font-size:16px;
+  line-height:1.65;
+}
+body.lp-monitoring-course .platform .lp-monitoring-prerequisites li::marker { color:var(--monitoring-copper); }
+body.lp-monitoring-course .platform .lp-monitoring-info-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:20px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-info {
+  padding:17px 19px;
+  background:#F8F4EB;
+  border:1px solid var(--monitoring-border);
+  border-left:3px solid var(--monitoring-copper);
+  border-radius:8px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-info h3 {
+  margin:0 0 7px;
+  color:var(--monitoring-heading);
+  font-size:17px;
+  font-weight:700;
+  line-height:1.35;
+}
+body.lp-monitoring-course .platform .lp-monitoring-info p {
+  margin:0;
+  color:var(--monitoring-text);
+  font-size:15.5px;
+  line-height:1.65;
+}
+body.lp-monitoring-course .platform .lp-monitoring-section-heading {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-section-heading h2 { margin-bottom:5px; }
+body.lp-monitoring-course .platform .lp-monitoring-section-heading p {
+  margin:0;
+  color:var(--monitoring-secondary);
+  font-size:15.5px;
+  line-height:1.55;
+}
+body.lp-monitoring-course .platform .lp-monitoring-section-heading>span {
+  flex:none;
+  color:var(--monitoring-muted);
+  font-size:13px;
+  font-weight:700;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card {
+  display:flex;
+  min-height:238px;
+  flex-direction:column;
+  padding:24px;
+  background:#FFFDF8;
+  border:1px solid #CABFAB;
+  border-radius:12px;
+  color:var(--monitoring-text);
+  box-shadow:0 2px 8px rgba(44,52,47,.025);
+  transition:background .18s,border-color .18s,box-shadow .18s,transform .18s;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card:hover {
+  background:#F7F1E7;
+  border-color:#205653;
+  box-shadow:0 8px 18px rgba(32,86,83,.10);
+  transform:translateY(-2px);
+}
+body.lp-monitoring-course .platform .lp-monitoring-card:focus-visible {
+  outline:3px solid var(--monitoring-copper);
+  outline-offset:3px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card-number {
+  color:#205653;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card h3 {
+  margin:13px 0 9px;
+  color:var(--monitoring-subheading);
+  font-size:19px;
+  font-weight:800;
+  line-height:1.32;
+  letter-spacing:-.015em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card p {
+  margin:0 0 20px;
+  color:var(--monitoring-text);
+  font-size:14.5px;
+  line-height:1.6;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card-meta {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:auto;
+  padding-top:14px;
+  border-top:1px solid var(--monitoring-divider);
+  color:var(--monitoring-muted);
+  font-size:13px;
+  font-weight:700;
+}
+body.lp-monitoring-course .platform .lp-monitoring-card-meta span:last-child { color:var(--monitoring-link); font-size:20px; transition:transform .18s; }
+body.lp-monitoring-course .platform .lp-monitoring-card:hover .lp-monitoring-card-meta span:last-child { transform:translateX(4px); }
+body.lp-monitoring-course .platform .lp-monitoring-course-pager { max-width:760px; margin-top:34px; }
+
+/* Shared submodule shell and navigation */
+body.lp-monitoring-course .platform .lp-monitoring-layout { grid-template-columns:minmax(235px,270px) minmax(0,1fr); gap:22px; }
+body.lp-monitoring-course .platform .lp-monitoring-sidebar {
+  background:var(--monitoring-surface);
+  border:1px solid var(--monitoring-border);
+  color:var(--monitoring-text);
+  box-shadow:0 6px 18px rgba(44,52,47,.05);
+}
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-module-nav>summary { color:var(--monitoring-heading); }
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-sidebar-counter { color:var(--monitoring-muted); }
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-sidebar-details li a {
+  color:var(--monitoring-secondary);
+  grid-template-columns:27px 1fr;
+  padding:11px 10px;
+  font-size:13.5px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-sidebar-details li a:hover { background:#EAE0D0; color:#103D39; }
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-sidebar-details li a.is-current {
+  background:#DCEAE3;
+  color:#103D39;
+  font-weight:700;
+  box-shadow:inset 3px 0 #205653;
+}
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-sidebar-details li a span:first-child { color:#205653; opacity:1; font-weight:800; }
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-back-course {
+  border-color:var(--monitoring-divider);
+  color:var(--monitoring-link);
+}
+body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-back-course-secondary { margin-top:10px; padding-top:0; border-top:0; }
+body.lp-monitoring-course .platform .lp-monitoring-reading {
+  min-width:0;
+  max-width:900px;
+  background:var(--monitoring-surface);
+  border:1px solid var(--monitoring-border);
+  padding:clamp(26px,3.5vw,44px);
+  box-shadow:0 8px 24px rgba(44,52,47,.06);
+}
+body.lp-monitoring-course .platform .lp-monitoring-submodule-header { border-color:var(--monitoring-divider); }
+body.lp-monitoring-course .platform .lp-monitoring-submodule-header h1 {
+  color:var(--monitoring-heading);
+  font-size:30px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:-.025em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-submodule-header p {
+  max-width:72ch;
+  color:var(--monitoring-secondary);
+  font-size:16.5px;
+  font-weight:450;
+  line-height:1.7;
+}
+body.lp-monitoring-course .platform .lp-monitoring-toc {
+  margin:26px 0 10px;
+  padding:20px 22px 16px;
+  background:#F8F4EB;
+  border:1px solid var(--monitoring-border);
+  border-radius:9px;
+}
+body.lp-monitoring-course .platform .lp-monitoring-toc-title {
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:9px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--monitoring-divider);
+}
+body.lp-monitoring-course .platform .lp-monitoring-toc-title strong { color:var(--monitoring-heading); font-size:17px; font-weight:700; }
+body.lp-monitoring-course .platform .lp-monitoring-toc-title span { color:var(--monitoring-muted); font-size:13px; font-weight:600; }
+body.lp-monitoring-course .platform .lp-monitoring-toc ol { display:grid; gap:0; margin:0; padding:0; list-style:none; }
+body.lp-monitoring-course .platform .lp-monitoring-toc li { margin:0; padding:0; }
+body.lp-monitoring-course .platform .lp-monitoring-toc a {
+  display:flex;
+  gap:11px;
+  padding:10px 3px;
+  border-bottom:1px solid rgba(202,191,171,.65);
+  color:var(--monitoring-link);
+  font-size:14px;
+  font-weight:600;
+  line-height:1.5;
+}
+body.lp-monitoring-course .platform .lp-monitoring-toc li:last-child a { border-bottom:0; }
+body.lp-monitoring-course .platform .lp-monitoring-toc a:hover { color:var(--monitoring-heading); }
+body.lp-monitoring-course .platform .lp-monitoring-toc a span:first-child { flex:none; color:var(--monitoring-copper-dark); font:800 12px/1.75 "JetBrains Mono","Cascadia Code",Consolas,monospace; }
+
+/* Chapter typography and long-form reading */
+body.lp-monitoring-course .platform .lp-monitoring-chapter { scroll-margin-top:92px; padding:32px 0 4px; }
+body.lp-monitoring-course .platform .lp-monitoring-chapter+.lp-monitoring-chapter { margin-top:28px; border-top:1px solid var(--monitoring-divider); }
+body.lp-monitoring-course .platform .lp-monitoring-chapter>h2 {
+  display:grid;
+  gap:4px;
+  margin:0 0 16px;
+  color:var(--monitoring-heading);
+  font-size:26px;
+  font-weight:800;
+  line-height:1.27;
+  letter-spacing:-.025em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-chapter>h2 span:first-child {
+  color:var(--monitoring-copper-dark);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+body.lp-monitoring-course .platform .lp-monitoring-chapter-content>div>p,
+body.lp-monitoring-course .platform .lp-monitoring-closing p,
+body.lp-monitoring-course .platform .lp-monitoring-closing li {
+  max-width:78ch;
+  margin:0 0 16px;
+  color:var(--monitoring-text);
+  font-size:16.5px;
+  font-weight:450;
+  line-height:1.7;
+  text-align:justify;
+  text-align-last:left;
+  overflow-wrap:break-word;
+  hyphens:none;
+}
+body.lp-monitoring-course .platform .lp-monitoring-subheading {
+  margin:26px 0 12px;
+  color:var(--monitoring-subheading);
+  font-size:22px;
+  font-weight:700;
+  line-height:1.35;
+  letter-spacing:-.01em;
+}
+body.lp-monitoring-course .platform .lp-monitoring-closing .lp-doc-section { border-color:var(--monitoring-divider); }
+body.lp-monitoring-course .platform .lp-monitoring-closing .lp-doc-section>h2 {
+  margin-bottom:12px;
+  color:var(--monitoring-subheading);
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:-.015em;
+}
+
+/* Information blocks */
+body.lp-monitoring-course .platform .lp-monitoring-info-block,
+body.lp-monitoring-course .platform .lp-monitoring-chapter-content .lp-lesson-project-link {
+  margin:16px 0 20px;
+  padding:16px 19px;
+  background:#F8F4EB;
+  border:1px solid var(--monitoring-border);
+  border-left:3px solid var(--monitoring-copper);
+  border-radius:8px;
+  color:var(--monitoring-text);
+  box-shadow:none;
+}
+body.lp-monitoring-course .platform .lp-monitoring-info-block h4,
+body.lp-monitoring-course .platform .lp-monitoring-info-block>strong {
+  display:block;
+  margin:0 0 8px;
+  color:var(--monitoring-heading);
+  font-size:17px;
+  font-weight:700;
+  line-height:1.35;
+}
+body.lp-monitoring-course .platform .lp-monitoring-info-block p { margin:0; color:var(--monitoring-text); font-size:16px; line-height:1.65; text-align:left; }
+body.lp-monitoring-course .platform .lp-monitoring-info-block dl { margin:0; }
+body.lp-monitoring-course .platform .lp-monitoring-info-block dl>div { border-color:var(--monitoring-divider); }
+body.lp-monitoring-course .platform .lp-monitoring-info-block dt code { color:var(--monitoring-heading); }
+body.lp-monitoring-course .platform .lp-monitoring-info-block dd {
+  color:var(--monitoring-text);
+  font-size:15.5px;
+  line-height:1.65;
+  text-align:left;
+  hyphens:none;
+}
+body.lp-monitoring-course .platform .lp-monitoring-chapter-content .lp-lesson-project-link a { color:var(--monitoring-link); }
+body.lp-monitoring-course .platform .lp-monitoring-chapter-content .lp-lesson-project-link p { color:var(--monitoring-secondary); text-align:left; }
+
+/* Tables */
+body.lp-monitoring-course .platform .lp-practical-table-wrap {
+  max-width:100%;
+  margin:18px 0 24px;
+  overflow-x:auto;
+  background:var(--monitoring-surface);
+  border:1px solid var(--monitoring-border);
+  border-radius:9px;
+}
+body.lp-monitoring-course .platform .lp-practical-table { width:100%; min-width:560px; border-collapse:separate; border-spacing:0; table-layout:auto; font-size:15.5px; line-height:1.55; }
+body.lp-monitoring-course .platform .lp-practical-table th {
+  padding:14px 16px;
+  background:#205653;
+  border:0;
+  color:#FFFFFF;
+  font-size:16px;
+  font-weight:700;
+  text-align:left;
+  vertical-align:top;
+}
+body.lp-monitoring-course .platform .lp-practical-table td {
+  padding:14px 16px;
+  background:#FFFDF8;
+  border:0;
+  border-bottom:1px solid #CABFAB;
+  color:#202B29;
+  font-size:15.5px;
+  font-weight:450;
+  line-height:1.55;
+  text-align:left;
+  vertical-align:top;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+body.lp-monitoring-course .platform .lp-practical-table tbody tr:nth-child(even) td { background:#F8F4EB; }
+body.lp-monitoring-course .platform .lp-practical-table tbody tr:last-child td { border-bottom:0; }
+
+/* Existing syntax highlighter, recolored only inside Module 13 */
+body.lp-monitoring-course .platform .lp-code-panel { max-width:100%; margin:18px 0 22px; background:#183C3A; border:1px solid #285854; border-radius:9px; box-shadow:none; }
+body.lp-monitoring-course .platform .lp-code-top { min-height:44px; padding:9px 16px; background:#20504D; color:#F5F7F4; }
+body.lp-monitoring-course .platform .lp-copy { background:#183C3A; border-color:#5B817C; color:#F5F7F4; }
+body.lp-monitoring-course .platform .lp-copy:hover { background:#285854; }
+body.lp-monitoring-course .platform .lp-code-panel pre {
+  max-width:100%;
+  max-height:none;
+  padding:16px 20px;
+  overflow-x:auto;
+  background:#183C3A;
+  color:#F5F7F4;
+  font:450 14px/1.6 "JetBrains Mono","Cascadia Code",Consolas,monospace;
+  text-align:left;
+  white-space:pre;
+  word-break:normal;
+}
+body.lp-monitoring-course .platform .lp-code-panel code { color:#F5F7F4; white-space:inherit; }
+body.lp-monitoring-course .platform .lp-code-panel .tok-keyword,
+body.lp-monitoring-course .platform .lp-code-panel .tok-type,
+body.lp-monitoring-course .platform .lp-code-panel .tok-tag { color:#9AD4FF; }
+body.lp-monitoring-course .platform .lp-code-panel .tok-string,
+body.lp-monitoring-course .platform .lp-code-panel .tok-function { color:#F8C58C; }
+body.lp-monitoring-course .platform .lp-code-panel .tok-number,
+body.lp-monitoring-course .platform .lp-code-panel .tok-variable { color:#B4EEBE; }
+body.lp-monitoring-course .platform .lp-code-panel .tok-comment { color:#B9C9C3; }
+body.lp-monitoring-course .platform .lp-code-panel .tok-property,
+body.lp-monitoring-course .platform .lp-code-panel .tok-annotation { color:#D6E9E3; }
+
+/* Screenshots and diagrams */
+body.lp-monitoring-course .platform .lp-practical-figure {
+  max-width:100%;
+  margin:18px 0 25px;
+  background:#FFFFFF;
+  border:1px solid #CABFAB;
+  border-radius:8px;
+}
+body.lp-monitoring-course .platform .lp-practical-figure .lp-evidence-trigger { padding:10px; background:#FFFFFF; text-align:center; }
+body.lp-monitoring-course .platform .lp-practical-figure .lp-evidence-trigger img {
+  width:auto;
+  max-width:100%;
+  height:auto;
+  max-height:580px;
+  margin:auto;
+  object-fit:contain;
+}
+body.lp-monitoring-course .platform .lp-practical-figure .lp-evidence-trigger:hover img { transform:none; }
+body.lp-monitoring-course .platform .lp-practical-figure figcaption { padding:10px 15px 12px; background:#FFFDF8; border-top:1px solid #CABFAB; }
+body.lp-monitoring-course .platform .lp-practical-figure figcaption span { color:#526159; font-size:13px; font-weight:500; line-height:1.5; text-align:left; }
+body.lp-monitoring-course .platform .lp-zoom { background:#183C3A; }
+
+body.lp-monitoring-course .platform .lp-lesson-pager a { background:#FFFDF8; border-color:#CABFAB; }
+body.lp-monitoring-course .platform .lp-lesson-pager a:hover { background:#F7F1E7; border-color:#205653; }
+body.lp-monitoring-course .platform .lp-lesson-pager small { color:var(--monitoring-muted); }
+body.lp-monitoring-course .platform .lp-lesson-pager strong { color:var(--monitoring-heading); }
+
+@media(max-width:1020px){
+  body.lp-monitoring-course .platform .lp-monitoring-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.lp-monitoring-course .platform .lp-monitoring-layout { grid-template-columns:220px minmax(0,1fr); gap:16px; }
+}
+@media(max-width:760px){
+  body.lp-monitoring-course .platform { padding-bottom:48px; }
+  body.lp-monitoring-course .platform .lp-monitoring-overview-surface { padding:26px 22px; }
+  body.lp-monitoring-course .platform .lp-monitoring-hero h1 { font-size:30px; }
+  body.lp-monitoring-course .platform .lp-monitoring-info-grid,
+  body.lp-monitoring-course .platform .lp-monitoring-card-grid { grid-template-columns:1fr; }
+  body.lp-monitoring-course .platform .lp-monitoring-card { min-height:0; }
+  body.lp-monitoring-course .platform .lp-monitoring-section-heading { align-items:flex-start; flex-direction:column; gap:6px; }
+  body.lp-monitoring-course .platform .lp-monitoring-layout { grid-template-columns:1fr; }
+  body.lp-monitoring-course .platform .lp-monitoring-sidebar .lp-module-nav>summary svg { stroke:#205653; }
+  body.lp-monitoring-course .platform .lp-monitoring-reading { max-width:none; padding:24px 20px; }
+  body.lp-monitoring-course .platform .lp-monitoring-submodule-header h1 { font-size:28px; }
+  body.lp-monitoring-course .platform .lp-monitoring-chapter>h2 { font-size:24px; }
+  body.lp-monitoring-course .platform .lp-monitoring-subheading { font-size:20px; }
+  body.lp-monitoring-course .platform .lp-monitoring-hero p,
+  body.lp-monitoring-course .platform .lp-monitoring-overview-section>p,
+  body.lp-monitoring-course .platform .lp-monitoring-chapter-content>div>p,
+  body.lp-monitoring-course .platform .lp-monitoring-closing p,
+  body.lp-monitoring-course .platform .lp-monitoring-closing li { font-size:16px; text-align:left; }
+  body.lp-monitoring-course .platform .lp-practical-figure .lp-evidence-trigger img { max-height:430px; }
+}
+@media(max-width:540px){
+  body.lp-monitoring-course .platform .lp-monitoring-overview-surface { padding:23px 17px; }
+  body.lp-monitoring-course .platform .lp-monitoring-hero h1 { font-size:28px; }
+  body.lp-monitoring-course .platform .lp-monitoring-toc { padding:17px 14px 13px; }
+  body.lp-monitoring-course .platform .lp-monitoring-toc-title { align-items:flex-start; flex-direction:column; gap:3px; }
+  body.lp-monitoring-course .platform .lp-monitoring-reading { padding:22px 16px; }
+  body.lp-monitoring-course .platform .lp-code-panel pre { padding:15px 13px; font-size:12.5px; }
+  body.lp-monitoring-course .platform .lp-practical-table { min-width:520px; }
+}

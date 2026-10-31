@@ -15,6 +15,32 @@ import java.util.List;
 @Service
 public class LearningService {
     private static final List<LearningCourse> COURSES = loadCourses();
+    private static final List<MonitoringSubmodule> MONITORING_SUBMODULES = List.of(
+        new MonitoringSubmodule("monitoring-fundamentals", "01", "Monitoring Fundamentals",
+            "Understand monitoring, observability, Prometheus, Grafana, and the complete metrics flow.", 1, 3),
+        new MonitoringSubmodule("metrics-collection", "02", "Metrics Collection with Prometheus",
+            "Prepare Spring Boot, configure Prometheus, and query the recorded application metrics.", 4, 6),
+        new MonitoringSubmodule("grafana-dashboards", "03", "Grafana & Dashboard Visualization",
+            "Connect Grafana to Prometheus and build a clear, useful monitoring dashboard.", 7, 8),
+        new MonitoringSubmodule("grafana-alerting", "04", "Grafana Alerting & Application Health",
+            "Understand Grafana alert states and verify the existing Application Down rule.", 9, 10),
+        new MonitoringSubmodule("slack-troubleshooting", "05", "Slack Integration & Troubleshooting",
+            "Deliver automatic Slack notifications and review troubleshooting, security, and limitations.", 11, 12)
+    );
+    private static final List<String> MONITORING_CHAPTER_TITLES = List.of(
+        "Introduction to Monitoring & Observability",
+        "Understanding Prometheus",
+        "Understanding Grafana & Monitoring Architecture",
+        "Preparing Spring Boot",
+        "Installing and Configuring Prometheus",
+        "Understanding and Querying Metrics",
+        "Installing and Connecting Grafana",
+        "Building the Monitoring Dashboard",
+        "Understanding Grafana Alerts",
+        "Application Down Alert",
+        "Slack Integration and Automatic Notifications",
+        "Troubleshooting, Security & Final Review"
+    );
 
     private static List<LearningCourse> loadCourses() {
         try (InputStream input = LearningService.class.getResourceAsStream("/content/learning-tracks.json")) {
@@ -58,6 +84,43 @@ public class LearningService {
         return new LessonNavigation(course, course.modules().get(index), index, previous, next);
     }
 
+    public List<MonitoringSubmodule> monitoringSubmodules() {
+        return MONITORING_SUBMODULES;
+    }
+
+    public MonitoringNavigation monitoringSubmodule(String track, String moduleSlug, String submoduleSlug) {
+        if (!"practical-devops".equals(track) || !"prometheus-grafana".equals(moduleSlug))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Monitoring submodule not found");
+
+        LessonNavigation module = lesson(track, moduleSlug);
+        int index = -1;
+        for (int i = 0; i < MONITORING_SUBMODULES.size(); i++) {
+            if (MONITORING_SUBMODULES.get(i).slug().equals(submoduleSlug)) { index = i; break; }
+        }
+        if (index == -1)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Monitoring submodule not found");
+
+        MonitoringSubmodule selected = MONITORING_SUBMODULES.get(index);
+        List<MonitoringChapter> chapters = java.util.stream.IntStream
+            .rangeClosed(selected.firstChapter(), selected.lastChapter())
+            .mapToObj(number -> new MonitoringChapter(
+                number,
+                MONITORING_CHAPTER_TITLES.get(number - 1),
+                module.lesson().practicalSteps().get(number - 1)))
+            .toList();
+        MonitoringSubmodule previous = index > 0 ? MONITORING_SUBMODULES.get(index - 1) : null;
+        MonitoringSubmodule next = index + 1 < MONITORING_SUBMODULES.size() ? MONITORING_SUBMODULES.get(index + 1) : null;
+        return new MonitoringNavigation(module, selected, index, chapters, previous, next);
+    }
+
     public record LessonNavigation(LearningCourse course, Lesson lesson, int lessonIndex,
                                    Lesson previous, Lesson next) {}
+    public record MonitoringSubmodule(String slug, String number, String title, String description,
+                                      int firstChapter, int lastChapter) {
+        public int chapterCount() { return lastChapter - firstChapter + 1; }
+    }
+    public record MonitoringChapter(int number, String title, LearningCourse.PracticalStep content) {}
+    public record MonitoringNavigation(LessonNavigation module, MonitoringSubmodule selected,
+                                       int selectedIndex, List<MonitoringChapter> chapters,
+                                       MonitoringSubmodule previous, MonitoringSubmodule next) {}
 }

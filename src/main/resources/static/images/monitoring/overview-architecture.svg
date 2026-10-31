@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 350" role="img" aria-label="overview architecture.svg"><rect width="1100" height="350" rx="15" fill="#FFFDF8"/><style>
+  text {font-family:Inter,Arial,sans-serif;fill:#202B29} .h {font-size:22px;font-weight:750;fill:#103D39} .t {font-size:17px;font-weight:680;fill:#174B46}
+  .s {font-size:13px;fill:#526159} .k {font-family:Consolas,monospace;font-size:13px;fill:#16584F}
+  .bx {fill:#FFFDF8;stroke:#205653;stroke-width:2} .mint {fill:#DCEAE3;stroke:#205653;stroke-width:2}
+  .navy {fill:#103D39;stroke:#205653;stroke-width:2} .wt {fill:#FFFDF8}.line{stroke:#205653;stroke-width:2.5;fill:none;marker-end:url(#a)}
+</style><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#205653"/></marker></defs><text x="40" y="44" class="h">The monitoring and notification path</text>
+<rect x="34" y="101" width="238" height="142" rx="13" class="bx"/><text x="153" y="145" text-anchor="middle" class="t">Spring Boot</text><text x="153" y="173" text-anchor="middle" class="s">Actuator + Micrometer</text><text x="153" y="197" text-anchor="middle" class="k">:8080 /actuator/prometheus</text>
+<rect x="312" y="101" width="226" height="142" rx="13" class="mint"/><text x="425" y="145" text-anchor="middle" class="t">Prometheus</text><text x="425" y="173" text-anchor="middle" class="s">Scrape + TSDB + PromQL</text><text x="425" y="197" text-anchor="middle" class="k">:9090</text>
+<rect x="578" y="101" width="211" height="142" rx="13" class="bx"/><text x="683" y="145" text-anchor="middle" class="t">Grafana</text><text x="683" y="173" text-anchor="middle" class="s">Dashboard + alert rules</text><text x="683" y="197" text-anchor="middle" class="k">:3000</text>
+<rect x="829" y="101" width="234" height="142" rx="13" class="bx"/><text x="946" y="145" text-anchor="middle" class="t">Slack</text><text x="946" y="173" text-anchor="middle" class="s">Automatic notifications</text><text x="946" y="197" text-anchor="middle" class="k">Incoming Webhook</text>
+<path d="M273 169H310" class="line"/><path d="M540 169H576" class="line"/><path d="M790 169H827" class="line"/>
+<text x="295" y="273" text-anchor="middle" class="s">15-second pull</text><text x="558" y="295" text-anchor="middle" class="s">PromQL API</text><text x="806" y="273" text-anchor="middle" class="s">HTTPS POST</text>
+<text x="39" y="330" class="s">The arrows show logical data flow. Prometheus initiates the HTTP scrape; Grafana initiates queries and sends alerts.</text></svg>

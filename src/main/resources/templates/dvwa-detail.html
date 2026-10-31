@@ -14,7 +14,7 @@
   <script defer src="/js/main.js" th:src="@{/js/main.js}"></script>
   <script defer src="/js/learning-highlight.js" th:src="@{/js/learning-highlight.js}"></script>
 </head>
-<body id="top" class="subpage" th:classappend="${course.slug == 'advanced-java-spring-boot'} ? 'lp-advanced-course' : ''"><a class="skip-link" href="#main-content">Skip to main content</a>
+<body id="top" class="subpage" th:classappend="${course.slug == 'advanced-java-spring-boot' ? 'lp-advanced-course' : (course.slug == 'practical-devops' and lesson.slug == 'prometheus-grafana' ? 'lp-monitoring-course' : '')}"><a class="skip-link" href="#main-content">Skip to main content</a>
 <div th:replace="~{fragments/navbar :: navbar('learning')}"></div>
 <main id="main-content" class="platform">
 
@@ -60,13 +60,30 @@
           </dl>
         </section>
       </th:block>
+      <!-- The new monitoring lesson reuses the established Learning Hub lesson shell and visual styles. -->
+      <th:block th:if="${course.slug == 'practical-devops' and lesson.slug == 'prometheus-grafana'}">
+        <section class="lp-doc-section lp-monitoring-intro" aria-labelledby="monitoring-intro-heading">
+          <h2 id="monitoring-intro-heading">Begin with the Big Picture</h2>
+          <p th:each="paragraph : ${lesson.conceptOverview}" th:text="${paragraph}">Monitoring explanation.</p>
+          <h3>Why This Matters</h3>
+          <p th:text="${lesson.whyItMatters}">Why a correct architecture matters.</p>
+          <h3>An Example from Our Local Test</h3>
+          <p th:text="${lesson.realLifeExample}">A local monitoring example.</p>
+          <div class="lp-monitoring-foundations"><dl class="lp-java-terms"><div th:each="item : ${lesson.coreIdeas}"><dt th:text="${item.term}">Core idea</dt><dd th:text="${item.explanation}">Explanation</dd></div></dl></div>
+        </section>
+      </th:block>
       <section class="lp-doc-section" aria-labelledby="devops-objective"><h2 id="devops-objective">Objective</h2><p th:text="${lesson.objective}">Recorded objective.</p></section>
       <section class="lp-doc-section" aria-labelledby="devops-requirements"><h2 id="devops-requirements">Prerequisites</h2><ul><li th:each="req : ${lesson.prerequisites}" th:text="${req}">Prerequisite</li></ul></section>
-      <section class="lp-doc-section lp-practical-content" aria-labelledby="devops-steps"><h2 id="devops-steps">Step-by-Step Implementation</h2>
-        <div class="lp-practical-step" th:each="item : ${lesson.practicalSteps}">
+      <nav class="lp-monitoring-toc" aria-label="Monitoring chapter contents" th:if="${course.slug == 'practical-devops' and lesson.slug == 'prometheus-grafana'}">
+        <div class="lp-monitoring-toc-title"><strong>In This Module</strong><span>Choose a chapter</span></div>
+        <ol><li th:each="chapter, index : ${lesson.practicalSteps}"><a th:attr="href=${'#monitoring-chapter-' + index.count}"><span th:text="${#numbers.formatInteger(index.count,2)}">01</span><span th:text="${chapter.title}">Chapter title</span></a></li></ol>
+      </nav>
+      <section class="lp-doc-section lp-practical-content" aria-labelledby="devops-steps"><h2 id="devops-steps" th:text="${course.slug == 'practical-devops' and lesson.slug == 'prometheus-grafana'} ? 'The Complete Learning Guide' : 'Step-by-Step Implementation'">Step-by-Step Implementation</h2>
+        <div class="lp-practical-step" th:each="item, chapterNo : ${lesson.practicalSteps}" th:attr="id=${course.slug == 'practical-devops' and lesson.slug == 'prometheus-grafana' ? 'monitoring-chapter-' + chapterNo.count : null}">
           <h3 th:text="${item.title}">Step 1 — Practical work</h3>
           <div th:each="block : ${item.blocks}" th:switch="${block.kind}">
             <p th:case="'text'" th:text="${block.text}">Recorded explanation.</p>
+            <h4 th:case="'subheading'" class="lp-monitoring-subheading" th:text="${block.text}">Detailed section heading</h4>
             <div th:case="'code'" class="lp-code-panel">
               <div class="lp-code-top"><span th:text="${block.label}">Original command or configuration</span><button type="button" class="lp-copy" aria-label="Copy original command or configuration">Copy</button></div>
               <pre><code th:text="${block.text}">Original command</code></pre>

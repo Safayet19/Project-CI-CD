@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 350" role="img" aria-label="alert lifecycle.svg"><rect width="1100" height="350" rx="15" fill="#FFFDF8"/><style>
+  text {font-family:Inter,Arial,sans-serif;fill:#202B29} .h {font-size:22px;font-weight:750;fill:#103D39} .t {font-size:17px;font-weight:680;fill:#174B46}
+  .s {font-size:13px;fill:#526159} .k {font-family:Consolas,monospace;font-size:13px;fill:#16584F}
+  .bx {fill:#FFFDF8;stroke:#205653;stroke-width:2} .mint {fill:#DCEAE3;stroke:#205653;stroke-width:2}
+  .navy {fill:#103D39;stroke:#205653;stroke-width:2} .wt {fill:#FFFDF8}.line{stroke:#205653;stroke-width:2.5;fill:none;marker-end:url(#a)}
+</style><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#205653"/></marker></defs><text x="38" y="42" class="h">An Application Down alert: what changes and when</text>
+<rect x="30" y="100" width="231" height="116" rx="12" fill="#DCEAE3" stroke="#205653" stroke-width="2"/><text x="145" y="144" text-anchor="middle" class="t">NORMAL</text><text x="145" y="173" text-anchor="middle" class="s">up = 1</text>
+<rect x="308" y="100" width="231" height="116" rx="12" fill="#F8F4EB" stroke="#C17B41" stroke-width="2"/><text x="423" y="144" text-anchor="middle" class="t">PENDING</text><text x="423" y="173" text-anchor="middle" class="s">up = 0, waiting 1m</text>
+<rect x="586" y="100" width="231" height="116" rx="12" fill="#F7F1E7" stroke="#94511F" stroke-width="2"/><text x="701" y="144" text-anchor="middle" class="t">FIRING</text><text x="701" y="173" text-anchor="middle" class="s">condition persists</text>
+<rect x="864" y="100" width="203" height="116" rx="12" fill="#DCEAE3" stroke="#205653" stroke-width="2"/><text x="966" y="144" text-anchor="middle" class="t">NORMAL</text><text x="966" y="173" text-anchor="middle" class="s">up = 1 again</text>
+<path d="M263 158H304" class="line"/><path d="M541 158H582" class="line"/><path d="M819 158H860" class="line"/>
+<text x="284" y="243" text-anchor="middle" class="s">scrape fails</text><text x="561" y="261" text-anchor="middle" class="s">pending period completes</text><text x="841" y="243" text-anchor="middle" class="s">scrape recovers</text>
+<text x="40" y="321" class="s">Rule evaluation: every 1 minute. Firing notification: via Grafana contact point to Slack. Actual timing can vary.</text></svg>

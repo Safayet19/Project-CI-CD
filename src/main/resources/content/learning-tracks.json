@@ -7832,20 +7832,2119 @@
       },
       {
         "slug": "prometheus-grafana",
-        "title": "Prometheus & Grafana Monitoring",
-        "comingSoon": true,
-        "concept": "",
-        "objective": "",
-        "prerequisites": [],
+        "title": "Prometheus, Grafana & Slack Monitoring",
+        "concept": "A complete, beginner-friendly, practical guide to monitoring a local Spring Boot application with Actuator, Micrometer, Prometheus, Grafana, and Slack. Learn the meaning of time-series metrics and PromQL, configure Docker containers and dashboards, then verify a real Application Down alert and automatic Slack delivery.",
+        "objective": "Understand monitoring fundamentals and build the recorded local end-to-end monitoring and alerting setup without changing the project configuration, environment variables, or production infrastructure.",
+        "prerequisites": [
+          "Existing Spring Boot application and Maven project.",
+          "Windows 11 with Docker Desktop and Windows PowerShell.",
+          "IntelliJ IDEA to run the Spring Boot application locally.",
+          "A web browser; a Slack workspace for the notification lesson.",
+          "No AWS EC2 or production configuration changes are required for this local tutorial."
+        ],
+        "conceptOverview": [
+          "This module starts with the fundamental questions: What is monitoring? What does Prometheus store? Why do we need PromQL and Grafana? It then follows the exact local Windows workflow from Spring Boot metrics to a successful Slack notification.",
+          "All configuration snippets, Docker names, ports, local file paths, and alert settings are retained from the recorded exercise. The screenshots are placed beside the steps they support; an active Slack webhook is redacted in its teaching image."
+        ],
+        "whyItMatters": "Learning the full data path is more valuable than memorizing Docker commands. You will know which component produces a metric, which service collects it, what a query actually measures, and why a dashboard and an alert are two different operations.",
+        "realLifeExample": "When Spring Boot is intentionally stopped during the local test, Prometheus changes up from 1 to 0. Grafana evaluates the Application Down rule and changes it to Firing. Once the Slack Contact Point is selected, an automatic Firing message is delivered to Slack.",
+        "coreIdeas": [
+          {
+            "term": "What is measured?",
+            "explanation": "Application/JVM metrics from the local Spring Boot /actuator/prometheus endpoint, not production EC2 resource metrics."
+          },
+          {
+            "term": "Where is it stored?",
+            "explanation": "Prometheus TSDB inside the prometheus-data Docker named volume."
+          },
+          {
+            "term": "How is it visualized?",
+            "explanation": "Grafana queries the Prometheus API through the monitoring Docker network."
+          },
+          {
+            "term": "How are alerts delivered?",
+            "explanation": "A Grafana-managed alert evaluates Prometheus metrics and sends messages to the saved Slack Contact Point."
+          }
+        ],
+        "practicalSteps": [
+          {
+            "title": "01 — Monitoring, Observability, and Why They Matter",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Imagine your Spring Boot website works normally in the morning, but visitors begin to experience slow pages after lunch. Without recorded measurements, you cannot tell whether requests increased, the JVM became busy, or the server ran short of memory. Monitoring provides measurements that help you investigate rather than guess."
+              },
+              {
+                "kind": "subheading",
+                "text": "1.1 — Monitoring and observability are related, but not identical"
+              },
+              {
+                "kind": "text",
+                "text": "Monitoring means collecting and checking signals that describe a system over time: whether it is reachable, how quickly it responds, how much resource capacity it uses, and how often errors occur. Observability is the broader ability to understand what is happening inside the system by examining its outputs. Metrics are one important output; logs and traces provide different details."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Signal",
+                    "What it answers",
+                    "Example"
+                  ],
+                  [
+                    "Metric",
+                    "How much, how often, or how fast?",
+                    "JVM heap currently uses 60 MiB."
+                  ],
+                  [
+                    "Log",
+                    "What event happened, and with what message?",
+                    "A request failed because a dependency timed out."
+                  ],
+                  [
+                    "Trace",
+                    "Where did an individual request spend time?",
+                    "A request spent 300 ms waiting for an external API."
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "Our project primarily covers metric-based monitoring. Prometheus stores measurements; Grafana displays them and evaluates our alert rule. This does not automatically provide a log-search system or distributed tracing."
+              },
+              {
+                "kind": "subheading",
+                "text": "1.2 — What should we monitor for this website?"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Area",
+                    "Useful question",
+                    "Example signal"
+                  ],
+                  [
+                    "Availability",
+                    "Can the monitoring service reach the application metrics endpoint?",
+                    "Prometheus up metric"
+                  ],
+                  [
+                    "Resource usage",
+                    "How busy is the Java application?",
+                    "Process CPU usage; JVM heap memory"
+                  ],
+                  [
+                    "Traffic",
+                    "How frequently are HTTP requests being completed?",
+                    "HTTP requests per second"
+                  ],
+                  [
+                    "Latency",
+                    "Are requests taking longer than before?",
+                    "Average recorded response duration"
+                  ],
+                  [
+                    "Errors",
+                    "Are server-side failures increasing?",
+                    "HTTP 5xx request rate"
+                  ],
+                  [
+                    "Runtime",
+                    "Is the JVM spending excessive time in garbage collection?",
+                    "GC pause count and duration"
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "1.3 — A simple real-life example"
+              },
+              {
+                "kind": "text",
+                "text": "Suppose CPU usage rises from 20% to 95% while request traffic also increases. A monitoring graph shows that the two events happened together. This is useful evidence, but it does not by itself prove high CPU caused the slowdown; you still investigate code, dependencies, and resource limits."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-01.png",
+                "caption": "Illustrative CPU trend, not a measurement from the live website. The shape demonstrates why historical metrics are useful."
+              },
+              {
+                "kind": "output-note",
+                "text": "Learning boundary: This guide reproduces the local Windows exercise. The example live website is not being monitored by these local dashboards. A different always-on design is needed for production."
+              },
+              {
+                "kind": "exercise",
+                "text": "After this lesson, you should be able to explain the difference between a metric, a log, and a trace without calling them the same thing."
+              }
+            ]
+          },
+          {
+            "title": "02 — Prometheus Fundamentals: Metrics, Database, Queries, and Components",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Prometheus is an open-source monitoring system that periodically collects numeric metrics, stores them as time series, lets you query the stored values with PromQL, and can evaluate alert rules. It is both a running service and a purpose-built time-series database. It is not a general relational database for application users, orders, or documents."
+              },
+              {
+                "kind": "subheading",
+                "text": "2.1 — What is a time-series database?"
+              },
+              {
+                "kind": "text",
+                "text": "A time series is a sequence of samples associated with the same metric and label set. Each sample includes a numeric value and a timestamp. The timestamp allows Prometheus to answer not just “What is CPU usage now?” but also “What was it five minutes ago?” and “Is it increasing?”"
+              },
+              {
+                "kind": "code",
+                "label": "Illustrative time-series samples · PromQL",
+                "text": "process_cpu_usage{job=\"spring-boot\",instance=\"host.docker.internal:8080\"} 0.05\nprocess_cpu_usage{job=\"spring-boot\",instance=\"host.docker.internal:8080\"} 0.08"
+              },
+              {
+                "kind": "output-note",
+                "text": "Read the illustration correctly: The two lines above are conceptual samples collected at different times; real Prometheus storage associates each sample with its timestamp. They are not configuration lines to paste into prometheus.yml."
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Breaking down one time series",
+                "items": [
+                  {
+                    "term": "process_cpu_usage",
+                    "explanation": "The metric name: a ratio describing CPU use by the Java process."
+                  },
+                  {
+                    "term": "job=\"spring-boot\"",
+                    "explanation": "A label identifying the scrape job we configured."
+                  },
+                  {
+                    "term": "instance=\"host.docker.internal:8080\"",
+                    "explanation": "A label identifying which target produced this series."
+                  },
+                  {
+                    "term": "0.05",
+                    "explanation": "A sample value. Depending on metric semantics, the same value can be displayed as 5%."
+                  },
+                  {
+                    "term": "Timestamp",
+                    "explanation": "Recorded alongside the numeric sample; it identifies when the reading was collected."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "2.2 — Metric types you must distinguish"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Type",
+                    "Behavior",
+                    "Example / question"
+                  ],
+                  [
+                    "Counter",
+                    "Cumulative count normally increases, apart from process resets.",
+                    "How many requests have completed?"
+                  ],
+                  [
+                    "Gauge",
+                    "Value can rise or fall.",
+                    "How many bytes of heap are used now?"
+                  ],
+                  [
+                    "Histogram",
+                    "Groups observations into buckets, plus sums and counts.",
+                    "How many requests finished within 0.5 seconds?"
+                  ],
+                  [
+                    "Summary",
+                    "Reports observation count, sum, and possibly client-side quantiles.",
+                    "What were observed request durations?"
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "CPU usage and current JVM memory are gauge-like values. Request totals and GC pause counts are cumulative counters. When graphing a counter, we commonly use rate() to estimate how fast it increased, instead of interpreting the total count as requests per second."
+              },
+              {
+                "kind": "subheading",
+                "text": "2.3 — Pull-based scraping: who calls whom?"
+              },
+              {
+                "kind": "text",
+                "text": "Our Spring Boot application exposes /actuator/prometheus. Prometheus acts as the client: every 15 seconds, it makes an HTTP request to that endpoint and collects the response. Spring Boot does not automatically send measurements to Grafana. This is called pull-based collection."
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Important monitoring words",
+                "items": [
+                  {
+                    "term": "Target",
+                    "explanation": "One endpoint Prometheus attempts to scrape, such as host.docker.internal:8080."
+                  },
+                  {
+                    "term": "Job",
+                    "explanation": "A named group of scraping instructions and targets; ours is spring-boot."
+                  },
+                  {
+                    "term": "Scrape interval",
+                    "explanation": "How often Prometheus attempts collection. We set 15s."
+                  },
+                  {
+                    "term": "Scrape timeout",
+                    "explanation": "How long Prometheus waits for a scrape before considering it failed."
+                  },
+                  {
+                    "term": "Metric endpoint",
+                    "explanation": "The URL that returns measurements in a format Prometheus understands."
+                  },
+                  {
+                    "term": "Service discovery",
+                    "explanation": "A method for finding changing targets automatically; not needed for our single static target."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "2.4 — The main Prometheus components"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/prometheus-architecture.svg",
+                "caption": "Prometheus architecture: metric endpoints, scrape manager, time-series storage, query engine, and optional Alertmanager."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Component",
+                    "Responsibility",
+                    "Used here?"
+                  ],
+                  [
+                    "Prometheus Server",
+                    "Coordinates scrapes and queries.",
+                    "Yes"
+                  ],
+                  [
+                    "Scrape manager / retrieval",
+                    "Retrieves metric samples from configured targets.",
+                    "Yes"
+                  ],
+                  [
+                    "TSDB",
+                    "Stores timestamped samples on local disk.",
+                    "Yes"
+                  ],
+                  [
+                    "PromQL query engine",
+                    "Calculates answers from current and historical metrics.",
+                    "Yes"
+                  ],
+                  [
+                    "Recording rules",
+                    "Precomputes frequently used query expressions.",
+                    "No"
+                  ],
+                  [
+                    "Prometheus alert rules",
+                    "Evaluate conditions inside Prometheus.",
+                    "No; our alerts are Grafana-managed"
+                  ],
+                  [
+                    "Alertmanager",
+                    "Routes and groups alerts from Prometheus alert rules.",
+                    "No; not installed"
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "2.5 — What are exporters and monitoring agents?"
+              },
+              {
+                "kind": "text",
+                "text": "An exporter is a service that exposes metrics for something that does not natively expose the Prometheus format. Node Exporter exposes host operating-system metrics; cAdvisor exposes container resource metrics. An agent is a broader term for software that runs near a system to collect or forward observations. These components are common in monitoring architectures, but they are not mandatory for every setup."
+              },
+              {
+                "kind": "text",
+                "text": "Spring Boot + Micrometer already exposes its JVM/application metrics, so our local example does not install Node Exporter, cAdvisor, Grafana Alloy, or a separate Prometheus Agent. Adding one without a concrete monitoring need would be unnecessary."
+              },
+              {
+                "kind": "subheading",
+                "text": "2.6 — Storage, retention, and limitations"
+              },
+              {
+                "kind": "text",
+                "text": "Prometheus stores its time-series database under /prometheus inside our container. We mount a named Docker volume there so removing the container does not automatically delete the stored samples. The example server configuration shows a 15-day time retention, but actual behavior depends on the running image and any retention flags."
+              },
+              {
+                "kind": "text",
+                "text": "Prometheus is optimized for metrics, not for storing images, full web-request bodies, raw logs, or visitor accounts. A successful metric scrape is not equivalent to a complete end-to-end website health check."
+              },
+              {
+                "kind": "subheading",
+                "text": "2.7 — What is PromQL?"
+              },
+              {
+                "kind": "text",
+                "text": "PromQL, the Prometheus Query Language, selects time series by metric names and labels, then computes values with functions and operators. For example, up{job=\"spring-boot\"} selects the scrape-success series for the Spring Boot job. sum(...) combines series, while rate(counter[5m]) estimates a per-second counter increase over a five-minute window."
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · three simple expressions",
+                "text": "up{job=\"spring-boot\"}\nsum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"heap\"})\nsum(rate(http_server_requests_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "exercise",
+                "text": "Identify which expression selects a value, which adds several memory pools, and which calculates a rate. Do not expect all three answers to use the same unit."
+              }
+            ]
+          },
+          {
+            "title": "03 — Grafana Fundamentals and the Complete Monitoring Architecture",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Grafana is an observability and visualization platform. It reads data from configured data sources, creates dashboards from queries, and can evaluate alert conditions. In this exercise, Grafana does not replace Prometheus storage; it requests metric data from Prometheus."
+              },
+              {
+                "kind": "subheading",
+                "text": "3.1 — Prometheus versus Grafana"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Question",
+                    "Prometheus",
+                    "Grafana"
+                  ],
+                  [
+                    "Who collects metrics from Spring Boot?",
+                    "Yes, through scraping.",
+                    "No; it queries a data source."
+                  ],
+                  [
+                    "Who stores the numeric samples in this setup?",
+                    "Prometheus TSDB.",
+                    "Not the raw Prometheus time series."
+                  ],
+                  [
+                    "Who lets us write PromQL?",
+                    "Prometheus Query UI and API.",
+                    "Grafana query editor via Prometheus Data Source."
+                  ],
+                  [
+                    "Who draws our multi-panel dashboard?",
+                    "Has simple built-in graphs.",
+                    "Grafana."
+                  ],
+                  [
+                    "Who evaluates the Application Down alert?",
+                    "Could, with Prometheus alert rules.",
+                    "Grafana-managed alert rule in our project."
+                  ],
+                  [
+                    "Who sends our Slack notification?",
+                    "Not in this setup.",
+                    "Grafana, using its configured Contact Point."
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "3.2 — Grafana vocabulary"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "UI terms you will encounter",
+                "items": [
+                  {
+                    "term": "Data Source",
+                    "explanation": "A configured connection to a system such as Prometheus."
+                  },
+                  {
+                    "term": "Dashboard",
+                    "explanation": "A page containing related charts and statistics."
+                  },
+                  {
+                    "term": "Panel",
+                    "explanation": "A single chart, gauge, or value on a dashboard."
+                  },
+                  {
+                    "term": "Visualization",
+                    "explanation": "A presentation type, such as Time series, Gauge, or Stat."
+                  },
+                  {
+                    "term": "Query",
+                    "explanation": "An expression that asks Prometheus for specific measurements."
+                  },
+                  {
+                    "term": "Alert rule",
+                    "explanation": "A scheduled condition Grafana evaluates to determine alert state."
+                  },
+                  {
+                    "term": "Contact Point",
+                    "explanation": "Where Grafana sends alert notifications, such as a Slack webhook."
+                  },
+                  {
+                    "term": "Evaluation Group",
+                    "explanation": "A collection of alert rules evaluated on the same schedule."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "3.3 — Follow the entire data flow"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/overview-architecture.svg",
+                "caption": "Actual responsibilities in the Spring Boot → Prometheus → Grafana → Slack flow."
+              },
+              {
+                "kind": "text",
+                "text": "First, Spring Boot produces measurements. Second, Prometheus retrieves and stores the samples. Third, Grafana queries Prometheus and displays graphs. Finally, Grafana can check a condition and send a message to Slack. Slack only receives notifications; it does not scrape metrics or host our dashboard."
+              },
+              {
+                "kind": "subheading",
+                "text": "3.4 — Why two Docker containers?"
+              },
+              {
+                "kind": "text",
+                "text": "Prometheus and Grafana have different responsibilities and different data directories. Separate containers let us stop or update Grafana without intentionally stopping Prometheus. We also preserve their settings and data in separate named volumes. A shared Docker network lets Grafana reach Prometheus by container name."
+              },
+              {
+                "kind": "output-note",
+                "text": "Local versus production: Our Windows PC is the host. Spring Boot runs locally in IntelliJ; Prometheus and Grafana run inside Docker. If the PC, Docker Engine, or internet connection is stopped, this setup cannot provide reliable 24/7 notifications."
+              },
+              {
+                "kind": "exercise",
+                "text": "Explain why the Grafana URL uses localhost:3000 in the browser but Prometheus is configured as http://prometheus:9090 inside Grafana."
+              }
+            ]
+          },
+          {
+            "title": "04 — Preparing the Existing Spring Boot Application",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Before Prometheus can collect metrics, Spring Boot must expose them through an HTTP endpoint. We used Spring Boot Actuator and the Micrometer Prometheus registry. These dependencies already exist in the uploaded project pom.xml; this guide documents them and does not modify the build file."
+              },
+              {
+                "kind": "subheading",
+                "text": "4.1 — Two monitoring dependencies"
+              },
+              {
+                "kind": "code",
+                "label": "pom.xml · Existing Maven dependencies",
+                "text": "<!-- Spring Boot Monitoring -->\n<dependency>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-actuator</artifactId>\n</dependency>\n\n<!-- Prometheus Metrics -->\n<dependency>\n    <groupId>io.micrometer</groupId>\n    <artifactId>micrometer-registry-prometheus</artifactId>\n</dependency>"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Why both are needed",
+                "items": [
+                  {
+                    "term": "spring-boot-starter-actuator",
+                    "explanation": "Provides Spring Boot production-oriented endpoints and health/metrics infrastructure."
+                  },
+                  {
+                    "term": "micrometer-registry-prometheus",
+                    "explanation": "Formats Micrometer measurements for Prometheus scraping."
+                  },
+                  {
+                    "term": "Micrometer",
+                    "explanation": "The metrics instrumentation layer; it bridges the application/runtime metrics and monitoring backends."
+                  },
+                  {
+                    "term": "Actuator endpoint",
+                    "explanation": "An HTTP endpoint that exposes selected information, subject to configuration and security."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "4.2 — Expose the endpoint with the original environment variable"
+              },
+              {
+                "kind": "text",
+                "text": "Open IntelliJ IDEA, choose Run → Edit Configurations, select the Spring Boot run configuration, and find Environment variables. Set the following exact environment variable for the local run. The name is long because it follows Spring Boot relaxed-binding rules: underscores separate property-name segments."
+              },
+              {
+                "kind": "code",
+                "label": "IntelliJ environment variable · Exact value",
+                "text": "MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,prometheus"
+              },
+              {
+                "kind": "output-note",
+                "text": "Configuration preservation: The module only documents this variable. It does not add it to application.properties or change any project-wide environment setting. We are keeping the original local configuration."
+              },
+              {
+                "kind": "subheading",
+                "text": "4.3 — Run Spring Boot and inspect the metrics output"
+              },
+              {
+                "kind": "text",
+                "text": "Start the application from IntelliJ. In the Windows browser, open http://localhost:8080/actuator/prometheus. A successful response is a text page containing HELP and TYPE lines followed by individual metric samples."
+              },
+              {
+                "kind": "code",
+                "label": "Browser address · Local Spring Boot metrics",
+                "text": "http://localhost:8080/actuator/prometheus"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-04.png",
+                "caption": "Actual Spring Boot Actuator output at localhost:8080/actuator/prometheus, showing JVM and HTTP metrics."
+              },
+              {
+                "kind": "walkthrough",
+                "title": "How to read the output",
+                "items": [
+                  {
+                    "term": "# HELP",
+                    "explanation": "Human-readable description of the metric."
+                  },
+                  {
+                    "term": "# TYPE",
+                    "explanation": "Prometheus metric type such as gauge, counter or summary."
+                  },
+                  {
+                    "term": "jvm_memory_used_bytes",
+                    "explanation": "Current JVM memory use for a labeled memory pool, expressed in bytes."
+                  },
+                  {
+                    "term": "process_cpu_usage",
+                    "explanation": "CPU usage ratio for the JVM process."
+                  },
+                  {
+                    "term": "http_server_requests_active_seconds",
+                    "explanation": "Information about requests active at collection time; not automatically an average completed response duration."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "4.4 — What does this prove?"
+              },
+              {
+                "kind": "text",
+                "text": "At this point the application produces Prometheus-compatible metrics locally. It does not prove Prometheus is collecting them yet. That second part is configured in the next chapter. Do not publish the metrics endpoint to the internet when deploying a production website; the local browser test is not a reason to make it publicly accessible."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Check",
+                    "Expected observation",
+                    "If not"
+                  ],
+                  [
+                    "Spring Boot running",
+                    "Application starts successfully.",
+                    "Check the application run configuration and existing logs."
+                  ],
+                  [
+                    "/actuator/prometheus",
+                    "Prometheus-formatted metrics text.",
+                    "Check dependencies and endpoint exposure."
+                  ],
+                  [
+                    "Public exposure",
+                    "Not required for local testing.",
+                    "Avoid opening a public Nginx route or security-group port."
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "title": "05 — Installing Prometheus on Windows and Connecting the Target",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Prometheus runs in a Docker container on the Windows computer. We deliberately begin with its default interface, then bind our own prometheus.yml file so it can scrape Spring Boot. The commands below preserve the same names, port bindings, storage volume, target and path from the recorded exercise."
+              },
+              {
+                "kind": "subheading",
+                "text": "5.1 — Verify Docker Desktop"
+              },
+              {
+                "kind": "text",
+                "text": "Start Docker Desktop. It must show that the Docker Engine is running. Open Windows PowerShell and check whether the client can talk to the Docker Engine."
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Docker version check",
+                "text": "docker version"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "What this proves",
+                "items": [
+                  {
+                    "term": "Client",
+                    "explanation": "The command-line application installed on the computer."
+                  },
+                  {
+                    "term": "Server",
+                    "explanation": "The Docker Engine that creates containers. Seeing both Client and Server confirms that the Engine is reachable."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "5.2 — Launch the initial Prometheus container"
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Original first Prometheus run",
+                "text": "docker run -d --name prometheus -p 127.0.0.1:9090:9090 -v prometheus-data:/prometheus prom/prometheus"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Understand the command before running it",
+                "items": [
+                  {
+                    "term": "docker run -d",
+                    "explanation": "Creates and starts the container in the background."
+                  },
+                  {
+                    "term": "--name prometheus",
+                    "explanation": "Names this running service prometheus."
+                  },
+                  {
+                    "term": "-p 127.0.0.1:9090:9090",
+                    "explanation": "Maps host localhost port 9090 to the container port 9090; it is not published to other machines by this mapping."
+                  },
+                  {
+                    "term": "-v prometheus-data:/prometheus",
+                    "explanation": "Mounts a named volume for persistent metric samples."
+                  },
+                  {
+                    "term": "prom/prometheus",
+                    "explanation": "The official Prometheus image used in this setup."
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "Open http://localhost:9090. The Prometheus Query page should load. This proves the Prometheus UI is available, not that our Spring Boot scrape job is configured."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-03.png",
+                "caption": "Prometheus Query page immediately after starting the server, before selecting an application metric."
+              },
+              {
+                "kind": "subheading",
+                "text": "5.3 — Why we need prometheus.yml"
+              },
+              {
+                "kind": "text",
+                "text": "Prometheus cannot automatically guess the location of the Spring Boot endpoint. The YAML file defines how often to scrape, which job to create, the HTTP path to request, and the target host and port. The folder is only a convenient place for our monitoring file; the E: drive has no special technical requirement."
+              },
+              {
+                "kind": "code",
+                "label": "prometheus.yml · Exact local configuration",
+                "text": "global:\n  scrape_interval: 15s\n\nscrape_configs:\n  - job_name: \"spring-boot\"\n    metrics_path: \"/actuator/prometheus\"\n    static_configs:\n      - targets: [\"host.docker.internal:8080\"]"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Every YAML field explained",
+                "items": [
+                  {
+                    "term": "global",
+                    "explanation": "Settings shared by scrape jobs unless overridden."
+                  },
+                  {
+                    "term": "scrape_interval: 15s",
+                    "explanation": "Prometheus attempts to gather metrics every 15 seconds."
+                  },
+                  {
+                    "term": "scrape_configs",
+                    "explanation": "A list of monitoring jobs."
+                  },
+                  {
+                    "term": "job_name: \"spring-boot\"",
+                    "explanation": "The name stored as the job label on collected time series."
+                  },
+                  {
+                    "term": "metrics_path",
+                    "explanation": "The HTTP path providing Prometheus-compatible metrics."
+                  },
+                  {
+                    "term": "static_configs",
+                    "explanation": "A manually defined target list; suitable for a single local application."
+                  },
+                  {
+                    "term": "host.docker.internal:8080",
+                    "explanation": "Docker Desktop special host name and the Windows Spring Boot port. localhost inside the Prometheus container would refer to the container itself."
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "Save the file at the original path exactly as recorded:"
+              },
+              {
+                "kind": "code",
+                "label": "Windows file path · Original recorded location",
+                "text": "E:\\DevOps\\Project\\montior\\prometheus.yml"
+              },
+              {
+                "kind": "output-note",
+                "text": "Spelling: The folder is spelled montior in the original recorded path. Do not silently rename it to monitor: the Docker bind mount must match the real file location."
+              },
+              {
+                "kind": "subheading",
+                "text": "5.4 — Re-create the container with the bind-mounted configuration"
+              },
+              {
+                "kind": "text",
+                "text": "The first container did not have our configuration file attached. Docker does not add a new bind mount to a running existing container in place, so the recorded workflow stops and removes the container, then starts a new container using the same persistent named volume."
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Stop and remove the original container",
+                "text": "docker stop prometheus\ndocker rm prometheus"
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Start Prometheus with the original bind mount",
+                "text": "docker run -d --name prometheus -p 127.0.0.1:9090:9090 --mount \"type=bind,source=E:\\DevOps\\Project\\montior\\prometheus.yml,target=/etc/prometheus/prometheus.yml,readonly\" -v prometheus-data:/prometheus prom/prometheus"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Bind mount versus named volume",
+                "items": [
+                  {
+                    "term": "--mount type=bind",
+                    "explanation": "Connects an existing file from Windows to a path in the container."
+                  },
+                  {
+                    "term": "source=E:\\DevOps\\Project\\montior\\prometheus.yml",
+                    "explanation": "The exact Windows file that controls the scrape job."
+                  },
+                  {
+                    "term": "target=/etc/prometheus/prometheus.yml",
+                    "explanation": "The location Prometheus reads inside the Linux container."
+                  },
+                  {
+                    "term": "readonly",
+                    "explanation": "The container cannot modify the mounted configuration file."
+                  },
+                  {
+                    "term": "prometheus-data:/prometheus",
+                    "explanation": "Separately persists the time-series data. Removing the container is not the same as deleting this volume."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "5.5 — Verify the target and the loaded configuration"
+              },
+              {
+                "kind": "text",
+                "text": "With Spring Boot running, open http://localhost:9090/targets. Find the spring-boot target. The expected state is UP, meaning its latest scrape succeeded. Open the Prometheus Status menu and then Configuration to check that job_name, metrics_path and targets match the YAML."
+              },
+              {
+                "kind": "code",
+                "label": "Browser addresses · Prometheus verification",
+                "text": "http://localhost:9090/targets\nhttp://localhost:9090/config"
+              },
+              {
+                "kind": "output-note",
+                "text": "If there are no scrape pools: An empty Target health page means no active scrape pools are shown. Check the loaded Configuration page before changing anything; confirm Prometheus actually loaded the mounted file."
+              },
+              {
+                "kind": "subheading",
+                "text": "5.6 — Use the data rather than only checking the UI"
+              },
+              {
+                "kind": "text",
+                "text": "After a successful scrape, use Prometheus Query to request up{job=\"spring-boot\"}. A result of 1 proves the latest metrics scrape succeeded. We will explain that query and more useful application metrics next."
+              }
+            ]
+          },
+          {
+            "title": "06 — PromQL in Practice: Availability, CPU, Memory, GC, and HTTP Metrics",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "PromQL does not merely retrieve a table. It lets you select one metric, filter by labels, combine measurements, calculate a rate over a time window, and convert units. We begin with the one query that verifies our monitoring connection and then explore metrics that are useful for a Spring Boot service."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.1 — Verify scrape health with up"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Application scrape status",
+                "text": "up{job=\"spring-boot\"}"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-05.png",
+                "caption": "Prometheus Query result showing up = 1 for host.docker.internal:8080."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Result",
+                    "Meaning",
+                    "What it does not prove"
+                  ],
+                  [
+                    "1",
+                    "Last metrics scrape succeeded.",
+                    "Every public page or business function is healthy."
+                  ],
+                  [
+                    "0",
+                    "Prometheus failed to scrape the configured target.",
+                    "The exact reason; it might be a stopped app, network fault or endpoint error."
+                  ],
+                  [
+                    "No data",
+                    "No current matching series was returned.",
+                    "That the application is healthy or unhealthy without investigation."
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "6.2 — CPU usage: a ratio and its display unit"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · CPU usage as a percentage in Prometheus",
+                "text": "process_cpu_usage{job=\"spring-boot\"} * 100"
+              },
+              {
+                "kind": "text",
+                "text": "process_cpu_usage is a ratio. Multiplying by 100 displays a percentage as an ordinary number in Prometheus. For example 0.054 becomes 5.4. The screenshot below shows the real local CPU curve, not an EC2 CPU chart."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-08.png",
+                "caption": "Spring Boot process CPU usage graph in the Prometheus UI. Values are shown after multiplication by 100."
+              },
+              {
+                "kind": "output-note",
+                "text": "Grafana unit pitfall: When the Grafana panel Unit is Percent (0.0-1.0), use process_cpu_usage{job=\"spring-boot\"} without * 100. Grafana applies the percentage formatting. Applying both multiplies the displayed value twice."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.3 — JVM Heap Memory in MiB"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Heap usage converted to MiB",
+                "text": "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"heap\"}) / 1024 / 1024"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Why the query looks like this",
+                "items": [
+                  {
+                    "term": "jvm_memory_used_bytes",
+                    "explanation": "Current memory bytes recorded for JVM memory pools."
+                  },
+                  {
+                    "term": "area=\"heap\"",
+                    "explanation": "Selects heap pools, which store most application objects."
+                  },
+                  {
+                    "term": "sum(...)",
+                    "explanation": "Adds all selected heap-pool values."
+                  },
+                  {
+                    "term": "/ 1024 / 1024",
+                    "explanation": "Converts bytes to mebibytes (MiB), a binary memory unit."
+                  }
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-07.png",
+                "caption": "Real local JVM Heap memory graph showing growth during a short observation period."
+              },
+              {
+                "kind": "text",
+                "text": "Memory use can increase as Java creates objects and decrease after garbage collection. A short rising graph alone is not proof of a memory leak. The heap is only part of the Java process memory footprint."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.4 — Non-Heap, committed memory, and heap utilization"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Non-Heap JVM memory in bytes",
+                "text": "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"nonheap\"})"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · JVM committed memory in bytes",
+                "text": "sum(jvm_memory_committed_bytes{job=\"spring-boot\"})"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Heap usage divided by pool maximums",
+                "text": "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"heap\"}) / sum(jvm_memory_max_bytes{job=\"spring-boot\",area=\"heap\"})"
+              },
+              {
+                "kind": "text",
+                "text": "Non-Heap includes JVM runtime structures such as class metadata and code cache. Committed memory means memory the JVM has committed for use, not necessarily currently occupied by live application objects. A heap-used/max ratio is meaningful only when the reported pool maximums are defined and appropriate; an undefined maximum or unusual pool configuration can make the ratio misleading."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.5 — Garbage Collection (GC)"
+              },
+              {
+                "kind": "text",
+                "text": "Java Garbage Collection identifies unreachable objects and reclaims heap memory. GC is automatic; applications normally do not manually free every object. We monitor it because long or frequent pauses can coincide with slower response times, but the presence of normal GC activity is not itself a failure."
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · GC pause events per second",
+                "text": "sum(rate(jvm_gc_pause_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · GC pause time per second",
+                "text": "sum(rate(jvm_gc_pause_seconds_sum{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "output-note",
+                "text": "Units matter: The first GC query is approximately pause events per second, not CPU percentage. The second is accumulated pause duration per elapsed second. Neither should use a generic CPU % chart title."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.6 — HTTP request rate"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Completed requests per second",
+                "text": "sum(rate(http_server_requests_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "text",
+                "text": "The recorded request counter increases when instrumented HTTP requests finish. rate(...[5m]) uses the past five minutes of samples to estimate requests per second, and sum(...) combines matching series. If the application is idle or has only a few samples, the graph may be sparse or show no data."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.7 — Average recorded request duration"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Mean HTTP response duration in milliseconds",
+                "text": "1000 * sum(rate(http_server_requests_seconds_sum{job=\"spring-boot\"}[5m])) / sum(rate(http_server_requests_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "text",
+                "text": "The numerator estimates duration accumulated per second; the denominator estimates completed requests per second. Their ratio gives a mean duration in seconds, multiplied by 1000 to get milliseconds. It is an average over the window, not the slowest request and not a 95th percentile. An empty or zero denominator can produce no meaningful result."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.8 — Server-side HTTP error rate"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Recorded HTTP 5xx errors per second",
+                "text": "sum(rate(http_server_requests_seconds_count{job=\"spring-boot\",status=~\"5..\"}[5m])) or vector(0)"
+              },
+              {
+                "kind": "text",
+                "text": "The status label filters HTTP response codes beginning with 5, and the regular expression 5.. matches three-character 5xx codes. The vector(0) fallback can display zero when there are no matching error series; zero must not be confused with proof that the application is reachable. The up metric is a separate availability signal."
+              },
+              {
+                "kind": "subheading",
+                "text": "6.9 — Choosing the correct Grafana unit"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Metric / query",
+                    "Correct interpretation",
+                    "Recommended Grafana unit"
+                  ],
+                  [
+                    "process_cpu_usage without *100",
+                    "CPU usage fraction",
+                    "Percent (0.0-1.0)"
+                  ],
+                  [
+                    "jvm_memory_used_bytes",
+                    "Raw memory bytes",
+                    "Bytes (IEC)"
+                  ],
+                  [
+                    "heap used divided by maximum",
+                    "Heap ratio, if valid",
+                    "Percent (0.0-1.0)"
+                  ],
+                  [
+                    "rate(request_count[5m])",
+                    "Estimated request rate",
+                    "Requests/sec"
+                  ],
+                  [
+                    "HTTP duration ratio multiplied by 1000",
+                    "Mean duration in milliseconds",
+                    "Milliseconds"
+                  ],
+                  [
+                    "rate(gc_count[5m])",
+                    "Events per second",
+                    "Events/sec"
+                  ]
+                ]
+              },
+              {
+                "kind": "exercise",
+                "text": "In Prometheus Query, compare a raw CPU ratio with the same expression multiplied by 100. In Grafana, do not add another * 100 when the panel unit already treats the input as a 0-to-1 fraction."
+              }
+            ]
+          },
+          {
+            "title": "07 — Docker Networking, Grafana Installation, and the Data Source",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Prometheus is already collecting the Spring Boot metrics. Grafana is a separate service. For Grafana to read Prometheus, the two containers must be able to communicate. A named Docker bridge network provides automatic name resolution and a clean communication boundary."
+              },
+              {
+                "kind": "subheading",
+                "text": "7.1 — Create the network and attach the existing Prometheus container"
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Create the original monitoring network",
+                "text": "docker network create monitoring"
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Attach the original running Prometheus container",
+                "text": "docker network connect monitoring prometheus"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Explain the terms",
+                "items": [
+                  {
+                    "term": "docker network create monitoring",
+                    "explanation": "Creates a user-defined Docker bridge network named monitoring."
+                  },
+                  {
+                    "term": "docker network connect monitoring prometheus",
+                    "explanation": "Adds the already-existing prometheus container to that network."
+                  },
+                  {
+                    "term": "Docker DNS",
+                    "explanation": "Containers on the user-defined network can find one another by container name."
+                  },
+                  {
+                    "term": "Network isolation",
+                    "explanation": "Services outside this network do not automatically become members of it. It is not a replacement for authentication or host security."
+                  }
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-09.png",
+                "caption": "PowerShell session displaying creation of the monitoring network and listing available Docker networks. The screenshot also contains an earlier unsuccessful command; the valid command is docker network create monitoring."
+              },
+              {
+                "kind": "subheading",
+                "text": "7.2 — Inspect the network if you are curious"
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · List and inspect Docker networks",
+                "text": "docker network ls\ndocker network inspect monitoring"
+              },
+              {
+                "kind": "text",
+                "text": "docker network ls shows the networks Docker knows about. docker network inspect monitoring shows details including the connected container names and private addresses. Do not hard-code those private addresses when Docker can resolve prometheus by name."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/docker-network.svg",
+                "caption": "Windows Spring Boot and the two Docker monitoring containers, with separate ports, data volumes, and network paths."
+              },
+              {
+                "kind": "subheading",
+                "text": "7.3 — Run the existing Grafana Docker image"
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Original Grafana Docker command",
+                "text": "docker run -d --name grafana --network monitoring -p 127.0.0.1:3000:3000 -v grafana-data:/var/lib/grafana --restart unless-stopped grafana/grafana"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "What each option means",
+                "items": [
+                  {
+                    "term": "--name grafana",
+                    "explanation": "Names the Grafana container for easier access and Docker name resolution."
+                  },
+                  {
+                    "term": "--network monitoring",
+                    "explanation": "Starts Grafana as a member of the same Docker network as Prometheus."
+                  },
+                  {
+                    "term": "-p 127.0.0.1:3000:3000",
+                    "explanation": "Allows only host-local browser access through localhost:3000."
+                  },
+                  {
+                    "term": "-v grafana-data:/var/lib/grafana",
+                    "explanation": "Persists Grafana dashboards, data source definitions and its local configuration database."
+                  },
+                  {
+                    "term": "--restart unless-stopped",
+                    "explanation": "Allows Docker to restart the container when the Docker Engine restarts unless the container was explicitly stopped."
+                  },
+                  {
+                    "term": "grafana/grafana",
+                    "explanation": "The Grafana image used in the recorded setup."
+                  }
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-docker-desktop.png",
+                "caption": "Docker Desktop showing the separate Prometheus and Grafana containers running on Windows."
+              },
+              {
+                "kind": "subheading",
+                "text": "7.4 — Log in to Grafana"
+              },
+              {
+                "kind": "text",
+                "text": "Open http://localhost:3000/login. On a new local installation, the default administrator username and password are both admin; Grafana normally prompts you to change the password. This is a local Grafana login, not an AWS or Docker Hub account."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-10.png",
+                "caption": "Grafana login page shown in the recorded local Windows exercise."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-11.png",
+                "caption": "Grafana home page after successful login."
+              },
+              {
+                "kind": "output-note",
+                "text": "Security: Do not keep a default admin password, and do not expose port 3000 to public internet access just to use this local learning dashboard."
+              },
+              {
+                "kind": "subheading",
+                "text": "7.5 — Configure the Prometheus Data Source through the UI"
+              },
+              {
+                "kind": "text",
+                "text": "Open Connections → Data sources, select Add new data source, and choose Prometheus. In the Prometheus server URL field, enter the original internal URL below. Then click Save & test."
+              },
+              {
+                "kind": "code",
+                "label": "Grafana Data Source URL · Original value",
+                "text": "http://prometheus:9090"
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Why this URL is different from the browser URL",
+                "items": [
+                  {
+                    "term": "prometheus",
+                    "explanation": "The Docker container name, resolved within the monitoring network."
+                  },
+                  {
+                    "term": "9090",
+                    "explanation": "The port the Prometheus process listens to inside its container."
+                  },
+                  {
+                    "term": "localhost:9090",
+                    "explanation": "This is the Windows browser access URL; localhost inside Grafana would refer to Grafana itself, so we do not use it for the Data Source."
+                  },
+                  {
+                    "term": "Save & test",
+                    "explanation": "Checks whether Grafana can query the configured Prometheus API."
+                  }
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-12.png",
+                "caption": "Grafana Prometheus Data Source screen, configured to use http://prometheus:9090."
+              },
+              {
+                "kind": "output-note",
+                "text": "Expected result: The Save & test action should report that the Prometheus API was queried successfully. This validates the Grafana-to-Prometheus connection, not every dashboard panel query."
+              },
+              {
+                "kind": "exercise",
+                "text": "Explain why Prometheus and Grafana run as two containers, why we created the monitoring network, and why a named volume is used for each service."
+              }
+            ]
+          },
+          {
+            "title": "08 — Importing, Fixing, and Customizing a Grafana Dashboard",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A Grafana Dashboard is a collection of panels. A panel contains its own query, visualization and formatting settings. We imported a community dashboard to learn the UI, but its preconfigured metric names or labels did not completely match our Spring Boot project. Instead of changing Docker or Spring Boot, we edited the panel queries to match actual stored metrics."
+              },
+              {
+                "kind": "subheading",
+                "text": "8.1 — Import the community dashboard used in the exercise"
+              },
+              {
+                "kind": "text",
+                "text": "Open Dashboards → New → Import dashboard. Enter dashboard ID 17623, choose the existing Prometheus Data Source, and import. This ID is preserved from the recorded exercise; community dashboards are not guaranteed to match every Spring Boot or Micrometer version."
+              },
+              {
+                "kind": "code",
+                "label": "Grafana community dashboard ID · Recorded value",
+                "text": "17623"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-13.png",
+                "caption": "Imported community dashboard showing No data before its queries were customized."
+              },
+              {
+                "kind": "subheading",
+                "text": "8.2 — Why did the imported panels show No data?"
+              },
+              {
+                "kind": "text",
+                "text": "A panel may expect a metric that is not present, a label that our application does not expose, or a dashboard variable that does not match the instance. A running Grafana container does not guarantee the panel query returns data. We already verified actual CPU and JVM metrics in Prometheus, so the correct next step was to update the panel PromQL."
+              },
+              {
+                "kind": "subheading",
+                "text": "8.3 — Find the exact query field in this Grafana interface"
+              },
+              {
+                "kind": "text",
+                "text": "Open the dashboard, click Edit, open the panel menu (three dots) on CPU Usage, and select Edit. In the panel editor, the bottom section is titled Queries. The query is inside Query A (prometheus). Choose Code beside Builder, replace the original process_cpu_usage expression, then click Run queries. This follows the labels visible in the recorded Grafana version."
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · CPU Usage panel, used with Percent (0.0-1.0)",
+                "text": "process_cpu_usage{job=\"spring-boot\"}"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-15.png",
+                "caption": "Exact panel editor: Queries → Query A → Code, the replacement CPU PromQL expression, and a working graph."
+              },
+              {
+                "kind": "output-note",
+                "text": "Avoid double percentage conversion: We previously tried multiplying the CPU query by 100 inside Grafana while the panel used a percent-from-fraction unit. The graph was incorrectly scaled. The correct combination in this dashboard is the raw ratio plus Percent (0.0-1.0) formatting."
+              },
+              {
+                "kind": "subheading",
+                "text": "8.4 — Panel configurations that match the local application"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Panel title",
+                    "Query / source",
+                    "Visualization and unit"
+                  ],
+                  [
+                    "CPU Usage",
+                    "process_cpu_usage{job=\"spring-boot\"}",
+                    "Time series; Percent (0.0-1.0)"
+                  ],
+                  [
+                    "JVM Heap Memory",
+                    "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"heap\"})",
+                    "Time series; Bytes (IEC)"
+                  ],
+                  [
+                    "JVM Heap Usage (%)",
+                    "heap used / heap maximum (see query below)",
+                    "Gauge; Percent (0.0-1.0)"
+                  ],
+                  [
+                    "JVM Non-Heap Memory",
+                    "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"nonheap\"})",
+                    "Stat; Bytes (IEC)"
+                  ],
+                  [
+                    "HTTP Requests per Second",
+                    "rate of http_server_requests_seconds_count",
+                    "Time series; Requests/sec"
+                  ],
+                  [
+                    "GC Pause Events per Second",
+                    "rate of jvm_gc_pause_seconds_count",
+                    "Time series; Events/sec"
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "8.5 — Exact PromQL for each panel"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · JVM Heap Memory",
+                "text": "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"heap\"})"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · JVM Heap Usage (%)",
+                "text": "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"heap\"}) / sum(jvm_memory_max_bytes{job=\"spring-boot\",area=\"heap\"})"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · JVM Non-Heap Memory",
+                "text": "sum(jvm_memory_used_bytes{job=\"spring-boot\",area=\"nonheap\"})"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Garbage Collector pause event rate",
+                "text": "sum(rate(jvm_gc_pause_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · HTTP Requests per Second",
+                "text": "sum(rate(http_server_requests_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Average Response Time in milliseconds",
+                "text": "1000 * sum(rate(http_server_requests_seconds_sum{job=\"spring-boot\"}[5m])) / sum(rate(http_server_requests_seconds_count{job=\"spring-boot\"}[5m]))"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · HTTP Server Errors (5xx/sec)",
+                "text": "sum(rate(http_server_requests_seconds_count{job=\"spring-boot\",status=~\"5..\"}[5m])) or vector(0)"
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Application scrape status",
+                "text": "up{job=\"spring-boot\"}"
+              },
+              {
+                "kind": "subheading",
+                "text": "8.6 — Choose title, visualization, unit and time range"
+              },
+              {
+                "kind": "text",
+                "text": "For a historical change, use Time series. For the latest percentage or total, use Gauge or Stat. In the right-side visualization options, expand Standard options and choose Unit. For raw jvm_memory_used_bytes select Bytes (IEC); for process_cpu_usage without *100 choose Percent (0.0-1.0). Save the panel and then save the dashboard. Use Last 15 minutes and the recorded 15s refresh interval if you want a near-live local view."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-16.png",
+                "caption": "Actual working dashboard after editing several panels. This is intermediate evidence: some labels and units still needed polishing."
+              },
+              {
+                "kind": "subheading",
+                "text": "8.7 — Reading a dashboard responsibly"
+              },
+              {
+                "kind": "text",
+                "text": "A JVM Heap graph is not the same as total system RAM. A successful up value means a scrape worked, not that the public site passed an end-to-end availability test. Response time is an average unless we explicitly calculate percentiles. Every panel should show a precise name and a unit that matches the query."
+              },
+              {
+                "kind": "exercise",
+                "text": "Build a two-column dashboard with a CPU Time series, a JVM Heap Time series, an Application Status Stat, and an HTTP Requests/sec graph. Verify each query in Prometheus if a Grafana panel shows No data."
+              }
+            ]
+          },
+          {
+            "title": "09 — Understanding Grafana Alerting Before Creating a Rule",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A dashboard shows what is happening when you open it. An alert checks a condition automatically and reports when the condition is met. Our Grafana-managed alert watches the Prometheus up metric, which represents whether Prometheus succeeded in scraping the configured Spring Boot target."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-17.png",
+                "caption": "Grafana Alerting entry screen where alert rules and notification destinations are configured."
+              },
+              {
+                "kind": "subheading",
+                "text": "9.1 — The vocabulary in the Grafana Alerting screen"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Setting",
+                    "Meaning in our exercise"
+                  ],
+                  [
+                    "Alert Rule",
+                    "The named condition Spring Boot - Application Down."
+                  ],
+                  [
+                    "Query A",
+                    "up{job=\"spring-boot\"}, retrieved from the Prometheus Data Source."
+                  ],
+                  [
+                    "Threshold",
+                    "The rule is true when the last up value is below 1."
+                  ],
+                  [
+                    "Folder",
+                    "Monitoring; groups alert resources for organization."
+                  ],
+                  [
+                    "Evaluation Group",
+                    "Spring Boot; schedules alerts that share a common interval."
+                  ],
+                  [
+                    "Evaluation Interval",
+                    "Every 1 minute; Grafana reevaluates the condition."
+                  ],
+                  [
+                    "Pending Period",
+                    "1 minute; the condition must persist before the alert fires."
+                  ],
+                  [
+                    "Keep firing for",
+                    "0 seconds; no extra firing hold after recovery."
+                  ],
+                  [
+                    "Contact Point",
+                    "The notification destination; later assigned to Slack Notification."
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "9.2 — How the states change"
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/alert-lifecycle.svg",
+                "caption": "Grafana alert lifecycle: Normal → Pending → Firing, then recovery to Normal, with the saved one-minute timing."
+              },
+              {
+                "kind": "walkthrough",
+                "title": "Interpret the states",
+                "items": [
+                  {
+                    "term": "Normal",
+                    "explanation": "The alert condition is not currently met."
+                  },
+                  {
+                    "term": "Pending",
+                    "explanation": "The condition is met, but the configured pending time has not elapsed."
+                  },
+                  {
+                    "term": "Firing",
+                    "explanation": "The condition stayed true through the pending period; the alert is active."
+                  },
+                  {
+                    "term": "Resolved",
+                    "explanation": "A notification can be sent when an earlier firing alert recovers, depending on routing settings."
+                  },
+                  {
+                    "term": "No Data",
+                    "explanation": "The expression did not return a usable value; this has its own handling policy."
+                  },
+                  {
+                    "term": "Error",
+                    "explanation": "The rule query or evaluation failed; this is not the same state as up = 0."
+                  }
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "9.3 — Why does Grafana show Normal and Firing in different places?"
+              },
+              {
+                "kind": "text",
+                "text": "The rule header reports an overall evaluated alert state. A Threshold expression preview can also display whether the numerical condition is met at the queried moment. These do not necessarily represent the same completed evaluation, so use the header state, History tab, and Instances tab to confirm whether the actual alert entered Firing."
+              },
+              {
+                "kind": "subheading",
+                "text": "9.4 — Why a folder and evaluation group?"
+              },
+              {
+                "kind": "text",
+                "text": "The folder named Monitoring organizes related rules. The evaluation group named Spring Boot controls the evaluation schedule for its member rules. These concepts are separate from a Prometheus scrape job: a scrape interval controls metric collection while an evaluation interval controls how often Grafana checks its alert logic."
+              },
+              {
+                "kind": "output-note",
+                "text": "Important limitation: An up = 0 alert detects scrape failure, not necessarily user-facing downtime. For example a firewall rule can block metrics while the website continues to serve users. External uptime checking is a separate monitoring capability."
+              }
+            ]
+          },
+          {
+            "title": "10 — Configure and Test the Application Down Alert",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "We will use the exact alert name, query, and timing from the verified local test. This procedure changes only Grafana alert settings through its UI; it does not modify Spring Boot application.properties, Prometheus YAML, or Docker port bindings."
+              },
+              {
+                "kind": "subheading",
+                "text": "10.1 — Open the alert-rule editor"
+              },
+              {
+                "kind": "text",
+                "text": "In Grafana, open Alerting → Alert rules, and click New alert rule. Use the name Spring Boot - Application Down. Choose the existing Prometheus Data Source. In Query A use the expression below, which we already verified in Prometheus."
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Exact alert rule query",
+                "text": "up{job=\"spring-boot\"}"
+              },
+              {
+                "kind": "subheading",
+                "text": "10.2 — Set the condition and schedule"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Grafana UI setting",
+                    "Value used",
+                    "Reason"
+                  ],
+                  [
+                    "Alert rule name",
+                    "Spring Boot - Application Down",
+                    "Identifies the failing metrics target."
+                  ],
+                  [
+                    "Alert condition",
+                    "Last is below 1",
+                    "A scrape failure gives up = 0."
+                  ],
+                  [
+                    "Folder",
+                    "Monitoring",
+                    "Keeps alert resources organized."
+                  ],
+                  [
+                    "Evaluation Group",
+                    "Spring Boot",
+                    "Schedules the related alert rule."
+                  ],
+                  [
+                    "Evaluation interval",
+                    "1m",
+                    "Grafana evaluates approximately every minute."
+                  ],
+                  [
+                    "Pending period",
+                    "1m",
+                    "A failure must persist before the alert begins firing."
+                  ],
+                  [
+                    "Keep firing for",
+                    "None / 0s",
+                    "No additional hold time after recovery."
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "If the Evaluation Group control is disabled, select or create the folder first. In Set evaluation behavior choose Monitoring, then select or create the Spring Boot evaluation group with the original 1m interval. Set Pending period to 1m and Keep firing for to None."
+              },
+              {
+                "kind": "subheading",
+                "text": "10.3 — Save and verify the normal state"
+              },
+              {
+                "kind": "text",
+                "text": "Click Save rule. Open Alerting → Alert rules → Spring Boot - Application Down. When Spring Boot is still running and Prometheus reports up = 1, the rule should display Normal once evaluated."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-19.png",
+                "caption": "Saved Application Down rule showing Normal and the correct up{job=\"spring-boot\"} query."
+              },
+              {
+                "kind": "subheading",
+                "text": "10.4 — Trigger the real local failure"
+              },
+              {
+                "kind": "text",
+                "text": "For the controlled test, stop only the local Spring Boot application from IntelliJ. Leave Docker, Prometheus and Grafana running. Because the metrics endpoint becomes unavailable, Prometheus should return up = 0 on its next scrape. The one-minute Grafana evaluation and one-minute pending period mean the overall alert state will not change immediately."
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Verify the failed scrape in Prometheus",
+                "text": "up{job=\"spring-boot\"}"
+              },
+              {
+                "kind": "text",
+                "text": "Confirm the value changes from 1 to 0, then revisit the saved Grafana alert. The expected sequence is Normal → Pending → Firing if the target remains unreachable and the rule continues evaluating."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-up-down.png",
+                "caption": "Prometheus Query confirmation: up{job=\"spring-boot\"} returned 0 after the local Spring Boot service was stopped."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-20.png",
+                "caption": "Actual Grafana Application Down rule showing the overall Firing state after the local Spring Boot application was stopped."
+              },
+              {
+                "kind": "subheading",
+                "text": "10.5 — What does a successful Firing result prove?"
+              },
+              {
+                "kind": "text",
+                "text": "Prometheus detected that its configured endpoint could not be scraped, and Grafana evaluated that condition long enough to transition the rule to Firing. It does not by itself prove Slack notification is routed: that is a separate step completed in the next chapter."
+              },
+              {
+                "kind": "output-note",
+                "text": "Test safety: This is a local learning test. The procedure stops only the Windows IntelliJ application, not the deployed website. Restore the application after testing when you want normal local metrics again."
+              },
+              {
+                "kind": "exercise",
+                "text": "State clearly why a value of zero, a pending threshold, and an overall Firing state are three different observations."
+              }
+            ]
+          },
+          {
+            "title": "11 — Slack: From a Test Contact Point to an Automatic Firing Notification",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "Slack is a workplace messaging tool. A Workspace is a shared collaboration area, and a Channel or direct message is where messages appear. Grafana does not need Slack to read localhost:3000; instead, Grafana sends an outbound HTTPS request to a Slack Incoming Webhook after an alert is routed to the Slack Contact Point."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.1 — Workspace, channel, app, and webhook"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Slack component",
+                    "Meaning"
+                  ],
+                  [
+                    "Workspace",
+                    "The overall space for messages and integrations; ours was called Personal World Monitoring."
+                  ],
+                  [
+                    "Channel",
+                    "A conversation for a topic such as monitoring alerts."
+                  ],
+                  [
+                    "Slack App",
+                    "An integration installed into a workspace; ours was called Grafana Monitoring Alerts."
+                  ],
+                  [
+                    "Incoming Webhook",
+                    "A secret URL that allows the integrated app to post a message into an authorized destination."
+                  ],
+                  [
+                    "Grafana Contact Point",
+                    "The Grafana configuration that contains the Slack integration and determines where alert messages go."
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "11.2 — Create or select a Slack Workspace"
+              },
+              {
+                "kind": "text",
+                "text": "Create a Workspace if necessary and give it the recorded name Personal World Monitoring. Select the workspace before configuring the application. A workspace can contain several channels; a direct message can also be a webhook destination if the integration permits it."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-21.png",
+                "caption": "Slack setup screen shown before a workspace was created."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-22.png",
+                "caption": "The Personal World Monitoring workspace name entered during Slack onboarding."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-23.png",
+                "caption": "Slack workspace after creation, displaying several channels and the messaging interface."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.3 — Create the Slack integration app"
+              },
+              {
+                "kind": "text",
+                "text": "Open https://api.slack.com/apps. On Your Apps, click Create an App. The recorded UI presented a Blank app option; select it and continue. Give the app the recorded name Grafana Monitoring Alerts, select Personal World Monitoring as the workspace, and create the app."
+              },
+              {
+                "kind": "link",
+                "label": "Slack developer apps",
+                "text": "https://api.slack.com/apps",
+                "caption": "Official Slack interface for managing your integration apps."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-24.png",
+                "caption": "Slack Your Apps page, used to begin creating the integration."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-25.png",
+                "caption": "Create new app dialog, showing the Blank app option."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-26.png",
+                "caption": "Create from scratch dialog, using the Grafana Monitoring Alerts app name and the Personal World Monitoring workspace."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.4 — Enable the Incoming Webhook"
+              },
+              {
+                "kind": "text",
+                "text": "Inside the Slack app settings, select Incoming Webhooks, enable the feature, and choose Add New Webhook to Workspace. Slack asks for authorization and a destination. Select the intended channel or direct message, then Allow. The webhook URL is generated for that destination."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-28.png",
+                "caption": "Slack app settings showing the Incoming Webhooks entry."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-27.png",
+                "caption": "Slack authorization screen for granting the app access to the selected destination."
+              },
+              {
+                "kind": "output-note",
+                "text": "Secret protection: The generated Incoming Webhook URL is a credential: anyone holding it may be able to post messages to the destination. Never paste it into a Git repository, application.properties, a public web page, or teaching screenshots. In this module the URL is redacted from the image; the actual project settings were not changed."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.5 — Configure the Grafana Slack Contact Point"
+              },
+              {
+                "kind": "text",
+                "text": "In Grafana, go to Alerting → Notification configuration → Contact points, choose New contact point, and enter the recorded name Slack Notification. Under Integration choose Slack rather than Email. Paste the secret Slack Incoming Webhook URL into the Webhook URL field on your own Grafana installation. Do not use the redacted sample as a real URL."
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Grafana field",
+                    "Original setup value / action"
+                  ],
+                  [
+                    "Name",
+                    "Slack Notification"
+                  ],
+                  [
+                    "Integration",
+                    "Slack"
+                  ],
+                  [
+                    "Webhook URL",
+                    "Paste the private Slack Incoming Webhook URL generated for your workspace"
+                  ],
+                  [
+                    "Recipient / Token",
+                    "Can remain empty when a valid incoming webhook is configured"
+                  ]
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-29.png",
+                "caption": "Grafana Slack Contact Point configuration. The secret webhook value is intentionally obscured in this learning screenshot."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.6 — Test the Contact Point"
+              },
+              {
+                "kind": "text",
+                "text": "Click Test from the Grafana Slack integration. Check the specific Slack destination chosen when creating the webhook. If the test succeeds, save the Contact Point. A successful test demonstrates that Grafana can send a message to Slack; it does not yet prove the Application Down alert will use that destination."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-30.png",
+                "caption": "Grafana confirmation that its Slack Contact Point test notification was sent successfully."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.7 — Assign Slack Notification to the real alert rule"
+              },
+              {
+                "kind": "text",
+                "text": "At first, the rule displayed Notifications are delivered to: empty, while Slack Notification was marked Unused. This is why merely creating a Contact Point is not sufficient. Edit Alerting → Alert rules → Spring Boot - Application Down. In Configure notifications select the saved Slack Notification Contact Point as the Recipient, then save the rule."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-31.png",
+                "caption": "Choosing Slack Notification from the existing Contact Point options in the Application Down alert configuration."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.8 — Verify an actual automatic Firing message"
+              },
+              {
+                "kind": "text",
+                "text": "After assigning the Contact Point, the controlled Spring Boot shutdown can be repeated from a Normal state. Prometheus records up = 0 and the Grafana-managed rule eventually enters Firing. Grafana sends a message automatically using the selected Slack Contact Point; this is different from pressing the Test button."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-32.png",
+                "caption": "Actual Slack direct message from Grafana Monitoring Alerts reporting Spring Boot - Application Down as FIRING. This is the recorded successful end-to-end alert result."
+              },
+              {
+                "kind": "text",
+                "text": "The source evidence shows that the test was delivered as a direct message in Slack. It does not establish that the same message appeared in every workspace channel. The destination is determined by the webhook authorization."
+              },
+              {
+                "kind": "subheading",
+                "text": "11.9 — Email versus Slack"
+              },
+              {
+                "kind": "text",
+                "text": "Grafana can notify Slack and email, but a local Grafana OSS instance generally requires working SMTP configuration to send email. Our local lesson completed the Slack Incoming Webhook path. Email SMTP was not configured in this exercise, and we do not introduce additional credentials or environment variables here."
+              },
+              {
+                "kind": "output-note",
+                "text": "Availability: When the Windows PC is off, the local Prometheus and Grafana containers cannot evaluate and deliver new alerts. Slack is cloud-hosted, but it cannot create an alert without a running monitoring system."
+              }
+            ]
+          },
+          {
+            "title": "12 — Troubleshooting, Security, and Final System Review",
+            "blocks": [
+              {
+                "kind": "text",
+                "text": "A useful technical module must explain why a step may fail, not just show the successful path. The following cases come from our actual local practice and are intended to help reproduce the monitoring flow without changing unrelated project settings."
+              },
+              {
+                "kind": "subheading",
+                "text": "12.1 — The browser cannot open localhost:9090"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Observed problem",
+                    "Meaning",
+                    "Check without guessing"
+                  ],
+                  [
+                    "ERR_CONNECTION_REFUSED",
+                    "Nothing is accepting the browser connection on the mapped port.",
+                    "Is the Prometheus container running? Inspect Docker Desktop or docker ps -a."
+                  ],
+                  [
+                    "Container absent after removing it",
+                    "The previous container was removed but not recreated successfully.",
+                    "Verify the bind-mounted file path and repeat only the documented run command."
+                  ],
+                  [
+                    "No scrape pools found",
+                    "Prometheus has no active scrape job/targets visible.",
+                    "View Status → Configuration; confirm the mounted YAML was loaded."
+                  ],
+                  [
+                    "Target DOWN",
+                    "Prometheus knows the target but the HTTP scrape fails.",
+                    "Check that local Spring Boot is running and the endpoint is reachable from Docker."
+                  ]
+                ]
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-no-scrape-pools.png",
+                "caption": "Prometheus Target health page showing the earlier No scrape pools found diagnostic state."
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Non-destructive container status check",
+                "text": "docker ps -a --filter \"name=prometheus\""
+              },
+              {
+                "kind": "code",
+                "label": "PowerShell · Verify the exact recorded file exists",
+                "text": "Test-Path \"E:\\DevOps\\Project\\montior\\prometheus.yml\""
+              },
+              {
+                "kind": "output-note",
+                "text": "Do not repeatedly delete containers: First inspect the error. docker rm without an explicit volume deletion does not remove named volumes, but repeated unplanned changes can hide the original problem."
+              },
+              {
+                "kind": "subheading",
+                "text": "12.2 — Avoid incorrect PromQL"
+              },
+              {
+                "kind": "text",
+                "text": "During the first alert attempt, the Query A screenshot contained p{job=\"spring-boot\"} rather than up{job=\"spring-boot\"}. The invalid metric name returned No data. The correct built-in scrape-success metric is up. Preserve this screenshot only as a troubleshooting example—not as the correct rule to copy."
+              },
+              {
+                "kind": "image",
+                "image": "/images/monitoring/capture-18.png",
+                "caption": "Troubleshooting evidence: an earlier alert editor screenshot used p instead of up, resulting in missing data. The working query is shown below."
+              },
+              {
+                "kind": "code",
+                "label": "PromQL · Correct the alert expression",
+                "text": "up{job=\"spring-boot\"}"
+              },
+              {
+                "kind": "subheading",
+                "text": "12.3 — Why does Grafana show misleading percentages?"
+              },
+              {
+                "kind": "text",
+                "text": "The CPU query and the panel Unit must agree. process_cpu_usage returns a ratio; the Grafana Unit Percent (0.0-1.0) converts it to the displayed percentage. Using * 100 in the query and also that percentage unit makes the display about 100 times too large. Likewise, raw JVM bytes should be formatted as Bytes (IEC), not as percentages."
+              },
+              {
+                "kind": "subheading",
+                "text": "12.4 — Why does a dashboard show No data even though the Data Source connects?"
+              },
+              {
+                "kind": "text",
+                "text": "The Data Source connection checks Prometheus API connectivity. Each panel independently queries a metric. If the imported community dashboard expects different labels, metric names, data source variables, or time ranges, its panels can still be empty. Our resolution was to use the exact working PromQL expressions from the local application."
+              },
+              {
+                "kind": "subheading",
+                "text": "12.5 — Why can Grafana be Firing with no Slack notification?"
+              },
+              {
+                "kind": "text",
+                "text": "There are two separate checks: the Contact Point Test proves the Slack webhook works, while the alert rule notification configuration determines which Contact Point receives that specific alert. In the recorded exercise, Slack Notification initially appeared Unused; we had to change the Alert Rule recipient from empty to Slack Notification."
+              },
+              {
+                "kind": "subheading",
+                "text": "12.6 — Safe boundaries of this setup"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Boundary",
+                    "What the module does",
+                    "What it does NOT do"
+                  ],
+                  [
+                    "Environment variables",
+                    "Shows the original IntelliJ variable exactly.",
+                    "Change any existing secrets or application.properties."
+                  ],
+                  [
+                    "Prometheus file",
+                    "Documents the YAML and original Windows location.",
+                    "Expose metrics publicly through Nginx or an EC2 security group."
+                  ],
+                  [
+                    "Docker",
+                    "Runs local containers and uses named volumes.",
+                    "Install a monitoring stack on the t3.micro EC2 instance."
+                  ],
+                  [
+                    "Slack",
+                    "Uses a private Incoming Webhook in Grafana.",
+                    "Commit the webhook URL or show an unredacted screenshot."
+                  ],
+                  [
+                    "Availability",
+                    "Tests Prometheus scraping and Grafana alert firing.",
+                    "Provide external uptime monitoring or continuous coverage while Windows is off."
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "12.7 — The final end-to-end checklist"
+              },
+              {
+                "kind": "table",
+                "rows": [
+                  [
+                    "Checkpoint",
+                    "Observed evidence"
+                  ],
+                  [
+                    "Spring Boot Actuator exposes metrics",
+                    "/actuator/prometheus returned JVM and HTTP metric lines."
+                  ],
+                  [
+                    "Prometheus is up",
+                    "Browser opened localhost:9090."
+                  ],
+                  [
+                    "The spring-boot job is scraped",
+                    "up{job=\"spring-boot\"} returned 1 while the app was running."
+                  ],
+                  [
+                    "CPU and JVM graphs work",
+                    "Prometheus showed the local CPU and heap-memory history."
+                  ],
+                  [
+                    "Grafana queries Prometheus",
+                    "Data Source Save & test succeeded."
+                  ],
+                  [
+                    "Dashboard panels show measurements",
+                    "The original imported queries were replaced with working metric names."
+                  ],
+                  [
+                    "Application Down rule fires",
+                    "Stopping Spring Boot changed up to 0 and the rule to Firing."
+                  ],
+                  [
+                    "Slack delivery works",
+                    "Test Contact Point succeeded and a real Firing direct message was received."
+                  ]
+                ]
+              },
+              {
+                "kind": "subheading",
+                "text": "12.8 — What should happen after local learning?"
+              },
+              {
+                "kind": "text",
+                "text": "The completed local exercise demonstrates the full monitoring and alerting chain. A production deployment requires separate design decisions: how to collect live EC2 application and host metrics securely, which always-on monitoring service to use, how to monitor external uptime independently of the EC2 instance, and how to protect credentials. None of those production changes are made by this module."
+              },
+              {
+                "kind": "exercise",
+                "text": "Explain the full story in one minute: Spring Boot publishes metrics → Prometheus scrapes and stores them → Grafana queries and evaluates an alert → Slack receives the notification."
+              }
+            ]
+          }
+        ],
+        "problems": [
+          "No data in an imported Grafana panel is not automatically a network failure: verify the metric name, labels, Data Source, and time range.",
+          "A CPU ratio combined with the wrong Percent unit produces values 100 times too large.",
+          "The Prometheus up metric indicates the scrape result, not the complete health of the public website.",
+          "An alert rule showing Firing does not automatically prove Slack delivery until the Contact Point is assigned and a real notification is received."
+        ],
+        "finalOutcome": "The recorded exercise successfully produced Spring Boot metrics on localhost, scraped them with Prometheus, displayed CPU and JVM metrics in Grafana, triggered an Application Down alert by stopping the local application, and delivered a Firing message to Slack. This is a local learning setup, not a 24/7 EC2 production monitoring deployment.",
+        "learningTakeaways": [
+          "Prometheus is a metrics monitoring system with a time-series database and PromQL query engine.",
+          "Grafana queries the metrics backend, builds dashboards, and can evaluate and notify on alerts.",
+          "The local setup uses separate Prometheus and Grafana Docker containers on a monitoring network.",
+          "Metrics, visualization units, and alert states must be interpreted correctly before drawing conclusions.",
+          "The original project configuration, runtime environment settings, and EC2 infrastructure are unchanged."
+        ],
         "steps": [],
         "commands": [],
         "evidence": [],
         "observations": "",
         "findings": "",
-        "prevention": [],
-        "practicalSteps": [],
-        "problems": [],
-        "finalOutcome": ""
+        "prevention": []
       }
     ]
   },
